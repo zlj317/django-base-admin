@@ -15,6 +15,7 @@ from django.core.management.base import BaseCommand  # 管理命令基类
 from django.db import connection  # 复用 Django 连接执行建表与初始化 SQL
 
 SQL_FILE = r'd:\other\django-base-admin\docs\后台管理系统-初始化建表SQL.sql'  # 初始化建表脚本路径（原始字符串避免转义）
+SQL_WORKFLOW_FILE = r'd:\other\django-base-admin\docs\后台管理系统-工作流建表SQL.sql'  # 工作流 11 张表建表脚本
 
 MENUS = [  # 菜单定义：(父 key, key, 名称, 路由, 组件, 权限, 类型, 图标, 排序)
     (None, 'dashboard', '首页', 'dashboard', 'dashboard/index', '', 'C', 'Odometer', 0),  # 首页看板，无需权限
@@ -77,7 +78,8 @@ class Command(BaseCommand):
 
         # 2. 执行建表 SQL
         self.exec_sql_file(SQL_FILE)  # 全量创建系统基础表，脚本内均为 CREATE TABLE
-        self.stdout.write(self.style.SUCCESS('系统基础表创建完成'))  # 提示建表完成
+        self.exec_sql_file(SQL_WORKFLOW_FILE)  # 创建工作流 11 张 wf_ 表（IF NOT EXISTS 幂等）
+        self.stdout.write(self.style.SUCCESS('系统基础表与工作流表创建完成'))  # 提示建表完成
 
         # 3. admin 密码重置为 123456（bcrypt）
         from common.utils import hash_password  # 局部导入，确保 Django 配置已加载完毕
@@ -93,6 +95,8 @@ class Command(BaseCommand):
                 cursor.execute("DELETE FROM sys_role_menu")  # 先清角色-菜单关联，避免留下脏数据
                 cursor.execute("DELETE FROM sys_menu")  # 再清菜单本体
         self.init_menus()  # 幂等：已有菜单时内部会自动跳过
+        from apps.workflow.seed import seed_workflow  # 局部导入，避免命令加载期依赖工作流模型
+        seed_workflow()  # 写入工作流程菜单、按钮权限与请假/报销演示数据（幂等）
         self.stdout.write(self.style.SUCCESS('初始化完成！默认账号 admin / 123456'))  # 收尾提示
 
     def exec_sql_file(self, path):

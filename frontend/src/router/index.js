@@ -46,6 +46,19 @@ export const constantRoutes = [
     ]
   },
   {
+    // 流程设计器（隐藏页面，由流程模型列表跳转进入）
+    path: '/workflow/design/:id',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        name: 'WorkflowDesign',
+        component: () => import('@/views/workflow/model/design.vue'),
+        meta: { title: '流程设计' }
+      }
+    ]
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: () => import('@/views/error/404.vue'),
@@ -58,23 +71,31 @@ const router = createRouter({
   routes: constantRoutes
 })
 
-// 根据 menus 树构建动态路由：顶级目录(M) 挂 Layout，子菜单(C) 映射到 views
+// 递归收集菜单树中的叶子页面（支持 工作流程 > 流程管理 > 页面 这种三级结构）
+function collectLeaves(menus, prefix, leaves) {
+  ;(menus || []).forEach(menu => {
+    if (menu.menu_type === 'C') {
+      const comp = resolveComponent(menu.component)
+      if (!comp) return
+      leaves.push({
+        path: prefix ? prefix + '/' + menu.path : menu.path,
+        name: 'menu-' + menu.id,
+        component: comp,
+        meta: { title: menu.menu_name, icon: menu.icon }
+      })
+    } else if (menu.menu_type === 'M' && menu.children) {
+      collectLeaves(menu.children, prefix ? prefix + '/' + menu.path : menu.path, leaves)
+    }
+  })
+}
+
+// 根据 menus 树构建动态路由：顶级目录(M) 挂 Layout，递归找到所有页面菜单(C)
 function buildDynamicRoutes(menus) {
   const routes = []
   ;(menus || []).forEach(top => {
     if (top.menu_type !== 'M') return
     const children = []
-    ;(top.children || []).forEach(menu => {
-      if (menu.menu_type !== 'C') return
-      const comp = resolveComponent(menu.component)
-      if (!comp) return
-      children.push({
-        path: menu.path,
-        name: 'menu-' + menu.id,
-        component: comp,
-        meta: { title: menu.menu_name, icon: menu.icon }
-      })
-    })
+    collectLeaves(top.children, '', children)
     if (!children.length) return
     routes.push({
       path: '/' + String(top.path || '').replace(/^\//, ''),

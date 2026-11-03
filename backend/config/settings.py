@@ -15,6 +15,7 @@ INSTALLED_APPS = [  # 已启用应用：contrib 基础能力 + DRF + 跨域 + �
     'corsheaders',  # 跨域响应头支持
     'apps.system',  # 系统管理：用户/角色/菜单/日志等
     'apps.gen',  # 代码生成器模块
+    'apps.workflow',  # 工作流（审批）模块：BPMN 引擎、待办、表单、抄送
     'core',  # 自定义管理命令（init_db）
     # ↓↓↓ 由代码生成器生成的业务模块（新增业务表后在此追加） ↓↓↓
     'apps.student',  # 示例业务模块：学生表
