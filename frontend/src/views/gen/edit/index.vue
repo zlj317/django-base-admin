@@ -154,7 +154,7 @@
     <!-- 建表 SQL 弹窗 -->
     <el-dialog v-model="ddlVisible" title="建表 SQL" width="760px" top="8vh" destroy-on-close>
       <el-scrollbar max-height="60vh">
-        <pre class="code-block">{{ ddl }}</pre>
+        <pre class="code-block">{{ ddlText }}</pre>
       </el-scrollbar>
     </el-dialog>
   </div>

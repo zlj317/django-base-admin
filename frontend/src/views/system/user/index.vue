@@ -71,7 +71,7 @@
           </template>
         </el-table-column>
         <el-table-column label="创建时间" prop="create_time" width="170" />
-        <el-table-column label="操作" width="250" fixed="right">
+        <el-table-column label="操作" width="310" fixed="right" class-name="op-col">
           <template #default="{ row }">
             <el-button v-perm="'system:user:update'" link type="primary" @click="openEdit(row)">编辑</el-button>
             <el-button v-perm="'system:user:resetPwd'" link type="warning" @click="openResetPwd(row)">重置密码</el-button>
@@ -447,5 +447,9 @@ onMounted(() => {
 .role-checks {
   display: flex;
   flex-direction: column;
+}
+
+:deep(.op-col .cell) {
+  white-space: nowrap;
 }
 </style>

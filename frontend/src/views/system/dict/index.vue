@@ -3,131 +3,67 @@
     <div class="page-header">
       <div class="page-title-wrap">
         <h2>字典管理</h2>
-        <div class="sub">字典类型与字典项维护</div>
+        <div class="sub">字典类型维护，字典项通过操作列进入维护</div>
       </div>
     </div>
-    <el-row :gutter="14">
-      <!-- 左侧：字典类型 -->
-      <el-col :span="10">
-        <el-card shadow="never">
-          <template #header>
-            <div class="card-header">
-              <span>字典类型</span>
-              <div>
-                <el-button v-perm="'system:dict:create'" type="primary" size="small" :icon="Plus" @click="openTypeCreate">新增类型</el-button>
-              </div>
-            </div>
+
+    <!-- 查询栏 -->
+    <el-card shadow="never" class="search-card">
+      <el-form inline @submit.prevent>
+        <el-form-item label="字典名称">
+          <el-input v-model="typeQuery.dict_name" placeholder="请输入字典名称" clearable style="width: 170px" @keyup.enter="searchTypes" />
+        </el-form-item>
+        <el-form-item label="类型编码">
+          <el-input v-model="typeQuery.dict_type" placeholder="请输入类型编码" clearable style="width: 170px" @keyup.enter="searchTypes" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :icon="Search" @click="searchTypes">查询</el-button>
+          <el-button :icon="Refresh" @click="resetTypes">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+
+    <el-card shadow="never" class="table-card">
+      <div class="toolbar">
+        <el-button v-perm="'system:dict:create'" type="primary" :icon="Plus" @click="openTypeCreate">新增类型</el-button>
+      </div>
+
+      <el-table v-loading="typeLoading" stripe empty-text="暂无数据" :data="typeList">
+        <el-table-column label="编号" prop="id" width="70" />
+        <el-table-column label="字典名称" prop="dict_name" min-width="140" show-overflow-tooltip />
+        <el-table-column label="类型编码" prop="dict_type" min-width="160" show-overflow-tooltip />
+        <el-table-column label="状态" width="90" align="center">
+          <template #default="{ row }">
+            <el-tag :type="row.status === 0 ? 'success' : 'danger'" size="small">
+              {{ row.status === 0 ? '正常' : '停用' }}
+            </el-tag>
           </template>
-
-          <el-form inline @submit.prevent>
-            <el-form-item label="名称">
-              <el-input v-model="typeQuery.dict_name" placeholder="字典名称" clearable style="width: 120px" @keyup.enter="searchTypes" />
-            </el-form-item>
-            <el-form-item label="类型">
-              <el-input v-model="typeQuery.dict_type" placeholder="类型编码" clearable style="width: 120px" @keyup.enter="searchTypes" />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :icon="Search" @click="searchTypes">查询</el-button>
-            </el-form-item>
-          </el-form>
-
-          <el-table
-            v-loading="typeLoading"
-            :data="typeList"
-            highlight-current-row
-            :row-class-name="typeRowClass"
-            @row-click="selectType"
-          >
-            <el-table-column label="字典名称" prop="dict_name" min-width="100" show-overflow-tooltip />
-            <el-table-column label="类型编码" prop="dict_type" min-width="110" show-overflow-tooltip />
-            <el-table-column label="状态" width="70" align="center">
-              <template #default="{ row }">
-                <el-tag :type="row.status === 0 ? 'success' : 'danger'" size="small">
-                  {{ row.status === 0 ? '正常' : '停用' }}
-                </el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" width="140" fixed="right">
-              <template #default="{ row }">
-                <el-button link type="primary" @click.stop="selectType(row)">字典项</el-button>
-                <el-button v-perm="'system:dict:update'" link type="primary" @click.stop="openTypeEdit(row)">编辑</el-button>
-                <el-button v-perm="'system:dict:delete'" link type="danger" @click.stop="handleTypeDelete(row)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-
-          <div class="pagination-wrap">
-            <el-pagination
-              v-model:current-page="typePage"
-              v-model:page-size="typePageSize"
-              :total="typeTotal"
-              :page-sizes="[10, 20, 50]"
-              layout="total, prev, pager, next"
-              @size-change="typePage = 1; fetchTypes()"
-              @current-change="fetchTypes"
-            />
-          </div>
-        </el-card>
-      </el-col>
-
-      <!-- 右侧：字典数据 -->
-      <el-col :span="14">
-        <el-card shadow="never">
-          <template #header>
-            <div class="card-header">
-              <span>字典数据{{ currentType ? `（${currentType.dict_name} / ${currentType.dict_type}）` : '' }}</span>
-              <div>
-                <el-button
-                  v-perm="'system:dict:create'"
-                  type="primary"
-                  size="small"
-                  :icon="Plus"
-                  :disabled="!currentType"
-                  @click="openDataCreate"
-                >新增字典项</el-button>
-              </div>
-            </div>
+        </el-table-column>
+        <el-table-column label="备注" prop="remark" min-width="160" show-overflow-tooltip>
+          <template #default="{ row }">{{ row.remark || '-' }}</template>
+        </el-table-column>
+        <el-table-column label="创建时间" prop="create_time" width="170" />
+        <el-table-column label="操作" width="230" fixed="right">
+          <template #default="{ row }">
+            <el-button link type="primary" @click="openDataDrawer(row)">字典数据</el-button>
+            <el-button v-perm="'system:dict:update'" link type="primary" @click="openTypeEdit(row)">编辑</el-button>
+            <el-button v-perm="'system:dict:delete'" link type="danger" @click="handleTypeDelete(row)">删除</el-button>
           </template>
+        </el-table-column>
+      </el-table>
 
-          <el-empty v-if="!currentType" description="请先在左侧选择字典类型" :image-size="80" />
-          <template v-else>
-            <el-table stripe empty-text="暂无数据" v-loading="dataLoading" :data="dataList">
-              <el-table-column label="标签" prop="dict_label" min-width="110" show-overflow-tooltip />
-              <el-table-column label="键值" prop="dict_value" min-width="90" show-overflow-tooltip />
-              <el-table-column label="排序" prop="dict_sort" width="70" align="center" />
-              <el-table-column label="状态" width="80" align="center">
-                <template #default="{ row }">
-                  <el-tag :type="row.status === 0 ? 'success' : 'danger'" size="small">
-                    {{ row.status === 0 ? '正常' : '停用' }}
-                  </el-tag>
-                </template>
-              </el-table-column>
-              <el-table-column label="备注" prop="remark" min-width="110" show-overflow-tooltip>
-                <template #default="{ row }">{{ row.remark || '-' }}</template>
-              </el-table-column>
-              <el-table-column label="操作" width="120" fixed="right">
-                <template #default="{ row }">
-                  <el-button v-perm="'system:dict:update'" link type="primary" @click="openDataEdit(row)">编辑</el-button>
-                  <el-button v-perm="'system:dict:delete'" link type="danger" @click="handleDataDelete(row)">删除</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-
-            <div class="pagination-wrap">
-              <el-pagination
-                v-model:current-page="dataPage"
-                v-model:page-size="dataPageSize"
-                :total="dataTotal"
-                :page-sizes="[10, 20, 50]"
-                layout="total, prev, pager, next"
-                @size-change="dataPage = 1; fetchData()"
-                @current-change="fetchData"
-              />
-            </div>
-          </template>
-        </el-card>
-      </el-col>
-    </el-row>
+      <div class="pagination-wrap">
+        <el-pagination
+          v-model:current-page="typePage"
+          v-model:page-size="typePageSize"
+          :total="typeTotal"
+          :page-sizes="[10, 20, 50]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="typePage = 1; fetchTypes()"
+          @current-change="fetchTypes"
+        />
+      </div>
+    </el-card>
 
     <!-- 字典类型弹窗 -->
     <el-dialog v-model="typeVisible" :title="typeForm.id ? '编辑字典类型' : '新增字典类型'" width="480px" destroy-on-close>
@@ -154,7 +90,56 @@
       </template>
     </el-dialog>
 
-    <!-- 字典数据弹窗 -->
+    <!-- 字典数据抽屉 -->
+    <el-drawer v-model="dataDrawerVisible" size="640px" destroy-on-close>
+      <template #header>
+        <div class="drawer-title">
+          <span>字典数据</span>
+          <span v-if="currentType" class="drawer-sub">{{ currentType.dict_name }} / {{ currentType.dict_type }}</span>
+        </div>
+      </template>
+
+      <div class="toolbar">
+        <el-button v-perm="'system:dict:create'" type="primary" :icon="Plus" @click="openDataCreate">新增字典项</el-button>
+      </div>
+
+      <el-table v-loading="dataLoading" stripe empty-text="暂无数据" :data="dataList">
+        <el-table-column label="编号" prop="id" width="70" />
+        <el-table-column label="标签" prop="dict_label" min-width="100" show-overflow-tooltip />
+        <el-table-column label="键值" prop="dict_value" min-width="90" show-overflow-tooltip />
+        <el-table-column label="排序" prop="dict_sort" width="70" align="center" />
+        <el-table-column label="状态" width="80" align="center">
+          <template #default="{ row }">
+            <el-tag :type="row.status === 0 ? 'success' : 'danger'" size="small">
+              {{ row.status === 0 ? '正常' : '停用' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="备注" prop="remark" min-width="100" show-overflow-tooltip>
+          <template #default="{ row }">{{ row.remark || '-' }}</template>
+        </el-table-column>
+        <el-table-column label="操作" width="120">
+          <template #default="{ row }">
+            <el-button v-perm="'system:dict:update'" link type="primary" @click="openDataEdit(row)">编辑</el-button>
+            <el-button v-perm="'system:dict:delete'" link type="danger" @click="handleDataDelete(row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div class="pagination-wrap">
+        <el-pagination
+          v-model:current-page="dataPage"
+          v-model:page-size="dataPageSize"
+          :total="dataTotal"
+          :page-sizes="[10, 20, 50]"
+          layout="total, prev, pager, next"
+          @size-change="dataPage = 1; fetchData()"
+          @current-change="fetchData"
+        />
+      </div>
+    </el-drawer>
+
+    <!-- 字典项弹窗 -->
     <el-dialog v-model="dataVisible" :title="dataForm.id ? '编辑字典项' : '新增字典项'" width="480px" destroy-on-close>
       <el-form ref="dataFormRef" :model="dataForm" :rules="dataRules" label-width="90px">
         <el-form-item label="字典类型">
@@ -212,9 +197,9 @@ async function fetchTypes() {
     })
     typeList.value = res.data.list || []
     typeTotal.value = res.data.total || 0
-    // 当前选中类型可能已被删除
+    // 当前打开的字典类型可能已被删除
     if (currentType.value && !typeList.value.some(t => t.id === currentType.value.id)) {
-      clearCurrentType()
+      closeDataDrawer()
     }
   } finally {
     typeLoading.value = false
@@ -226,20 +211,10 @@ function searchTypes() {
   fetchTypes()
 }
 
-function typeRowClass({ row }) {
-  return currentType.value && currentType.value.id === row.id ? 'current-type-row' : ''
-}
-
-function selectType(row) {
-  currentType.value = row
-  dataPage.value = 1
-  fetchData()
-}
-
-function clearCurrentType() {
-  currentType.value = null
-  dataList.value = []
-  dataTotal.value = 0
+function resetTypes() {
+  typeQuery.dict_name = ''
+  typeQuery.dict_type = ''
+  searchTypes()
 }
 
 // 类型新增/编辑
@@ -297,16 +272,33 @@ async function handleTypeDelete(row) {
   await ElMessageBox.confirm(`确定删除字典类型「${row.dict_name}」吗？其下字典项将不可用。`, '提示', { type: 'warning' })
   await request.delete('/system/dict/type/delete', { data: { ids: [row.id] } })
   ElMessage.success('删除成功')
-  if (currentType.value && currentType.value.id === row.id) clearCurrentType()
+  if (currentType.value && currentType.value.id === row.id) closeDataDrawer()
   fetchTypes()
 }
 
-// ---------- 字典数据 ----------
+// ---------- 字典数据（抽屉） ----------
+const dataDrawerVisible = ref(false)
 const dataLoading = ref(false)
 const dataList = ref([])
 const dataTotal = ref(0)
 const dataPage = ref(1)
 const dataPageSize = ref(10)
+
+function openDataDrawer(row) {
+  currentType.value = row
+  dataPage.value = 1
+  dataList.value = []
+  dataTotal.value = 0
+  dataDrawerVisible.value = true
+  fetchData()
+}
+
+function closeDataDrawer() {
+  dataDrawerVisible.value = false
+  currentType.value = null
+  dataList.value = []
+  dataTotal.value = 0
+}
 
 async function fetchData() {
   if (!currentType.value) return
@@ -397,13 +389,15 @@ onMounted(fetchTypes)
 </script>
 
 <style scoped>
-.card-header {
+.drawer-title {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
 }
 
-:deep(.current-type-row) {
-  background-color: #ecf5ff;
+.drawer-sub {
+  font-size: 12px;
+  color: #909399;
+  font-weight: normal;
 }
 </style>
