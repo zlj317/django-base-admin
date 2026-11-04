@@ -15,7 +15,7 @@ USE `gen_admin`;
 -- 1.1 附件主表 wf_file
 DROP TABLE IF EXISTS `wf_file`;
 CREATE TABLE `wf_file` (
-  `id`             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`             BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `file_name`      VARCHAR(255) NOT NULL COMMENT '存储文件名',
   `original_name`  VARCHAR(255) NOT NULL COMMENT '原始文件名',
   `file_ext`       VARCHAR(32)  DEFAULT NULL COMMENT '文件后缀',
@@ -46,7 +46,7 @@ CREATE TABLE `wf_file` (
 -- 1.2 上传/预览配置表 wf_file_config
 DROP TABLE IF EXISTS `wf_file_config`;
 CREATE TABLE `wf_file_config` (
-  `id`                BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`                BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `config_key`        VARCHAR(100) NOT NULL COMMENT '配置键',
   `config_value`      VARCHAR(500) DEFAULT NULL COMMENT '配置值',
   `config_name`       VARCHAR(100) DEFAULT NULL COMMENT '配置名称',
@@ -64,7 +64,7 @@ CREATE TABLE `wf_file_config` (
 -- 1.3 附件回收站表 wf_file_recycle
 DROP TABLE IF EXISTS `wf_file_recycle`;
 CREATE TABLE `wf_file_recycle` (
-  `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `file_id`     BIGINT       NOT NULL COMMENT '原附件ID wf_file.id',
   `file_name`   VARCHAR(255) DEFAULT NULL COMMENT '文件名快照',
   `delete_user_id` BIGINT    DEFAULT NULL COMMENT '删除用户id',
@@ -81,7 +81,7 @@ CREATE TABLE `wf_file_recycle` (
 -- 2.1 消息模板表 msg_template
 DROP TABLE IF EXISTS `msg_template`;
 CREATE TABLE `msg_template` (
-  `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`           BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `template_code` VARCHAR(100) NOT NULL COMMENT '模板编码',
   `template_name` VARCHAR(100) NOT NULL COMMENT '模板名称',
   `msg_type`      VARCHAR(30)  NOT NULL COMMENT '消息类型：todo待办 done已办 cc抄送 system系统 report报表 alarm告警 notice公告',
@@ -101,7 +101,7 @@ CREATE TABLE `msg_template` (
 -- 2.2 站内消息表 msg_record
 DROP TABLE IF EXISTS `msg_record`;
 CREATE TABLE `msg_record` (
-  `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`           BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `msg_type`     VARCHAR(30)  NOT NULL COMMENT '消息类型',
   `title`        VARCHAR(200) DEFAULT NULL COMMENT '消息标题',
   `content`      VARCHAR(1000) DEFAULT NULL COMMENT '消息内容',
@@ -124,7 +124,7 @@ CREATE TABLE `msg_record` (
 -- 2.3 消息推送记录表 msg_push_log
 DROP TABLE IF EXISTS `msg_push_log`;
 CREATE TABLE `msg_push_log` (
-  `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`           BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `record_id`    BIGINT       DEFAULT NULL COMMENT '关联站内消息ID msg_record.id',
   `receiver_id`  BIGINT       DEFAULT NULL COMMENT '接收用户id',
   `channel`      VARCHAR(30)  DEFAULT NULL COMMENT '推送渠道：site短信 email',
@@ -140,7 +140,7 @@ CREATE TABLE `msg_push_log` (
 -- 2.4 消息推送配置表 msg_push_config
 DROP TABLE IF EXISTS `msg_push_config`;
 CREATE TABLE `msg_push_config` (
-  `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`           BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `channel`      VARCHAR(30)  NOT NULL COMMENT '渠道：site短信 email',
   `channel_name` VARCHAR(100) DEFAULT NULL COMMENT '渠道名称',
   `enabled`      TINYINT(1)   NOT NULL DEFAULT 1 COMMENT '是否启用：0停用 1启用',
@@ -162,7 +162,7 @@ CREATE TABLE `msg_push_config` (
 -- 3.1 公告分类表 notice_category
 DROP TABLE IF EXISTS `notice_category`;
 CREATE TABLE `notice_category` (
-  `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `category_name` VARCHAR(100) NOT NULL COMMENT '分类名称',
   `category_code` VARCHAR(64)  DEFAULT NULL COMMENT '分类编码',
   `sort`        INT          DEFAULT 0 COMMENT '排序',
@@ -179,7 +179,7 @@ CREATE TABLE `notice_category` (
 -- 3.2 公告信息表 notice_info
 DROP TABLE IF EXISTS `notice_info`;
 CREATE TABLE `notice_info` (
-  `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`            BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `category_id`   BIGINT       DEFAULT NULL COMMENT '公告分类ID',
   `title`         VARCHAR(200) NOT NULL COMMENT '公告标题',
   `content`       TEXT         COMMENT '公告内容',
@@ -204,7 +204,7 @@ CREATE TABLE `notice_info` (
 -- 3.3 公告已读记录表 notice_read
 DROP TABLE IF EXISTS `notice_read`;
 CREATE TABLE `notice_read` (
-  `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `notice_id`   BIGINT       NOT NULL COMMENT '公告ID',
   `user_id`     BIGINT       NOT NULL COMMENT '用户ID',
   `read_time`   DATETIME     DEFAULT NULL COMMENT '阅读时间',
@@ -220,7 +220,7 @@ CREATE TABLE `notice_read` (
 -- 4.1 任务信息表 task_info
 DROP TABLE IF EXISTS `task_info`;
 CREATE TABLE `task_info` (
-  `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`            BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `task_name`     VARCHAR(100) NOT NULL COMMENT '任务名称',
   `task_key`      VARCHAR(100) NOT NULL COMMENT '任务唯一标识（Celery任务名）',
   `task_type`     VARCHAR(20)  NOT NULL COMMENT '调度类型：cron间隔 interval间隔',
@@ -243,7 +243,7 @@ CREATE TABLE `task_info` (
 -- 4.2 任务日志表 task_log
 DROP TABLE IF EXISTS `task_log`;
 CREATE TABLE `task_log` (
-  `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`           BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `task_id`      BIGINT       DEFAULT NULL COMMENT '任务ID task_info.id',
   `task_name`    VARCHAR(100) DEFAULT NULL COMMENT '任务名称快照',
   `run_status`   TINYINT(1)   NOT NULL DEFAULT 0 COMMENT '执行状态：0运行中 1成功 2失败',
@@ -264,7 +264,7 @@ CREATE TABLE `task_log` (
 -- 5.1 报表分类表 rp_category
 DROP TABLE IF EXISTS `rp_category`;
 CREATE TABLE `rp_category` (
-  `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`            BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `category_name` VARCHAR(100) NOT NULL COMMENT '分类名称',
   `sort`          INT          DEFAULT 0 COMMENT '排序',
   `status`        TINYINT(1)   NOT NULL DEFAULT 1 COMMENT '状态：0停用 1启用',
@@ -280,7 +280,7 @@ CREATE TABLE `rp_category` (
 -- 5.2 报表数据源配置表 rp_datasource
 DROP TABLE IF EXISTS `rp_datasource`;
 CREATE TABLE `rp_datasource` (
-  `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`            BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `ds_name`       VARCHAR(100) NOT NULL COMMENT '数据源名称',
   `ds_type`       VARCHAR(20)  NOT NULL COMMENT '数据源类型：mysql本地库 api外部接口',
   `ds_config`     TEXT         COMMENT '数据源配置JSON（库连接或接口配置）',
@@ -297,7 +297,7 @@ CREATE TABLE `rp_datasource` (
 -- 5.3 报表模板表 rp_template
 DROP TABLE IF EXISTS `rp_template`;
 CREATE TABLE `rp_template` (
-  `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`            BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `template_name` VARCHAR(100) NOT NULL COMMENT '模板名称',
   `template_key`  VARCHAR(100) DEFAULT NULL COMMENT '模板唯一标识',
   `category_id`   BIGINT       DEFAULT NULL COMMENT '报表分类ID rp_category.id',
@@ -318,7 +318,7 @@ CREATE TABLE `rp_template` (
 -- 5.4 报表生成记录表 rp_generate_record
 DROP TABLE IF EXISTS `rp_generate_record`;
 CREATE TABLE `rp_generate_record` (
-  `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`            BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `template_id`   BIGINT       DEFAULT NULL COMMENT '报表模板ID rp_template.id',
   `template_name` VARCHAR(100) DEFAULT NULL COMMENT '模板名称快照',
   `param_json`    TEXT         COMMENT '生成参数JSON',
@@ -346,7 +346,7 @@ CREATE TABLE `rp_generate_record` (
 -- 6.1 大屏信息表 bi_screen
 DROP TABLE IF EXISTS `bi_screen`;
 CREATE TABLE `bi_screen` (
-  `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`            BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `screen_name`   VARCHAR(100) NOT NULL COMMENT '大屏名称',
   `screen_config` LONGTEXT     COMMENT '大屏设计JSON（组件、布局、数据绑定）',
   `status`        TINYINT(1)   NOT NULL DEFAULT 1 COMMENT '状态：0草稿 1已发布 2停用',
@@ -366,7 +366,7 @@ CREATE TABLE `bi_screen` (
 -- 6.2 大屏数据集表 bi_dataset
 DROP TABLE IF EXISTS `bi_dataset`;
 CREATE TABLE `bi_dataset` (
-  `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`            BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `dataset_name`  VARCHAR(100) NOT NULL COMMENT '数据集名称',
   `ds_type`       VARCHAR(20)  NOT NULL COMMENT '数据源类型：mysql api',
   `ds_config`     TEXT         COMMENT '数据集配置JSON',
@@ -384,7 +384,7 @@ CREATE TABLE `bi_dataset` (
 -- 6.3 大屏访问记录表 bi_visit_log
 DROP TABLE IF EXISTS `bi_visit_log`;
 CREATE TABLE `bi_visit_log` (
-  `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`           BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `screen_id`    BIGINT       DEFAULT NULL COMMENT '大屏ID bi_screen.id',
   `visitor_user_id` BIGINT    DEFAULT NULL COMMENT '访问用户id',
   `visit_ip`     VARCHAR(50)  DEFAULT NULL COMMENT '访问IP',
@@ -401,7 +401,7 @@ CREATE TABLE `bi_visit_log` (
 -- 7.1 外部接口配置表 outer_api_config
 DROP TABLE IF EXISTS `outer_api_config`;
 CREATE TABLE `outer_api_config` (
-  `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`           BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `api_name`     VARCHAR(100) NOT NULL COMMENT '接口名称',
   `api_url`      VARCHAR(500) NOT NULL COMMENT '接口地址',
   `method`       VARCHAR(10)  NOT NULL DEFAULT 'GET' COMMENT '请求方式：GET/POST/PUT/DELETE',
@@ -422,7 +422,7 @@ CREATE TABLE `outer_api_config` (
 -- 7.2 外部接口请求日志表 outer_api_request_log
 DROP TABLE IF EXISTS `outer_api_request_log`;
 CREATE TABLE `outer_api_request_log` (
-  `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`           BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `api_id`       BIGINT       DEFAULT NULL COMMENT '接口ID outer_api_config.id',
   `api_name`     VARCHAR(100) DEFAULT NULL COMMENT '接口名称快照',
   `request_url`  VARCHAR(500) DEFAULT NULL COMMENT '请求地址',
@@ -441,7 +441,7 @@ CREATE TABLE `outer_api_request_log` (
 -- 7.3 数据同步任务表 outer_sync_task
 DROP TABLE IF EXISTS `outer_sync_task`;
 CREATE TABLE `outer_sync_task` (
-  `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`           BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `sync_name`    VARCHAR(100) NOT NULL COMMENT '同步任务名称',
   `api_id`       BIGINT       DEFAULT NULL COMMENT '来源接口ID outer_api_config.id',
   `target_table` VARCHAR(100) DEFAULT NULL COMMENT '目标本地表名',
@@ -462,15 +462,15 @@ CREATE TABLE `outer_sync_task` (
 -- 初始化基础配置数据（可选）
 -- =====================================================================
 -- 附件上传/预览默认配置
-INSERT INTO `wf_file_config` (`config_key`, `config_value`, `config_name`, `config_type`, `create_time`, `is_deleted`) VALUES
-  ('file.upload.max_size', '10', '单文件大小上限(MB)', 'upload', NOW(), 0),
-  ('file.upload.chunk_size', '5', '分片大小(MB)', 'upload', NOW(), 0),
-  ('file.upload.whitelist', 'jpg,png,gif,pdf,doc,docx,xls,xlsx,ppt,pptx,txt,zip,mp4,mp3', '文件后缀白名单', 'upload', NOW(), 0),
-  ('file.storage.type', 'local', '存储方式(local/minio)', 'storage', NOW(), 0),
-  ('file.preview.kkfileview_url', 'http://127.0.0.1:8012', 'kkFileView服务地址', 'preview', NOW(), 0),
-  ('file.preview.onlyoffice_url', 'http://127.0.0.1:8080', 'OnlyOffice服务地址', 'preview', NOW(), 0),
-  ('file.watermark.enable', '0', '预览水印开关(0关1开)', 'preview', NOW(), 0),
-  ('file.expire.clean_days', '30', '过期附件清理周期(天)', 'storage', NOW(), 0);
+INSERT INTO `wf_file_config` (`id`, `config_key`, `config_value`, `config_name`, `config_type`, `create_time`, `is_deleted`) VALUES
+  (1, 'file.upload.max_size', '10', '单文件大小上限(MB)', 'upload', NOW(), 0),
+  (2, 'file.upload.chunk_size', '5', '分片大小(MB)', 'upload', NOW(), 0),
+  (3, 'file.upload.whitelist', 'jpg,png,gif,pdf,doc,docx,xls,xlsx,ppt,pptx,txt,zip,mp4,mp3', '文件后缀白名单', 'upload', NOW(), 0),
+  (4, 'file.storage.type', 'local', '存储方式(local/minio)', 'storage', NOW(), 0),
+  (5, 'file.preview.kkfileview_url', 'http://127.0.0.1:8012', 'kkFileView服务地址', 'preview', NOW(), 0),
+  (6, 'file.preview.onlyoffice_url', 'http://127.0.0.1:8080', 'OnlyOffice服务地址', 'preview', NOW(), 0),
+  (7, 'file.watermark.enable', '0', '预览水印开关(0关1开)', 'preview', NOW(), 0),
+  (8, 'file.expire.clean_days', '30', '过期附件清理周期(天)', 'storage', NOW(), 0);
 
 -- =====================================================================
 -- 完成。请按顺序执行。

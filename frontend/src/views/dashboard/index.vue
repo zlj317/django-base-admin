@@ -1,72 +1,205 @@
 <template>
-  <div class="app-container">
-    <!-- 欢迎横幅 -->
-    <div class="hero">
-      <div class="hero-bg"></div>
-      <div class="hero-content">
-        <el-avatar :size="54" :src="auth.user.avatar || undefined" class="hero-avatar">
+  <div class="app-container dashboard-wrap">
+    <!-- 1. 顶部渐变 Banner -->
+    <div class="hero-banner">
+      <div class="hero-decor hero-decor-1"></div>
+      <div class="hero-decor hero-decor-2"></div>
+      <div class="hero-decor hero-decor-3"></div>
+
+      <div class="hero-left">
+        <el-avatar :size="60" :src="auth.user.avatar || undefined" class="hero-avatar">
           {{ displayName.slice(0, 1).toUpperCase() }}
         </el-avatar>
         <div class="hero-text">
-          <div class="hello">{{ greeting }}，{{ displayName }}，欢迎回来！</div>
-          <div class="sub">今天也是充满效率的一天 ~</div>
+          <div class="hero-greeting">{{ greeting }}，{{ displayName }}！</div>
+          <div class="hero-sub">
+            今天是 {{ todayText }}，欢迎回到管理后台，祝您工作顺利 🚀
+          </div>
         </div>
       </div>
-      <div class="hero-badge">Django · Vue3 · MySQL</div>
+
+      <div class="hero-right">
+        <div class="quick-entry" v-for="entry in quickEntries" :key="entry.title" @click="go(entry.path)">
+          <div class="quick-icon" :style="{ background: entry.bg }">
+            <el-icon :size="20"><component :is="entry.icon" /></el-icon>
+          </div>
+          <div class="quick-label">{{ entry.title }}</div>
+        </div>
+      </div>
     </div>
 
-    <el-row :gutter="16" class="mt12">
-      <el-col :xs="24" :sm="12" :md="6" v-for="card in quickCards" :key="card.path" class="stat-col">
-        <div class="stat-card" @click="go(card.path)">
-          <div class="stat-icon" :style="{ background: card.bg }">
-            <el-icon :size="22"><component :is="card.icon" /></el-icon>
+    <!-- 2. 四列统计卡片 -->
+    <el-row :gutter="16" class="stat-row">
+      <el-col :xs="24" :sm="12" :md="6" v-for="(s, idx) in statCards" :key="idx">
+        <div class="stat-card" :class="'stat-' + s.color">
+          <div class="stat-icon-wrap" :style="{ background: s.bg }">
+            <el-icon :size="24"><component :is="s.icon" /></el-icon>
           </div>
-          <div class="stat-text">
-            <div class="stat-title">{{ card.title }}</div>
-            <div class="stat-desc">{{ card.desc }}</div>
+          <div class="stat-info">
+            <div class="stat-value">{{ getStatValue(s.key) }}</div>
+            <div class="stat-label">{{ s.label }}</div>
+            <div class="stat-trend">
+              <span class="trend-tip">{{ s.tip }}</span>
+            </div>
+          </div>
+          <div class="stat-spark">
+            <svg viewBox="0 0 80 36" class="sparkline">
+              <polyline :points="s.spark" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
           </div>
         </div>
       </el-col>
     </el-row>
 
-    <el-row :gutter="16" class="mt12">
-      <el-col :xs="24" :md="15">
+    <!-- 3. 下方两栏：左栏待办事项 + 右栏最新动态 -->
+    <el-row :gutter="16" class="content-row">
+      <el-col :xs="24" :md="14">
         <el-card shadow="never" class="panel">
           <template #header>
             <div class="panel-header">
-              <span class="panel-dot"></span>
-              <span>系统简介</span>
+              <div class="panel-title">
+                <span class="panel-dot dot-blue"></span>
+                <span>待办事项</span>
+                <el-tag effect="light" size="small" type="primary" class="panel-count">{{ todoItems.length }}</el-tag>
+              </div>
             </div>
           </template>
-          <p class="desc">
-            本系统是一套基于 <b>Django + Vue3 + MySQL</b> 的代码生成型后台管理系统，
-            内置用户管理、角色管理、菜单管理、部门管理、字典管理、参数配置、
-            操作日志与登录日志等系统模块，并提供强大的代码生成器：
-            选择数据库业务表并完成字段配置后，可一键生成后端 Django 代码与
-            前端 Vue 页面，快速交付常规增删改查业务模块。
-          </p>
-          <div class="tags">
-            <el-tag effect="light">Django</el-tag>
-            <el-tag type="success" effect="light">Vue 3</el-tag>
-            <el-tag type="warning" effect="light">Element Plus</el-tag>
-            <el-tag type="danger" effect="light">MySQL</el-tag>
-            <el-tag type="info" effect="light">Vite</el-tag>
+          <div v-loading="todoLoading" class="todo-list">
+            <div v-if="todoItems.length === 0" class="empty-hint">
+              <el-icon :size="32" color="#c0c4cc"><Tickets /></el-icon>
+              <div>暂无待办，真是清闲的一天~</div>
+            </div>
+            <div v-else v-for="(item, i) in todoItems" :key="i" class="todo-item" @click="handleTodoClick(item)">
+              <div class="todo-left">
+                <div class="todo-type" :class="'type-' + item.type">{{ item.typeLabel }}</div>
+                <div class="todo-title">{{ item.title }}</div>
+                <div class="todo-meta">
+                  <span v-if="item.creator">发起人：{{ item.creator }}</span>
+                  <span v-if="item.time" class="todo-time">⏰ {{ item.time }}</span>
+                </div>
+              </div>
+              <el-button link type="primary">处理 →</el-button>
+            </div>
           </div>
         </el-card>
       </el-col>
-      <el-col :xs="24" :md="9">
+
+      <el-col :xs="24" :md="10">
         <el-card shadow="never" class="panel">
           <template #header>
             <div class="panel-header">
-              <span class="panel-dot"></span>
-              <span>使用流程</span>
+              <div class="panel-title">
+                <span class="panel-dot dot-purple"></span>
+                <span>最新动态</span>
+              </div>
             </div>
           </template>
-          <ul class="steps">
-            <li><span class="step-no">1</span><span>在代码生成器中选择业务数据表并导入</span></li>
-            <li><span class="step-no">2</span><span>配置字段的查询、表单、字典与校验方式</span></li>
-            <li><span class="step-no">3</span><span>预览代码并下载 ZIP，自动注册业务菜单</span></li>
-          </ul>
+          <div class="activity-body" v-loading="activityLoading">
+            <el-timeline v-if="activities.length">
+              <el-timeline-item
+                v-for="(a, i) in activities"
+                :key="i"
+                :timestamp="a.time"
+                :type="a.color || 'primary'"
+                :hollow="false"
+              >
+                <div class="activity-item">
+                  <el-tag :type="a.tagType || 'info'" effect="light" size="small" class="activity-tag">{{ a.typeLabel }}</el-tag>
+                  <span class="activity-text">{{ a.text }}</span>
+                </div>
+              </el-timeline-item>
+            </el-timeline>
+            <div v-else class="empty-hint">
+              <el-icon :size="32" color="#c0c4cc"><Clock /></el-icon>
+              <div>暂无动态记录</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <!-- 4. 底部两小栏：系统监控 + 常用功能 -->
+    <el-row :gutter="16" class="bottom-row">
+      <el-col :xs="24" :md="10">
+        <el-card shadow="never" class="panel monitor-panel">
+          <template #header>
+            <div class="panel-header">
+              <div class="panel-title">
+                <span class="panel-dot dot-green"></span>
+                <span>系统监控</span>
+              </div>
+              <el-tag effect="light" size="small" type="success" class="status-tag">● 运行正常</el-tag>
+            </div>
+          </template>
+          <div v-loading="monitorLoading" class="monitor-body">
+            <div class="monitor-item">
+              <div class="monitor-row">
+                <div class="monitor-label">
+                  <el-icon :size="16"><Monitor /></el-icon>
+                  <span>数据库连接</span>
+                </div>
+                <div class="monitor-val">
+                  <el-tag :type="monitor.db_status === 'ok' ? 'success' : 'danger'" effect="light" size="small">
+                    {{ monitor.db_status === 'ok' ? '正常' : '异常' }}
+                  </el-tag>
+                </div>
+              </div>
+              <el-progress :percentage="100" :stroke-width="6" :show-text="false" :color="monitor.db_status === 'ok' ? '#22c55e' : '#ef4444'" />
+            </div>
+
+            <div class="monitor-item">
+              <div class="monitor-row">
+                <div class="monitor-label">
+                  <el-icon :size="16"><FolderOpened /></el-icon>
+                  <span>磁盘空间</span>
+                </div>
+                <div class="monitor-val">{{ monitor.disk_total ? `${monitor.disk_used} / ${monitor.disk_total} GB` : '--' }}</div>
+              </div>
+              <el-progress
+                :percentage="monitor.disk_percent || 0"
+                :stroke-width="6"
+                :color="diskColor"
+              />
+            </div>
+
+            <div class="monitor-item">
+              <div class="monitor-row">
+                <div class="monitor-label">
+                  <el-icon :size="16"><Cpu /></el-icon>
+                  <span>系统状态</span>
+                </div>
+                <div class="monitor-val">Uptime {{ monitor.uptime || '--' }}</div>
+              </div>
+              <div class="monitor-meta">
+                <span v-if="monitor.mem_percent !== null && monitor.mem_percent !== undefined">内存 {{ monitor.mem_percent }}%</span>
+                <span v-if="monitor.disk_free !== undefined">可用 {{ monitor.disk_free }} GB</span>
+              </div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+
+      <el-col :xs="24" :md="14">
+        <el-card shadow="never" class="panel">
+          <template #header>
+            <div class="panel-header">
+              <div class="panel-title">
+                <span class="panel-dot dot-orange"></span>
+                <span>常用功能</span>
+              </div>
+            </div>
+          </template>
+          <div class="common-grid">
+            <div class="common-item" v-for="item in commonEntries" :key="item.title" @click="go(item.path)">
+              <div class="ci-icon" :style="{ background: item.bg }">
+                <el-icon :size="22"><component :is="item.icon" /></el-icon>
+              </div>
+              <div class="ci-text">
+                <div class="ci-title">{{ item.title }}</div>
+                <div class="ci-desc">{{ item.desc }}</div>
+              </div>
+            </div>
+          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -74,16 +207,14 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth } from '@/store/auth'
+import request from '@/utils/request'
 import {
-  UserFilled,
-  Setting,
-  MagicStick,
-  Menu as MenuIcon,
-  OfficeBuilding,
-  Collection
+  UserFilled, Document, TrendCharts, Calendar, Bell, Files, Tickets,
+  Monitor, FolderOpened, MagicStick, DataAnalysis, Setting, Clock,
+  Cpu
 } from '@element-plus/icons-vue'
 
 const router = useRouter()
@@ -100,233 +231,372 @@ const greeting = computed(() => {
   return '晚上好'
 })
 
-const quickCards = [
-  {
-    title: '用户管理',
-    desc: '账号与角色分配',
-    path: '/system/user',
-    icon: UserFilled,
-    bg: 'linear-gradient(135deg, #4a6cf7, #7a92f9)'
-  },
-  {
-    title: '菜单管理',
-    desc: '目录与按钮权限',
-    path: '/system/menu',
-    icon: MenuIcon,
-    bg: 'linear-gradient(135deg, #12b76a, #4ad991)'
-  },
-  {
-    title: '部门管理',
-    desc: '组织架构维护',
-    path: '/system/dept',
-    icon: OfficeBuilding,
-    bg: 'linear-gradient(135deg, #f79009, #fdb022)'
-  },
-  {
-    title: '代码生成',
-    desc: '一键生成前后端',
-    path: '/gen/table',
-    icon: MagicStick,
-    bg: 'linear-gradient(135deg, #8b5cf6, #b08bfa)'
-  }
+const todayText = computed(() => {
+  const d = new Date()
+  const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
+  const pad = n => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${weekdays[d.getDay()]}`
+})
+
+// 快捷入口
+const quickEntries = [
+  { title: '新建用户', icon: UserFilled, path: '/system/user', bg: 'linear-gradient(135deg, #4a6cf7, #7a92f9)' },
+  { title: '新建菜单', icon: Setting, path: '/system/menu', bg: 'linear-gradient(135deg, #12b76a, #4ad991)' },
+  { title: '任务调度', icon: Calendar, path: '/task', bg: 'linear-gradient(135deg, #f59e0b, #fbbf24)' },
+  { title: '数据备份', icon: Files, path: '/system/record', bg: 'linear-gradient(135deg, #8b5cf6, #b08bfa)' }
 ]
+
+// 常用功能九宫格
+const commonEntries = [
+  { title: '文件上传', desc: '文件管理', icon: FolderOpened, path: '/file', bg: 'linear-gradient(135deg, #6366f1, #818cf8)' },
+  { title: '报表生成', desc: '数据报表', icon: DataAnalysis, path: '/rp/template', bg: 'linear-gradient(135deg, #06b6d4, #22d3ee)' },
+  { title: '大屏预览', desc: 'BI可视化', icon: Monitor, path: '/bi', bg: 'linear-gradient(135deg, #14b8a6, #2dd4bf)' },
+  { title: '工单处理', desc: '工单系统', icon: Tickets, path: '/wo/order', bg: 'linear-gradient(135deg, #f59e0b, #fbbf24)' },
+  { title: '知识库', desc: '文档管理', icon: Document, path: '/kb/document', bg: 'linear-gradient(135deg, #ec4899, #f472b6)' },
+  { title: '定时任务', desc: '任务调度', icon: Calendar, path: '/task', bg: 'linear-gradient(135deg, #8b5cf6, #a78bfa)' },
+  { title: '字典管理', desc: '字典维护', icon: MagicStick, path: '/system/dict', bg: 'linear-gradient(135deg, #4a6cf7, #6366f1)' },
+  { title: '角色权限', desc: 'RBAC', icon: Bell, path: '/system/role', bg: 'linear-gradient(135deg, #ef4444, #f87171)' },
+  { title: '日志审计', desc: '操作日志', icon: Clock, path: '/system/operlog', bg: 'linear-gradient(135deg, #64748b, #94a3b8)' }
+]
+
+// 统计卡片配置
+const statCards = [
+  { key: 'todos', label: '今日待办', icon: Tickets, color: 'blue', bg: 'linear-gradient(135deg, #4a6cf7, #6366f1)', tip: '待办审批与工单', spark: '0,24 14,16 28,20 42,10 56,14 70,6 80,12' },
+  { key: 'messages', label: '未读消息', icon: Bell, color: 'purple', bg: 'linear-gradient(135deg, #8b5cf6, #a78bfa)', tip: '站内消息未读', spark: '0,18 14,22 28,14 42,18 56,10 70,14 80,8' },
+  { key: 'workflows', label: '运行中工作流', icon: TrendCharts, color: 'green', bg: 'linear-gradient(135deg, #22c55e, #4ade80)', tip: '流程实例总数', spark: '0,14 14,10 28,18 42,12 56,16 70,14 80,20' },
+  { key: 'new_users', label: '今日新增用户', icon: UserFilled, color: 'orange', bg: 'linear-gradient(135deg, #f59e0b, #fbbf24)', tip: '今日注册用户', spark: '0,22 14,18 28,20 42,14 56,18 70,8 80,10' }
+]
+
+// 概览数据
+const overview = reactive({ stats: {}, greeting: '', now: '' })
+const monitor = reactive({ db_status: 'ok', disk_used: 0, disk_total: 0, disk_percent: 0, disk_free: 0, mem_percent: null, uptime: '' })
+
+const todoLoading = ref(false)
+const activityLoading = ref(false)
+const monitorLoading = ref(false)
+
+const todoItems = ref([])
+const activities = ref([])
+
+const diskColor = computed(() => {
+  const p = monitor.disk_percent || 0
+  if (p > 80) return '#ef4444'
+  if (p > 60) return '#f59e0b'
+  return '#22c55e'
+})
+
+function getStatValue(key) {
+  return overview.stats[key] ?? 0
+}
 
 function go(path) {
   router.push(path).catch(() => {})
 }
+
+function handleTodoClick(item) {
+  if (item.path) go(item.path)
+}
+
+// 拉取概览数据（统计 + 待办 + 动态一次请求完成）
+async function loadOverview() {
+  todoLoading.value = true
+  activityLoading.value = true
+  try {
+    const res = await request.get('/home/overview/')
+    const data = res.data || {}
+    Object.assign(overview, data)
+    overview.stats = data.stats || {}
+    todoItems.value = data.todos || []
+    activities.value = data.activities || []
+  } catch (e) {
+    todoItems.value = []
+    activities.value = []
+  } finally {
+    todoLoading.value = false
+    activityLoading.value = false
+  }
+}
+
+// 拉取监控数据
+async function loadMonitor() {
+  monitorLoading.value = true
+  try {
+    const res = await request.get('/home/monitor/')
+    if (res.data) Object.assign(monitor, res.data)
+  } catch (e) { /* ignore */ }
+  monitorLoading.value = false
+}
+
+onMounted(() => {
+  loadOverview()
+  loadMonitor()
+})
 </script>
 
 <style scoped>
-/* 欢迎横幅 */
-.hero {
+.dashboard-wrap {
+  padding-bottom: 20px;
+}
+
+/* ============ Hero Banner ============ */
+.hero-banner {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 26px 30px;
+  gap: 20px;
+  padding: 28px 32px;
+  margin-bottom: 18px;
+  background: linear-gradient(120deg, #4a6cf7 0%, #6a83f9 40%, #8b5cf6 75%, #a78bfa 100%);
+  border-radius: 16px;
+  box-shadow: 0 10px 36px rgba(74, 108, 247, 0.28);
   overflow: hidden;
   color: #fff;
-  background: linear-gradient(120deg, #4a6cf7 0%, #6a83f9 45%, #8b5cf6 100%);
-  border-radius: 14px;
-  box-shadow: 0 12px 30px rgba(74, 108, 247, 0.3);
 }
 
-.hero-bg {
+.hero-decor {
   position: absolute;
-  top: -80px;
-  right: 60px;
-  width: 240px;
-  height: 240px;
-  background: rgba(255, 255, 255, 0.14);
   border-radius: 50%;
-}
-
-.hero-bg::after {
-  content: '';
-  position: absolute;
-  right: -140px;
-  bottom: -150px;
-  width: 180px;
-  height: 180px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
 }
+.hero-decor-1 { top: -60px; right: 10%; width: 200px; height: 200px; }
+.hero-decor-2 { bottom: -90px; right: 28%; width: 180px; height: 180px; background: rgba(255, 255, 255, 0.07); }
+.hero-decor-3 { top: 30px; right: -30px; width: 120px; height: 120px; background: rgba(255, 255, 255, 0.12); }
 
-.hero-content {
+.hero-left {
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
 
 .hero-avatar {
   color: #4a6cf7;
-  font-size: 20px;
-  font-weight: 700;
   background: #fff;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.18);
+  font-size: 22px;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  border: 3px solid rgba(255, 255, 255, 0.6);
 }
 
-.hello {
-  font-size: 19px;
+.hero-greeting {
+  font-size: 22px;
   font-weight: 600;
   letter-spacing: 0.5px;
 }
-
-.sub {
-  margin-top: 7px;
+.hero-sub {
+  margin-top: 8px;
   font-size: 13px;
   color: rgba(255, 255, 255, 0.85);
 }
 
-.hero-badge {
+.hero-right {
   position: relative;
   z-index: 1;
-  padding: 7px 14px;
-  font-size: 12px;
-  letter-spacing: 1px;
-  color: rgba(255, 255, 255, 0.92);
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.26);
-  border-radius: 20px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-/* 快捷卡片 */
-.stat-col {
-  margin-bottom: 16px;
+.quick-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 18px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  min-width: 88px;
 }
+.quick-entry:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-2px);
+}
+.quick-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  color: #fff;
+}
+.quick-label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ============ 统计卡片 ============ */
+.stat-row { margin-bottom: 18px; }
+.stat-col { margin-bottom: 16px; }
 
 .stat-card {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 18px 20px;
-  cursor: pointer;
+  padding: 20px 22px;
   background: #fff;
-  border: 1px solid #eef1f6;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(30, 41, 59, 0.05);
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(30, 41, 59, 0.06);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-
 .stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 26px rgba(30, 41, 59, 0.11);
+  box-shadow: 0 10px 24px rgba(30, 41, 59, 0.1);
 }
-
-.stat-icon {
+.stat-icon-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
+  width: 52px;
+  height: 52px;
   color: #fff;
-  border-radius: 12px;
+  border-radius: 14px;
   flex-shrink: 0;
-  box-shadow: 0 6px 14px rgba(30, 41, 59, 0.16);
+  box-shadow: 0 6px 16px rgba(30, 41, 59, 0.14);
 }
-
-.stat-title {
-  font-size: 15px;
-  font-weight: 600;
+.stat-info { flex: 1; min-width: 0; }
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
   color: #1f2937;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
 }
-
-.stat-desc {
-  margin-top: 5px;
-  font-size: 12px;
-  color: #8a94a6;
-}
-
-/* 内容面板 */
-.panel {
-  height: 100%;
-}
-
-.panel-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.panel-dot {
-  width: 4px;
-  height: 15px;
-  background: linear-gradient(180deg, #4a6cf7, #8b5cf6);
-  border-radius: 3px;
-}
-
-.desc {
-  margin: 0 0 18px;
-  font-size: 13.5px;
-  line-height: 2;
-  color: #4b5563;
-}
-
-.desc b {
-  color: #4a6cf7;
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-/* 流程 */
-.steps {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.steps li {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 14px;
+.stat-label {
+  margin-top: 4px;
   font-size: 13px;
-  line-height: 1.6;
-  color: #4b5563;
+  color: #6b7280;
 }
-
-.steps li:last-child {
-  margin-bottom: 0;
-}
-
-.step-no {
+.stat-trend {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
+  gap: 4px;
+  margin-top: 6px;
   font-size: 12px;
-  font-weight: 600;
-  color: #4a6cf7;
-  background: #eef1ff;
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-top: 1px;
+}
+.trend-up { color: #22c55e; font-weight: 600; }
+.trend-down { color: #ef4444; font-weight: 600; }
+.trend-tip { color: #9ca3af; margin-left: 2px; }
+
+.stat-spark {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  opacity: 0.5;
+  width: 80px;
+  height: 36px;
+}
+.stat-blue .stat-spark { color: #4a6cf7; }
+.stat-purple .stat-spark { color: #8b5cf6; }
+.stat-green .stat-spark { color: #22c55e; }
+.stat-orange .stat-spark { color: #f59e0b; }
+
+/* ============ 面板通用 ============ */
+.content-row, .bottom-row { margin-bottom: 18px; }
+.bottom-row { margin-bottom: 0; }
+
+/* 同一行卡片等高，消除短内容下方的空白 */
+.content-row > .el-col,
+.bottom-row > .el-col,
+.stat-row > .el-col { display: flex; }
+
+.panel { border-radius: 14px; border: 1px solid #f1f5f9; display: flex; flex-direction: column; height: 100%; }
+.panel :deep(.el-card__header) { padding: 14px 20px; border-bottom: 1px solid #f1f5f9; }
+.panel :deep(.el-card__body) { padding: 16px 20px; flex: 1; display: flex; flex-direction: column; }
+.stat-card { width: 100%; }
+
+.panel-header { display: flex; align-items: center; justify-content: space-between; }
+.panel-title {
+  display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: #1f2937;
+}
+.panel-dot { width: 4px; height: 16px; border-radius: 3px; }
+.dot-blue { background: linear-gradient(180deg, #4a6cf7, #6366f1); }
+.dot-purple { background: linear-gradient(180deg, #8b5cf6, #a78bfa); }
+.dot-green { background: linear-gradient(180deg, #22c55e, #4ade80); }
+.dot-orange { background: linear-gradient(180deg, #f59e0b, #fbbf24); }
+.panel-count { margin-left: 4px; }
+.status-tag { font-weight: 500; }
+
+/* ============ 待办事项 ============ */
+.todo-list { min-height: 120px; flex: 1; display: flex; flex-direction: column; }
+.todo-item { flex: 1; }
+.empty-hint {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; padding: 30px 0; color: #9ca3af; font-size: 13px;
+}
+.todo-item {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 12px 14px; margin-bottom: 10px;
+  background: #f8fafc; border-radius: 10px; cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+.todo-item:hover { background: #eef1ff; transform: translateX(2px); }
+.todo-left { flex: 1; min-width: 0; }
+.todo-type {
+  display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;
+  margin-bottom: 6px;
+}
+.type-workflow { background: #eef1ff; color: #4a6cf7; }
+.type-wo { background: #fef3c7; color: #d97706; }
+.type-cal { background: #dcfce7; color: #16a34a; }
+.todo-title { font-size: 14px; color: #1f2937; font-weight: 500; margin-bottom: 4px; }
+.todo-meta { font-size: 12px; color: #9ca3af; display: flex; gap: 14px; }
+
+/* ============ 最新动态 ============ */
+.activity-body { flex: 1; }
+.activity-item { display: flex; align-items: center; gap: 8px; }
+.activity-tag { flex-shrink: 0; }
+.activity-text { font-size: 13px; color: #374151; }
+
+/* ============ 系统监控 ============ */
+.monitor-body { padding: 4px 0; flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; }
+.monitor-item { margin-bottom: 18px; }
+.monitor-item:last-child { margin-bottom: 0; }
+.monitor-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px; font-size: 13px;
+}
+.monitor-label { display: flex; align-items: center; gap: 6px; color: #4b5563; }
+.monitor-val { color: #6b7280; font-variant-numeric: tabular-nums; }
+.monitor-meta {
+  display: flex; gap: 16px; margin-top: 8px; font-size: 12px; color: #9ca3af;
+}
+
+/* ============ 常用功能 ============ */
+.common-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; flex: 1;
+}
+.common-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 12px; background: #f8fafc; border-radius: 10px;
+  cursor: pointer; transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+.common-item:hover {
+  background: #fff; transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(30, 41, 59, 0.08);
+}
+.ci-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px; border-radius: 10px; color: #fff; flex-shrink: 0;
+}
+.ci-text { flex: 1; min-width: 0; }
+.ci-title { font-size: 13px; font-weight: 600; color: #1f2937; }
+.ci-desc { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+
+/* 小屏适配 */
+@media (max-width: 768px) {
+  .hero-banner {
+    flex-direction: column; align-items: flex-start; padding: 22px;
+  }
+  .hero-right { margin-top: 14px; width: 100%; justify-content: flex-start; }
+  .common-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>

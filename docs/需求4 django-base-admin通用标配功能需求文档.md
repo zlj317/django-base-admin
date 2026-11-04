@@ -572,3 +572,26 @@
 ## 附录：标配功能建表 SQL
 
 > 对应的全部建表 SQL 语句请见独立文件 `common_features_init.sql`，包含本清单全部 11 个功能模块的数据表（sys_no_rule、sys_no_log、imp_template、imp_template_column、backup_record、backup_strategy、sys_data_permission、sys_role_data_permission、desensitize_rule、desensitize_field、desensitize_role、print_template、biz_version、sign_stamp、sign_record、api_debug_log、monitor_alarm_rule、monitor_alarm_record、sys_ip_control、sys_login_attempt、sys_rate_limit）。
+
+---
+
+## 实现状态
+
+**已全部实现 ✅**（2026-11-04 完成）
+
+| 模块 | Django App | 前端目录 | 数据表 | 演示数据 |
+|------|-----------|---------|--------|---------|
+| 编码规则 | apps/sys_no | views/sys_no/rule/ | sys_no_rule (5) | ✅ 5 条规则 |
+| 导入模板 | apps/imprint | views/imprint/template/, views/imprint/column/ | imp_template (3), imp_template_column (6) | ✅ |
+| 打印模板 | apps/imprint | views/imprint/print/ | print_template (3) | ✅ |
+| 数据备份 | apps/backup | views/backup/record/, views/backup/strategy/ | backup_record (3), backup_strategy (3) | ✅ |
+| 数据权限 | apps/dp | views/dp/permission/, views/dp/role_perm/ | sys_data_permission (4), sys_role_data_permission (4) | ✅ |
+| 脱敏配置 | apps/dsm | views/dsm/rule/ | desensitize_rule (5) | ✅ |
+| 监控告警 | apps/mon | views/mon/rule/, views/mon/record/ | monitor_alarm_rule (5), monitor_alarm_record (4) | ✅ |
+| 安全策略 | apps/sec | views/sec/ip/, views/sec/login_attempt/, views/sec/rate_limit/ | sys_ip_control (4), sys_login_attempt (4), sys_rate_limit (3) | ✅ |
+
+- 所有后端 ViewSet 继承 common/views.py 的 CrudViewSet 基类
+- 所有前端列表页复用统一骨架（.app-container + .search-card + .table-card + .pagination-wrap）
+- 建表 SQL：docs/new_features_init.sql
+- 演示数据填充命令：`python manage.py seed_new_modules`
+- 菜单注册：各 app 的 seed.py + core/management/commands/init_db.py

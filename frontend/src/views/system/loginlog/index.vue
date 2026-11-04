@@ -32,8 +32,8 @@
       </div>
 
       <el-table stripe empty-text="暂无数据" v-loading="loading" :data="list" @selection-change="onSelectionChange">
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column type="selection" width="50" />
-        <el-table-column label="编号" prop="id" width="70" />
         <el-table-column label="用户名" prop="username" min-width="110" show-overflow-tooltip />
         <el-table-column label="登录IP" prop="ip" min-width="130" show-overflow-tooltip>
           <template #default="{ row }">{{ row.ip || '-' }}</template>

@@ -32,8 +32,8 @@
         </div>
       </template>
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据" @selection-change="onSelectionChange">
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column type="selection" width="50" align="center" />
-        <el-table-column label="编号" prop="id" width="70" align="center" />
         <el-table-column label="表单名称" prop="form_name" min-width="160" show-overflow-tooltip />
         <el-table-column label="表单标识" prop="form_key" min-width="150" show-overflow-tooltip />
         <el-table-column label="字段数" width="90" align="center">

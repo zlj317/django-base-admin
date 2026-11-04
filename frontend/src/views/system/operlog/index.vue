@@ -32,8 +32,8 @@
       </div>
 
       <el-table stripe empty-text="暂无数据" v-loading="loading" :data="list" @selection-change="onSelectionChange">
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column type="selection" width="50" />
-        <el-table-column label="编号" prop="id" width="70" />
         <el-table-column label="操作人员" prop="oper_user" min-width="110" show-overflow-tooltip />
         <el-table-column label="模块名称" prop="module_name" min-width="120" show-overflow-tooltip />
         <el-table-column label="操作类型" prop="oper_type" min-width="100">

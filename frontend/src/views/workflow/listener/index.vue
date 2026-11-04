@@ -36,8 +36,8 @@
         </div>
       </template>
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据" @selection-change="onSelectionChange">
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column type="selection" width="50" align="center" />
-        <el-table-column label="编号" prop="id" width="70" align="center" />
         <el-table-column label="流程模型" prop="model_name" min-width="140" show-overflow-tooltip />
         <el-table-column label="事件类型" width="110" align="center">
           <template #default="scope">{{ typeName(eventTypes, scope.row.event_type) }}</template>

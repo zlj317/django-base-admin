@@ -40,8 +40,8 @@
         </div>
       </template>
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据" @selection-change="onSelectionChange">
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column type="selection" width="50" />
-        <el-table-column label="编号" prop="id" width="70" />
         <el-table-column label="同步名称" prop="sync_name" min-width="170" show-overflow-tooltip />
         <el-table-column label="目标接口" min-width="150">
           <template #default="{ row }">{{ row.api_name || row.api_id || '-' }}</template>

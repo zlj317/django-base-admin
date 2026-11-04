@@ -29,7 +29,7 @@
 
     <el-card shadow="never" class="table-card">
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无请假流程数据">
-        <el-table-column label="编号" prop="id" width="70" align="center" />
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column label="业务单据号" prop="biz_key" min-width="160" show-overflow-tooltip />
         <el-table-column label="请假类型" min-width="100" align="center">
           <template #default="scope">{{ scope.row.form_data_obj?.leaveType || '-' }}</template>

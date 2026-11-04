@@ -34,6 +34,7 @@
 
     <el-card shadow="never" class="table-card">
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据">
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column label="记录ID" prop="record_id" min-width="160" show-overflow-tooltip />
         <el-table-column label="接收人ID" prop="receiver_id" width="110" />
         <el-table-column label="渠道" prop="channel" width="100" />

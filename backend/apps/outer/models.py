@@ -1,5 +1,6 @@
 """外部接口模块模型（表结构由 docs 建表 SQL 手工创建，managed=False）。"""
 from django.db import models  # Django ORM 字段与模型基类
+from common.fields import SnowflakeIDField  # 雪花算法主键字段
 
 from common.utils import BaseModel  # 公共字段基类：创建/更新人、逻辑删除
 
@@ -9,7 +10,7 @@ class OuterApiConfig(BaseModel):
     METHOD_CHOICES = (('GET', 'GET'), ('POST', 'POST'), ('PUT', 'PUT'), ('DELETE', 'DELETE'))  # HTTP 方法可选值
     AUTH_TYPE_CHOICES = (('none', '无鉴权'), ('token', 'Token'), ('basic', 'Basic Auth'))  # 鉴权方式可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     api_name = models.CharField('接口名称', max_length=200)  # 显示名称
     api_url = models.CharField('接口URL', max_length=500)  # 完整 URL 或模板
     method = models.CharField('请求方法', max_length=10, choices=METHOD_CHOICES, default='GET')  # HTTP 方法
@@ -29,7 +30,7 @@ class OuterApiConfig(BaseModel):
 
 class OuterApiRequestLog(models.Model):
     """外部API调用日志表（不继承 BaseModel）：记录每次外部接口调用详情。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     api_id = models.BigIntegerField('API配置ID')  # 关联 outer_api_config 主键
     api_name = models.CharField('接口名称', max_length=200, blank=True, null=True)  # 接口名称快照
     request_url = models.CharField('请求URL', max_length=500, blank=True, null=True)  # 实际请求 URL
@@ -52,7 +53,7 @@ class OuterSyncTask(BaseModel):
     """外部数据同步任务表：定时从外部接口拉取数据写入目标表。"""
     SYNC_TYPE_CHOICES = (('manual', '手动触发'), ('schedule', '定时任务'))  # 同步方式可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     sync_name = models.CharField('同步任务名称', max_length=200)  # 显示名称
     api_id = models.BigIntegerField('接口配置ID')  # 关联 outer_api_config 主键
     target_table = models.CharField('目标表名', max_length=100)  # 同步写入的数据表名

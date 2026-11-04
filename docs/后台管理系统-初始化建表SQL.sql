@@ -20,7 +20,7 @@ USE `gen_admin`;
 -- =====================================================================
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user` (
-  `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `username`    VARCHAR(50)  NOT NULL COMMENT '用户名（登录账号）',
   `password`    VARCHAR(100) NOT NULL COMMENT '密码（bcrypt加密）',
   `nickname`    VARCHAR(50)  DEFAULT NULL COMMENT '昵称',
@@ -44,7 +44,7 @@ CREATE TABLE `sys_user` (
 -- =====================================================================
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role` (
-  `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `role_name`   VARCHAR(50) NOT NULL COMMENT '角色名称',
   `role_key`    VARCHAR(50) NOT NULL COMMENT '角色编码（唯一）',
   `role_sort`   INT         DEFAULT 0 COMMENT '角色排序',
@@ -73,7 +73,7 @@ CREATE TABLE `sys_user_role` (
 -- =====================================================================
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu` (
-  `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `parent_id`   BIGINT      NOT NULL DEFAULT 0 COMMENT '父级菜单ID（0为顶级）',
   `menu_name`   VARCHAR(50) NOT NULL COMMENT '菜单名称',
   `path`        VARCHAR(200) DEFAULT NULL COMMENT '路由地址',
@@ -106,7 +106,7 @@ CREATE TABLE `sys_role_menu` (
 -- =====================================================================
 DROP TABLE IF EXISTS `sys_dept`;
 CREATE TABLE `sys_dept` (
-  `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `parent_id`   BIGINT      NOT NULL DEFAULT 0 COMMENT '父部门ID（0为顶级）',
   `dept_name`   VARCHAR(50) NOT NULL COMMENT '部门名称',
   `order_num`   INT         DEFAULT 0 COMMENT '排序',
@@ -127,7 +127,7 @@ CREATE TABLE `sys_dept` (
 -- =====================================================================
 DROP TABLE IF EXISTS `sys_dict_type`;
 CREATE TABLE `sys_dict_type` (
-  `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `dict_name`   VARCHAR(100) NOT NULL COMMENT '字典名称',
   `dict_type`   VARCHAR(100) NOT NULL COMMENT '字典类型编码（唯一）',
   `status`      TINYINT(1)   NOT NULL DEFAULT 0 COMMENT '状态：0启用 1停用',
@@ -146,7 +146,7 @@ CREATE TABLE `sys_dict_type` (
 -- =====================================================================
 DROP TABLE IF EXISTS `sys_dict_data`;
 CREATE TABLE `sys_dict_data` (
-  `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`            BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `dict_type_id`  BIGINT NOT NULL COMMENT '所属字典类型ID',
   `dict_label`    VARCHAR(100) NOT NULL COMMENT '字典标签（展示文本）',
   `dict_value`    VARCHAR(100) NOT NULL COMMENT '字典键值',
@@ -167,7 +167,7 @@ CREATE TABLE `sys_dict_data` (
 -- =====================================================================
 DROP TABLE IF EXISTS `sys_oper_log`;
 CREATE TABLE `sys_oper_log` (
-  `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`            BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `oper_user`     VARCHAR(64)  DEFAULT NULL COMMENT '操作人账号',
   `module_name`   VARCHAR(50)  DEFAULT NULL COMMENT '操作模块',
   `oper_type`     VARCHAR(20)  DEFAULT NULL COMMENT '操作类型：新增/编辑/删除/导出/导入',
@@ -187,7 +187,7 @@ CREATE TABLE `sys_oper_log` (
 -- =====================================================================
 DROP TABLE IF EXISTS `sys_login_log`;
 CREATE TABLE `sys_login_log` (
-  `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`           BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `username`     VARCHAR(50)  DEFAULT NULL COMMENT '登录账号',
   `ip`           VARCHAR(50)  DEFAULT NULL COMMENT '登录IP',
   `login_time`   DATETIME     DEFAULT NULL COMMENT '登录时间',
@@ -205,7 +205,7 @@ CREATE TABLE `sys_login_log` (
 -- =====================================================================
 DROP TABLE IF EXISTS `sys_config`;
 CREATE TABLE `sys_config` (
-  `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`           BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `config_key`   VARCHAR(100) NOT NULL COMMENT '配置键（唯一）',
   `config_value` VARCHAR(500) DEFAULT NULL COMMENT '配置值',
   `config_name`  VARCHAR(100) DEFAULT NULL COMMENT '配置名称',
@@ -224,7 +224,7 @@ CREATE TABLE `sys_config` (
 -- =====================================================================
 DROP TABLE IF EXISTS `sys_gen_table`;
 CREATE TABLE `sys_gen_table` (
-  `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`              BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `table_name`      VARCHAR(100) NOT NULL COMMENT '数据库表名',
   `table_comment`   VARCHAR(200) DEFAULT NULL COMMENT '表注释',
   `class_name`      VARCHAR(100) DEFAULT NULL COMMENT '生成的实体类名（Django model名）',
@@ -250,7 +250,7 @@ CREATE TABLE `sys_gen_table` (
 -- =====================================================================
 DROP TABLE IF EXISTS `sys_gen_table_column`;
 CREATE TABLE `sys_gen_table_column` (
-  `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`            BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `gen_table_id`  BIGINT      NOT NULL COMMENT '关联生成任务ID（sys_gen_table.id）',
   `column_name`   VARCHAR(100) NOT NULL COMMENT '数据库字段名',
   `column_comment` VARCHAR(200) DEFAULT NULL COMMENT '字段注释',
@@ -277,19 +277,19 @@ CREATE TABLE `sys_gen_table_column` (
 -- =====================================================================
 -- 12. 初始化基础数据（可选，管理员账号 admin / 123456，密码占位，请按需调整）
 -- =====================================================================
-INSERT INTO `sys_user` (`username`, `password`, `nickname`, `status`, `create_time`, `is_deleted`)
-VALUES ('admin', 'admin_placeholder_use_bcrypt', '系统管理员', 0, NOW(), 0);
+INSERT INTO `sys_user` (`id`, `username`, `password`, `nickname`, `status`, `create_time`, `is_deleted`)
+VALUES (1, 'admin', 'admin_placeholder_use_bcrypt', '系统管理员', 0, NOW(), 0);
 
-INSERT INTO `sys_role` (`role_name`, `role_key`, `role_sort`, `status`, `create_time`, `is_deleted`)
-VALUES ('超级管理员', 'admin', 1, 0, NOW(), 0);
+INSERT INTO `sys_role` (`id`, `role_name`, `role_key`, `role_sort`, `status`, `create_time`, `is_deleted`)
+VALUES (1, '超级管理员', 'admin', 1, 0, NOW(), 0);
 
 INSERT INTO `sys_user_role` (`user_id`, `role_id`) VALUES (1, 1);
 
-INSERT INTO `sys_config` (`config_key`, `config_value`, `config_name`, `create_time`, `is_deleted`)
+INSERT INTO `sys_config` (`id`, `config_key`, `config_value`, `config_name`, `create_time`, `is_deleted`)
 VALUES
-  ('sys.upload.max_size', '10', '上传文件大小上限(MB)', NOW(), 0),
-  ('sys.export.max_rows', '50000', '导出最大行数', NOW(), 0),
-  ('sys.page.default_size', '10', '默认分页条数', NOW(), 0);
+  (1, 'sys.upload.max_size', '10', '上传文件大小上限(MB)', NOW(), 0),
+  (2, 'sys.export.max_rows', '50000', '导出最大行数', NOW(), 0),
+  (3, 'sys.page.default_size', '10', '默认分页条数', NOW(), 0);
 
 -- =====================================================================
 -- 完成。请按顺序执行，并在 Django 中配置对应连接信息。

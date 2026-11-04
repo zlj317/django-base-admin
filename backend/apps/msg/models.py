@@ -1,5 +1,6 @@
 """消息模块模型（表结构由 docs 建表 SQL 手工创建，managed=False）。"""
 from django.db import models  # Django ORM 字段与模型基类
+from common.fields import SnowflakeIDField  # 雪花算法主键字段
 
 from common.utils import BaseModel  # 公共字段基类：创建/更新人、逻辑删除
 
@@ -8,7 +9,7 @@ class MsgTemplate(BaseModel):
     """消息模板表：以 template_code 唯一标识一种消息模板。"""
     MSG_TYPE_CHOICES = (('notice', '通知'), ('alert', '告警'), ('todo', '待办'))  # 消息类型可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     template_code = models.CharField('模板编码', max_length=100, unique=True)  # 唯一编码，程序引用用
     template_name = models.CharField('模板名称', max_length=200)  # 显示名称
     msg_type = models.CharField('消息类型', max_length=16, choices=MSG_TYPE_CHOICES, default='notice')  # 类型
@@ -28,7 +29,7 @@ class MsgRecord(BaseModel):
     """消息记录表：记录每条发送给用户的消息。"""
     MSG_TYPE_CHOICES = (('notice', '通知'), ('alert', '告警'), ('todo', '待办'))  # 消息类型可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     msg_type = models.CharField('消息类型', max_length=16, choices=MSG_TYPE_CHOICES, default='notice')  # 类型
     title = models.CharField('消息标题', max_length=200, blank=True, null=True)  # 标题行
     content = models.TextField('消息内容', blank=True, null=True)  # 消息正文
@@ -50,7 +51,7 @@ class MsgPushLog(models.Model):
     """消息推送日志表（不继承 BaseModel）：记录各渠道推送结果。"""
     PUSH_STATUS_CHOICES = ((0, '待推送'), (1, '成功'), (2, '失败'))  # 推送状态可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     record_id = models.BigIntegerField('消息记录ID')  # 关联 msg_record 主键
     receiver_id = models.BigIntegerField('接收人ID', blank=True, null=True)  # 接收人用户 ID
     channel = models.CharField('推送渠道', max_length=32, blank=True, null=True)  # sms/email/wechat 等
@@ -69,7 +70,7 @@ class MsgPushLog(models.Model):
 
 class MsgPushConfig(BaseModel):
     """消息推送配置表：以 channel 唯一标识一个渠道的推送参数。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     channel = models.CharField('推送渠道', max_length=32, unique=True)  # sms/email/wechat/dingtalk 等
     channel_name = models.CharField('渠道名称', max_length=100)  # 显示名称
     enabled = models.SmallIntegerField('是否启用', default=0)  # 0 否 / 1 是

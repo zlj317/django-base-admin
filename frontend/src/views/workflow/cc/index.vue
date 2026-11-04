@@ -16,7 +16,7 @@
         </div>
       </template>
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无抄送记录">
-        <el-table-column label="编号" prop="id" width="70" align="center" />
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column label="流程名称" prop="model_name" min-width="140" show-overflow-tooltip />
         <el-table-column label="发起人" prop="start_user_name" width="110" align="center" />
         <el-table-column label="抄送节点" prop="node_id" min-width="140" show-overflow-tooltip>

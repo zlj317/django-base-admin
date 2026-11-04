@@ -26,6 +26,19 @@ INSTALLED_APPS = [  # 已启用应用：contrib 基础能力 + DRF + 跨域 + �
     'apps.report',  # 报表模块
     'apps.bi',  # 大屏BI模块
     'apps.outer',  # 外部接口模块
+    # ↓↓↓ 需求4：通用标配功能 ↓↓↓
+    'apps.sys_no',  # 编码规则
+    'apps.imprint',  # 导入模板 + 打印模板
+    'apps.backup',  # 数据备份
+    'apps.dp',  # 数据权限
+    'apps.dsm',  # 脱敏配置
+    'apps.mon',  # 监控告警
+    'apps.sec',  # 安全策略
+    # ↓↓↓ 需求5：高级可选功能 ↓↓↓
+    'apps.tenant',  # 多租户
+    'apps.wo',  # 工单
+    'apps.cal',  # 日历日程
+    'apps.kb',  # 知识库
 ]
 
 MIDDLEWARE = [  # 中间件按顺序包装请求/响应，越靠前越外层
@@ -80,6 +93,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny'],  # 默认放行，由视图按需叠加权限
     'EXCEPTION_HANDLER': 'common.exception.exception_handler',  # 统一错误码封装，HTTP 状态恒为 200
     'UNAUTHENTICATED_USER': None,  # 不用 Django 的 User 对象，认证结果由 user_info 承载
+    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',  # 时间统一输出 yyyy-MM-dd HH:mm:ss，避免 ISO 的 T 分隔
+    'DATE_FORMAT': '%Y-%m-%d',  # 日期统一输出 yyyy-MM-dd
+    'TIME_FORMAT': '%H:%M:%S',  # 时间仅输出时分秒
 }
 
 # JWT 配置

@@ -286,3 +286,18 @@
 ## 附录：高级功能建表 SQL
 
 > 对应的全部建表 SQL 语句请见独立文件 `advanced_features_init.sql`，包含本清单全部 4 个功能模块的数据表（sys_tenant、sys_tenant_user、sys_tenant_package、work_order_type、work_order、work_order_log、cal_schedule、cal_reminder、kb_category、kb_document、kb_favorite）。
+
+---
+
+## 实现状态
+
+**已全部实现 ✅**（2026-11-04 完成）
+
+| 模块 | Django App | 前端目录 | 数据表 | 演示数据 |
+|------|-----------|---------|--------|---------|
+| 多租户 | apps/tenant | views/tenant/tenant/, views/tenant/package/ | sys_tenant (4), sys_tenant_user (4), sys_tenant_package (3) | ✅ |
+| 工单管理 | apps/wo | views/wo/type/, views/wo/order/ | work_order_type (5), work_order (10), work_order_log (13) | ✅ |
+| 日历日程 | apps/cal | views/cal/schedule/ | cal_schedule (11) | ✅ |
+| 知识库 | apps/kb | views/kb/category/, views/kb/document/ | kb_category (8), kb_document (8) | ✅ |
+
+工单支持完整 CRUD + assign/solve/close 自定义动作；日历日程支持月/周/日三种视图切换；知识库分类用 el-tree + 表格联动。

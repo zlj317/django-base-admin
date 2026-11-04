@@ -44,8 +44,8 @@
         </div>
       </template>
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据" @selection-change="onSelectionChange">
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column type="selection" width="50" />
-        <el-table-column label="编号" prop="id" width="70" />
         <el-table-column label="消息类型" prop="msg_type" width="100" />
         <el-table-column label="标题" prop="title" min-width="180" show-overflow-tooltip />
         <el-table-column label="内容" prop="content" min-width="260" show-overflow-tooltip />

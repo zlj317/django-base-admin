@@ -1,12 +1,13 @@
 """公告模块模型（表结构由 docs 建表 SQL 手工创建，managed=False）。"""
 from django.db import models  # Django ORM 字段与模型基类
+from common.fields import SnowflakeIDField  # 雪花算法主键字段
 
 from common.utils import BaseModel  # 公共字段基类：创建/更新人、逻辑删除
 
 
 class NoticeCategory(BaseModel):
     """公告分类表：组织公告的类别，支持排序与启用/停用。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     category_name = models.CharField('分类名称', max_length=100)  # 分类显示名
     category_code = models.CharField('分类编码', max_length=64, blank=True, null=True)  # 程序引用编码
     sort = models.IntegerField('排序', default=0)  # 同级显示顺序，越小越靠前
@@ -24,7 +25,7 @@ class NoticeInfo(BaseModel):
     """公告信息表：存储公告正文、发布范围及状态。"""
     STATUS_CHOICES = ((0, '草稿'), (1, '已发布'), (2, '已下线'))  # 公告状态可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     category_id = models.BigIntegerField('分类ID', blank=True, null=True)  # 关联 notice_category 主键
     title = models.CharField('公告标题', max_length=200)  # 公告标题
     content = models.TextField('公告正文', blank=True, null=True)  # 富文本正文
@@ -46,7 +47,7 @@ class NoticeInfo(BaseModel):
 
 class NoticeRead(models.Model):
     """公告阅读记录表（不继承 BaseModel）：记录用户阅读公告的痕迹。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     notice_id = models.BigIntegerField('公告ID')  # 关联 notice_info 主键
     user_id = models.BigIntegerField('阅读用户ID')  # 阅读者用户 ID
     read_time = models.DateTimeField('阅读时间', blank=True, null=True)  # 实际阅读时刻

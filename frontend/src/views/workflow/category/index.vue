@@ -35,8 +35,8 @@
         </div>
       </template>
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据" @selection-change="onSelectionChange">
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column type="selection" width="50" align="center" />
-        <el-table-column label="编号" prop="id" width="70" align="center" />
         <el-table-column label="分类名称" prop="name" min-width="150" show-overflow-tooltip />
         <el-table-column label="分类编码" prop="code" min-width="140" show-overflow-tooltip />
         <el-table-column label="排序号" prop="sort" width="90" align="center" />

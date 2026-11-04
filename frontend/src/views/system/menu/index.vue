@@ -39,6 +39,7 @@
         :tree-props="{ children: 'children' }"
         :default-expand-all="expanded"
       >
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column label="菜单名称" prop="menu_name" min-width="180" />
         <el-table-column label="图标" width="70" align="center">
           <template #default="{ row }">

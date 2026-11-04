@@ -23,7 +23,7 @@
 
     <el-card shadow="never" class="table-card">
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据">
-        <el-table-column label="日志ID" prop="id" width="80" />
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column label="接口ID" prop="api_id" width="90" />
         <el-table-column label="接口名称" min-width="150">
           <template #default="{ row }">{{ row.api_name || '-' }}</template>

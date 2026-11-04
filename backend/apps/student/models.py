@@ -1,11 +1,12 @@
 """学生信息表 模型（由代码生成器生成，可二次修改）。"""
 from django.db import models  # 引入 Django ORM 模型模块
+from common.fields import SnowflakeIDField  # 雪花算法主键字段
 
 
 class BizStudent(models.Model):  # 学生信息表模型，对应数据库表 biz_student
     """学生信息表（biz_student）"""
 
-    id = models.BigAutoField(primary_key=True, verbose_name='主键ID')  # 自增主键
+    id = SnowflakeIDField(primary_key=True, verbose_name='主键ID')  # 自增主键
     name = models.CharField(verbose_name='学生姓名', max_length=50)  # 学生姓名，必填，最长 50 字符
     age = models.IntegerField(verbose_name='年龄', null=True, blank=True)  # 年龄，允许为空
     gender = models.SmallIntegerField(verbose_name='性别（字典sys_user_sex）', null=True, blank=True)  # 性别，存字典值，允许为空

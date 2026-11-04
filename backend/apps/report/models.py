@@ -1,12 +1,13 @@
 """报表模块模型（表结构由 docs 建表 SQL 手工创建，managed=False）。"""
 from django.db import models  # Django ORM 字段与模型基类
+from common.fields import SnowflakeIDField  # 雪花算法主键字段
 
 from common.utils import BaseModel  # 公共字段基类：创建/更新人、逻辑删除
 
 
 class RpCategory(BaseModel):
     """报表分类表：组织报表模板的类别，支持排序与启用/停用。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     category_name = models.CharField('分类名称', max_length=100)  # 分类显示名
     sort = models.IntegerField('排序', default=0)  # 同级显示顺序，越小越靠前
     status = models.SmallIntegerField('状态', default=0)  # 0 正常 / 1 停用
@@ -23,7 +24,7 @@ class RpDatasource(BaseModel):
     """报表数据源表：定义报表可引用的数据源连接。"""
     DS_TYPE_CHOICES = (('mysql', 'MySQL数据库'), ('api', '外部API'))  # 数据源类型可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     ds_name = models.CharField('数据源名称', max_length=100)  # 显示名称
     ds_type = models.CharField('数据源类型', max_length=16, choices=DS_TYPE_CHOICES, default='mysql')  # 类型
     ds_config = models.TextField('数据源配置', blank=True, null=True)  # JSON 文本，含连接参数
@@ -39,7 +40,7 @@ class RpDatasource(BaseModel):
 
 class RpTemplate(BaseModel):
     """报表模板表：存储报表的查询与呈现定义。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     template_name = models.CharField('模板名称', max_length=200)  # 显示名称
     template_key = models.CharField('模板编码', max_length=100, blank=True, null=True)  # 程序引用编码
     category_id = models.BigIntegerField('分类ID', blank=True, null=True)  # 关联 rp_category 主键
@@ -62,7 +63,7 @@ class RpGenerateRecord(BaseModel):
     GEN_STATUS_CHOICES = ((0, '生成中'), (1, '成功'), (2, '失败'))  # 生成状态可选值
     GEN_TYPE_CHOICES = (('manual', '手动触发'), ('schedule', '定时任务'))  # 触发方式可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     template_id = models.BigIntegerField('模板ID')  # 关联 rp_template 主键
     template_name = models.CharField('模板名称', max_length=200, blank=True, null=True)  # 模板名称快照
     param_json = models.TextField('生成参数', blank=True, null=True)  # JSON 文本，前端传入的查询条件

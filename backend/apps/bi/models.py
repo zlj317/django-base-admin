@@ -1,5 +1,6 @@
 """大屏BI模块模型（表结构由 docs 建表 SQL 手工创建，managed=False）。"""
 from django.db import models  # Django ORM 字段与模型基类
+from common.fields import SnowflakeIDField  # 雪花算法主键字段
 
 from common.utils import BaseModel  # 公共字段基类：创建/更新人、逻辑删除
 
@@ -8,7 +9,7 @@ class BiScreen(BaseModel):
     """大屏信息表：存储大屏的可视化配置与发布状态。"""
     STATUS_CHOICES = ((0, '草稿'), (1, '已发布'), (2, '已下线'))  # 大屏状态可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     screen_name = models.CharField('大屏名称', max_length=200)  # 显示名称
     screen_config = models.TextField('大屏配置', blank=True, null=True)  # LONGTEXT：组件布局+样式 JSON
     status = models.SmallIntegerField('状态', choices=STATUS_CHOICES, default=0)  # 0/1/2
@@ -29,7 +30,7 @@ class BiDataset(BaseModel):
     """大屏数据集表：大屏组件引用的数据查询定义。"""
     DS_TYPE_CHOICES = (('mysql', 'MySQL数据库'), ('api', '外部API'))  # 数据源类型可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     dataset_name = models.CharField('数据集名称', max_length=200)  # 显示名称
     ds_type = models.CharField('数据源类型', max_length=16, choices=DS_TYPE_CHOICES, default='mysql')  # 类型
     ds_config = models.TextField('数据集配置', blank=True, null=True)  # SQL 或 API 参数 JSON
@@ -46,7 +47,7 @@ class BiDataset(BaseModel):
 
 class BiVisitLog(models.Model):
     """大屏访问日志表（不继承 BaseModel）：记录大屏被访问的痕迹。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     screen_id = models.BigIntegerField('大屏ID')  # 关联 bi_screen 主键
     visitor_user_id = models.BigIntegerField('访问用户ID', blank=True, null=True)  # 登录用户 ID，匿名则空
     visit_ip = models.CharField('访问IP', max_length=50, blank=True, null=True)  # 客户端 IP

@@ -37,8 +37,8 @@
         </div>
       </template>
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据" @selection-change="onSelectionChange">
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column type="selection" width="50" />
-        <el-table-column label="编号" prop="id" width="70" />
         <el-table-column label="任务名称" prop="task_name" min-width="160" show-overflow-tooltip />
         <el-table-column label="任务Key" prop="task_key" min-width="140" show-overflow-tooltip />
         <el-table-column label="类型" prop="task_type" width="90">

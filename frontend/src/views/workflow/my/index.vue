@@ -33,7 +33,7 @@
         </div>
       </template>
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据">
-        <el-table-column label="编号" prop="id" width="70" align="center" />
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column label="业务单据号" prop="biz_key" min-width="170" show-overflow-tooltip />
         <el-table-column label="流程名称" prop="model_name" min-width="140" show-overflow-tooltip />
         <el-table-column label="流程状态" width="100" align="center">

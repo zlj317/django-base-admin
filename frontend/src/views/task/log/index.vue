@@ -27,7 +27,7 @@
 
     <el-card shadow="never" class="table-card">
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据">
-        <el-table-column label="日志ID" prop="id" width="80" />
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column label="任务ID" prop="task_id" width="90" />
         <el-table-column label="任务名称" prop="task_name" min-width="160" show-overflow-tooltip />
         <el-table-column label="运行状态" width="100" align="center">

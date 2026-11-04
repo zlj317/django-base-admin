@@ -11,7 +11,7 @@ USE `gen_admin`;
 -- 1. 流程分类表 wf_category
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS `wf_category` (
-  `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `name`        VARCHAR(100) NOT NULL COMMENT '分类名称',
   `code`        VARCHAR(64)  NOT NULL COMMENT '分类编码（唯一）',
   `sort`        INT          NOT NULL DEFAULT 0 COMMENT '排序号，越小越靠前',
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `wf_category` (
 -- 2. 流程表单表 wf_form
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS `wf_form` (
-  `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `form_name`   VARCHAR(100) NOT NULL COMMENT '表单名称',
   `form_key`    VARCHAR(64)  NOT NULL COMMENT '表单唯一标识',
   `form_json`   LONGTEXT     COMMENT '表单配置JSON（字段、组件、校验规则）',
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `wf_form` (
 -- 3. 用户分组表 wf_group
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS `wf_group` (
-  `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `group_name`  VARCHAR(100) NOT NULL COMMENT '分组名称',
   `group_code`  VARCHAR(64)  NOT NULL COMMENT '分组编码（唯一）',
   `status`      TINYINT(1)   NOT NULL DEFAULT 0 COMMENT '状态：0启用 1停用',
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `wf_group` (
 -- 4. 用户分组关联表 wf_group_user
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS `wf_group_user` (
-  `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `group_id`    BIGINT NOT NULL COMMENT '分组ID（wf_group.id）',
   `user_id`     BIGINT NOT NULL COMMENT '用户ID（sys_user.id）',
   `create_time` DATETIME DEFAULT NULL COMMENT '创建时间',
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `wf_group_user` (
 -- 5. 流程模型表 wf_model
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS `wf_model` (
-  `id`             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`             BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `model_name`     VARCHAR(100) NOT NULL COMMENT '模型名称（请假流程、报销流程）',
   `model_key`      VARCHAR(64)  NOT NULL COMMENT '模型唯一Key（引擎识别）',
   `category_id`    BIGINT       DEFAULT NULL COMMENT '所属分类 wf_category.id',
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `wf_model` (
 -- 6. 流程实例表 wf_instance
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS `wf_instance` (
-  `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`            BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `instance_key`  VARCHAR(64)  NOT NULL COMMENT '实例唯一标识（引擎token）',
   `model_id`      BIGINT       NOT NULL COMMENT '关联流程模型 wf_model.id（锁定版本）',
   `model_version` INT          NOT NULL DEFAULT 1 COMMENT '模型版本快照',
@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `wf_instance` (
 -- 7. 流程任务表 wf_task（人工待办）
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS `wf_task` (
-  `id`                 BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`                 BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `instance_id`        BIGINT       NOT NULL COMMENT '关联流程实例 wf_instance.id',
   `task_key`           VARCHAR(64)  NOT NULL COMMENT '任务节点ID（BPMN userTask id）',
   `task_name`          VARCHAR(100) DEFAULT NULL COMMENT '任务名称',
@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `wf_task` (
 -- 8. 审批记录表 wf_audit（历史操作记录）
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS `wf_audit` (
-  `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `instance_id` BIGINT       NOT NULL COMMENT '关联流程实例 wf_instance.id',
   `task_id`     BIGINT       DEFAULT NULL COMMENT '关联流程任务 wf_task.id',
   `operator_id` BIGINT       DEFAULT NULL COMMENT '操作人用户ID',
@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `wf_audit` (
 -- 9. 抄送记录表 wf_cc
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS `wf_cc` (
-  `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `instance_id` BIGINT      NOT NULL COMMENT '关联流程实例 wf_instance.id',
   `user_id`     BIGINT      NOT NULL COMMENT '抄送用户ID',
   `node_id`     VARCHAR(64) DEFAULT NULL COMMENT '抄送来源节点',
@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `wf_cc` (
 -- 10. 流程监听器表 wf_listener
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS `wf_listener` (
-  `id`             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`             BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `model_id`       BIGINT       NOT NULL COMMENT '关联流程模型 wf_model.id',
   `event_type`     VARCHAR(30)  NOT NULL COMMENT '事件类型：start启动 enter进入 complete完成 end结束 reject驳回',
   `action_type`    VARCHAR(30)  NOT NULL COMMENT '动作：callback回调 notify通知 update_data改数据 log写日志',
@@ -211,7 +211,7 @@ CREATE TABLE IF NOT EXISTS `wf_listener` (
 -- 11. 流程表达式表 wf_expression
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS `wf_expression` (
-  `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `id`           BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
   `expr_name`    VARCHAR(100) NOT NULL COMMENT '表达式名称',
   `expr_code`    VARCHAR(64)  NOT NULL COMMENT '表达式编码（唯一）',
   `expr_content` VARCHAR(500) DEFAULT NULL COMMENT '表达式内容，如 ${form.leaveDays > 3}',

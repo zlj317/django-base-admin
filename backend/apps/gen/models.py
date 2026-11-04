@@ -1,5 +1,6 @@
 """代码生成器配置表模型。"""
 from django.db import models  # 引入 ORM 字段定义模块
+from common.fields import SnowflakeIDField  # 雪花算法主键字段
 
 from common.utils import BaseModel  # 公共基类，提供审计字段与逻辑删除标记
 
@@ -7,7 +8,7 @@ from common.utils import BaseModel  # 公共基类，提供审计字段与逻辑
 class SysGenTable(BaseModel):
     """生成任务主表：记录一张业务表导入后形成的代码生成配置。"""
 
-    id = models.BigAutoField(primary_key=True)  # 自增主键，显式声明以保证与库结构一致
+    id = SnowflakeIDField(primary_key=True)  # 自增主键，显式声明以保证与库结构一致
     table_name = models.CharField('数据库表名', max_length=100, unique=True)  # 源表名，唯一防止重复导入
     table_comment = models.CharField('表注释', max_length=200, blank=True, null=True)  # 表中文名，用于菜单与标题展示
     class_name = models.CharField('实体类名', max_length=100, blank=True, null=True)  # 生成模型类名，如 BizStudent
@@ -41,7 +42,7 @@ class SysGenTableColumn(BaseModel):
         ('lt', '小于'), ('between', '区间'),
     )
 
-    id = models.BigAutoField(primary_key=True)  # 自增主键，逐列唯一标识
+    id = SnowflakeIDField(primary_key=True)  # 自增主键，逐列唯一标识
     gen_table_id = models.BigIntegerField('生成任务ID')  # 所属生成任务，逻辑外键关联 SysGenTable
     column_name = models.CharField('字段名', max_length=100)  # 源表列名，生成代码时直接使用
     column_comment = models.CharField('字段注释', max_length=200, blank=True, null=True)  # 列中文名，作为表单标签

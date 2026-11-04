@@ -23,7 +23,7 @@
 
     <el-card shadow="never" class="table-card">
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据">
-        <el-table-column label="记录ID" prop="id" width="80" />
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column label="大屏ID" prop="screen_id" width="90" />
         <el-table-column label="大屏名称" min-width="180">
           <template #default="{ row }">{{ row.screen_name || '-' }}</template>

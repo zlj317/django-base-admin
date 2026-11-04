@@ -32,8 +32,8 @@
       </div>
 
       <el-table stripe empty-text="暂无数据" v-loading="loading" :data="list" @selection-change="onSelectionChange">
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column type="selection" width="50" />
-        <el-table-column label="编号" prop="id" width="70" />
         <el-table-column label="角色名称" prop="role_name" min-width="130" show-overflow-tooltip />
         <el-table-column label="权限字符" prop="role_key" min-width="130" show-overflow-tooltip />
         <el-table-column label="显示顺序" prop="role_sort" width="90" align="center" />

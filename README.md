@@ -1,4 +1,4 @@
-# 代码生成型后台管理系统
+# 后台管理系统
 
 **简体中文** | [English](#english)
 
@@ -10,6 +10,245 @@
 
 一个基于 **Django 4.2 + DRF + MySQL 8 + Vue 3 + Element Plus** 的后台管理系统。
 内置完整的平台基础模块（用户、角色、菜单、部门、字典、参数、日志）、**代码生成器**（读表 → 配置 → 预览/下载 → 自动注册菜单）与**工作流审批模块**（BPMN 2.0 流程设计、流程发起、待办审批、抄送与流程轨迹）。
+
+---
+
+## 系统架构图
+
+> 💡 以下为架构图图片，PNG 原图位于 [`docs/images/`](docs/images/)；每张图下方可展开查看对应的 Mermaid 源码。
+
+### 总体分层架构（四层）
+
+![系统总体架构图](docs/images/16-architecture.png)
+
+<details>
+<summary>Mermaid 源码（点击展开）</summary>
+
+```mermaid
+flowchart TB
+    subgraph Client["🖥️ 客户端层"]
+        direction TB
+        FE["Vue 3 + Element Plus<br/>Vite 5 · TypeScript-Free"]
+        WS["WebSocket 客户端<br/>Django Channels"]
+    end
+
+    subgraph Gateway["🌐 接入网关层"]
+        Nginx["Nginx 反向代理<br/>静态资源 / SSL / 限流"]
+        ViteProxy["Vite Dev Proxy<br/>开发环境直连后端"]
+    end
+
+    subgraph Backend["⚙️ Django 4.2 业务层（20 个 App）"]
+        direction TB
+
+        subgraph Common["📦 公共基座 common/"]
+            JWT["JWT 认证 + bcrypt"]
+            Crud["通用 CrudViewSet<br/>统一响应 / 分页 / 异常 / 审计"]
+            RBAC["PermissionCheck 权限校验<br/>按钮级 v-perm 指令"]
+        end
+
+        subgraph Core["🏛️ 平台核心（6 App）"]
+            Sys["system<br/>用户/角色/菜单/部门/字典/配置/日志"]
+            Gen["gen<br/>代码生成器<br/>SQL 模板 → 9 产物 → ZIP"]
+            WF["workflow<br/>自研 BPMN 2.0 引擎<br/>bpmn-js Designer + Viewer"]
+            File["file<br/>本地/MinIO 双存储<br/>MD5 秒传 / 分片上传<br/>kkFileView + OnlyOffice"]
+            Task["task_sched<br/>Celery + CRON / 间隔<br/>4 系统模板"]
+            Home["home<br/>首页聚合<br/>overview / monitor"]
+        end
+
+        subgraph BizOld["📊 附加模块（6 App）"]
+            Msg["msg<br/>模板 + 站内信 + 渠道"]
+            Notice["notice<br/>公告分类 / 发布 / 推送"]
+            Report["report<br/>低代码报表<br/>MySQL + API 双数据源"]
+            BI["bi<br/>可视化大屏<br/>折线/柱/饼/指标卡"]
+            Outer["outer<br/>外部 API 对接<br/>手动 / 定时同步"]
+            Student["student<br/>生成模块示例"]
+        end
+
+        subgraph BizNew["🛠️ 标配 + 高级（11 App · 2026-11 批次）"]
+            SysNo["sys_no<br/>编码规则"]
+            Imprint["imprint<br/>导入模板 + 打印模板"]
+            Backup["backup<br/>手动 + 自动备份"]
+            DP["dp<br/>数据权限规则"]
+            DSM["dsm<br/>脱敏规则"]
+            Mon["mon<br/>监控告警"]
+            Sec["sec<br/>IP 黑白名单<br/>登录限流 / 接口限流"]
+            Tenant["tenant<br/>多租户 + 套餐"]
+            WO["wo<br/>工单流转<br/>assign / solve / close"]
+            Cal["cal<br/>日历日程<br/>月/周/日视图"]
+            KB["kb<br/>知识库<br/>分类树 + 文档"]
+        end
+    end
+
+    subgraph Infra["🗄️ 基础设施"]
+        MySQL[("MySQL 8<br/>SQL-first 手工建表<br/>managed=False")]
+        Redis["Redis<br/>Celery Broker<br/>Channels Layer"]
+        MinIO["MinIO（可选）<br/>对象存储"]
+        KKFile["kkFileView<br/>只读预览服务"]
+        OnlyOffice["OnlyOffice<br/>协同编辑"]
+    end
+
+    FE -->|REST /api/**| Nginx
+    FE -->|REST /api/**| ViteProxy
+    ViteProxy --> Backend
+    Nginx --> Backend
+    Backend --> MySQL
+    Backend --> Redis
+    Backend --> MinIO
+    Backend --> KKFile
+    Backend --> OnlyOffice
+    WS -->|WebSocket /ws/**| Backend
+
+    style Client fill:#e8f4fd,stroke:#1976d2
+    style Gateway fill:#fff8e1,stroke:#f9a825
+    style Common fill:#f3e5f5,stroke:#7b1fa2
+    style Core fill:#e8f5e9,stroke:#388e3c
+    style BizOld fill:#e3f2fd,stroke:#1976d2
+    style BizNew fill:#fce4ec,stroke:#c2185b
+    style Infra fill:#eceff1,stroke:#455a64
+```
+
+</details>
+
+### 模块业务关联图（数据流 + 依赖关系）
+
+![模块业务关联图](docs/images/17-module-relations.png)
+
+<details>
+<summary>Mermaid 源码（点击展开）</summary>
+
+```mermaid
+flowchart LR
+    %% ========== 核心平台 ==========
+    subgraph 平台核心
+        direction TB
+        Auth["🔐 认证权限<br/>JWT + bcrypt"]
+        RBAC["🎯 角色权限<br/>菜单 / 按钮级"]
+        Menu["📋 动态菜单<br/>M / C / F 三级"]
+        Dict["📚 字典参数<br/>类型 + 数据 + 系统配置"]
+        User["👤 用户<br/>角色 / 部门 / 状态"]
+    end
+
+    %% ========== 业务模块 ==========
+    subgraph 业务模块
+        direction LR
+        direction TB
+        WF["📝 工作流<br/>BPMN 审批"]
+        Task["⏰ 定时任务<br/>CRON / 间隔"]
+        Report["📈 报表<br/>lowcode-report"]
+        BI["📺 大屏<br/>可视化组件"]
+        File["📎 附件<br/>存储 + 预览 + 协同"]
+        Msg["💬 消息<br/>站内信 + 推送"]
+        Notice["📢 公告<br/>分类发布"]
+        Outer["🌐 外部 API<br/>同步 / 拉取"]
+        CodeGen["🔧 代码生成<br/>读表 → 下载"]
+    end
+
+    subgraph 标配功能
+        direction TB
+        No["🔢 编码规则<br/>单号生成"]
+        Backup["💾 数据备份<br/>手动 + 自动"]
+        DP["🛡️ 数据权限<br/>行级过滤"]
+        DSM["👁️ 脱敏规则<br/>敏感字段"]
+        Mon["📟 监控告警<br/>DB / API / 磁盘"]
+        Sec["🚫 安全策略<br/>IP 黑白 + 限流"]
+    end
+
+    subgraph 高级功能
+        direction TB
+        Tenant["🏢 多租户<br/>隔离 + 套餐"]
+        WO["🎫 工单流转<br/>assign/solve/close"]
+        Cal["📅 日历日程<br/>月/周/日"]
+        KB["📖 知识库<br/>分类树 + 文档"]
+    end
+
+    subgraph 首页聚合
+        direction TB
+        Home["🏠 Dashboard<br/>overview + monitor"]
+    end
+
+    %% ========== 核心依赖 ==========
+    User --> Auth
+    User --> RBAC
+    RBAC --> Menu
+    Dict -.-> Report
+    Dict -.-> BI
+    Dict -.-> WF
+
+    %% ========== 附件中心（被引用） ==========
+    File -.-> Report
+    File -.-> BI
+    File -.-> Notice
+    File -.-> Backup
+    File -.-> Print["打印模板"]
+    File -.-> WO
+    File -.-> KB
+
+    %% ========== 消息发布 ==========
+    Notice --> Msg
+    WF --> Msg
+    WO --> Msg
+    Msg --> FE
+
+    %% ========== 数据源流向 ==========
+    Outer -->|"拉取 / API 数据源"| Report
+    Outer -->|"拉取 / API 数据源"| BI
+    Report -->|"手动生成 / 定时生成"| File
+    BI -->|"快照归档"| File
+
+    %% ========== 定时任务触发 ==========
+    Task -->|"定时生成"| Report
+    Task -->|"自动备份"| Backup
+    Task -->|"失败重试"| Msg
+    Task -->|"超时检测"| WF
+
+    %% ========== 工作流 ==========
+    WO -->|"审批流"| WF
+    WF -->|"抄送 / 通知"| Msg
+
+    %% ========== 编码规则 ==========
+    No -.-> WO
+    No -.-> Backup
+    No -.-> KB
+
+    %% ========== 监控 ==========
+    Mon -->|告警触发| Msg
+    Sec -->|封禁 / 限流| Auth
+
+    %% ========== 首页聚合 ==========
+    User --> Home
+    WF --> Home
+    Msg --> Home
+    Report --> Home
+    BI --> Home
+    WO --> Home
+    Cal --> Home
+    Mon --> Home
+
+    %% ========== 租户 ==========
+    Tenant -->|"隔离"| User
+    Tenant -->|"隔离"| Menu
+
+    %% ========== 代码生成 ==========
+    CodeGen -->|"生成新 App"| 业务模块
+
+    %% 样式
+    classDef core fill:#e8f5e9,stroke:#2e7d32,stroke-width:1px;
+    classDef biz fill:#e3f2fd,stroke:#1565c0,stroke-width:1px;
+    classDef std fill:#fff3e0,stroke:#ef6c00,stroke-width:1px;
+    classDef adv fill:#fce4ec,stroke:#c2185b,stroke-width:1px;
+    classDef home fill:#f3e5f5,stroke:#7b1fa2,stroke-width:1px;
+
+    class Auth,RBAC,Menu,Dict,User core;
+    class WF,Task,Report,BI,File,Msg,Notice,Outer,CodeGen biz;
+    class No,Backup,DP,DSM,Mon,Sec std;
+    class Tenant,WO,Cal,KB adv;
+    class Home home;
+
+    %% 线颜色
+    linkStyle default stroke-width:1.5px
+```
+
+</details>
 
 ---
 
@@ -86,6 +325,36 @@
 - **报表管理**：低代码报表模板拖拽设计（lowcode-report）、MySQL 本地 + API 外部双数据源、模板版本与角色权限、手动/定时生成 Excel/PDF、自动存入附件管理、生成记录与在线预览下载、WebSocket 实时查询。
 - **报表大屏**：大屏拖拽设计（datart）、折线/柱状/饼图/数字指标/表格/地图组件、MySQL/API 数据集、发布后生成分享链接+访问密码、自动刷新秒、快照归档至附件管理、访问日志。
 - **外部对接**：外部 API 配置（GET/POST/PUT/DELETE、Header/Query/Token/Basic 鉴权）、连通性一键测试、完整请求日志（入参/返回/耗时/状态码/异常）、手动/定时同步任务拉取外部数据写入本地库，报表与大屏模块直接选用已配置接口作为数据源。
+
+### 2026-11 标配功能（6 App）
+
+- **编码规则**：自定义编码前缀、流水号位数、重置周期（日/月/年/永不）、预览生成、12 条规则演示数据。
+- **数据备份**：手动备份（全量/指定模块）、自动备份策略（CRON + 保留份数）、备份记录列表与下载、清理过期备份。
+- **数据权限**：行级数据权限规则（本部门/本部门及以下/仅本人/自定义 SQL）、角色绑定权限规则，列表查询自动生效。
+- **字段脱敏**：脱敏规则（手机号/身份证/邮箱/银行卡等 10 种内置算法）、字段绑定脱敏规则、按角色控制是否显示原文。
+- **安全策略**：IP 黑白名单、登录失败锁定（5 次/15 分钟）、接口限流（滑动窗口）、三条安全规则演示数据。
+- **系统监控**：告警规则（CPU/内存/磁盘/API 响应时间）、告警记录、触发消息中心通知。
+
+### 2026-11 高级功能（4 App）
+
+- **多租户**：租户管理、租户套餐（功能模块勾选）、租户用户隔离、套餐到期自动锁定。
+- **工单流转**：工单类型配置、工单全生命周期（创建 → 指派 → 处理 → 解决 → 关闭）、支持关联工作流审批、工单日志与消息通知；提供「工单列表」与「我的工单（我创建的 / 我处理的）」两个页面。
+- **日历日程**：月/周/日三种视图、重复规则（每日/每周/每月/自定义间隔）、提醒设置（提前 N 分钟 + 多渠道）、日程提醒记录管理，演示数据 8 条。
+- **知识库**：分类树（el-tree）、文档（Markdown + 富文本两种编辑模式）、收藏、浏览量统计、搜索；文档列表顶部提供总数 / 今日新增 / 已发布 / 累计阅读统计。
+
+### 首页 Dashboard
+
+- 重写首页：渐变 Hero + 4 统计卡（用户数/待办/告警/今日访问）、待办事项列表（联动工作流 + 工单 + 日程）、系统动态时间线（最近操作日志 + 告警）、九宫格常用功能快捷入口（可自定义）。
+
+### 数据与展示约定
+
+- **雪花主键**：所有数据表 `id` 为 `BIGINT`，数据库不使用 `AUTO_INCREMENT`，统一由后端 `common/snowflake.py` 生成；模型字段使用 `common/fields.py` 的 `SnowflakeIDField`。
+- **列表序号**：所有列表页第一列为「序号」列，分页内升序，不展示主键 `id`。
+- **标题一致**：列表页左上角标题与 `sys_menu.menu_name` 保持一致。
+- **操作列**：多按钮操作列统一 `class-name="op-col"`，全局样式保证按钮单行不换行。
+
+---
+
 - **工程规范**：统一响应 `{code, msg, data}`（HTTP 状态恒 200）、统一分页、全局异常处理、逻辑删除 `is_deleted`、操作日志中间件、`managed=False` 的 SQL-first 表结构、Element Plus 主题定制。
 - **中英文文档**：本 README 提供中英文切换，`docs/` 下提供结构图、功能说明、运行部署与零基础学习路线。
 
@@ -118,6 +387,7 @@ django-base-admin/
 │  ├─ apps/
 │  │  ├─ system/            # 用户/角色/菜单/部门/字典/配置/日志/认证
 │  │  ├─ gen/               # 代码生成器（引擎 + 模板）
+│  │  ├─ home/              # 首页聚合接口：overview + monitor（无表）
 │  │  ├─ student/           # 生成模块示例（学生信息表）
 │  │  ├─ workflow/          # 工作流：模型/实例/任务/引擎/监听器/菜单种子数据
 │  │  ├─ file/              # 附件管理：上传/预览/配置/回收站
@@ -126,7 +396,20 @@ django-base-admin/
 │  │  ├─ task_sched/        # 定时任务：任务信息/任务日志（Celery）
 │  │  ├─ report/            # 报表管理：分类/数据源/模板/生成记录
 │  │  ├─ bi/                # 报表大屏：大屏/数据集/访问日志
-│  │  └─ outer/             # 外部对接：接口配置/请求日志/同步任务
+│  │  ├─ outer/             # 外部对接：接口配置/请求日志/同步任务
+│  │  │
+│  │  ├─ sys_no/            # 【标配】编码规则：规则 + 流水号日志
+│  │  ├─ imprint/           # 【标配】导入/打印模板：模板 + 列 + 打印
+│  │  ├─ backup/            # 【标配】数据备份：备份记录 + 备份策略
+│  │  ├─ dp/                # 【标配】数据权限：权限规则 + 角色数据权限
+│  │  ├─ dsm/               # 【标配】字段脱敏：脱敏规则 + 字段 + 角色绑定
+│  │  ├─ sec/               # 【标配】安全策略：IP 控制 + 登录尝试 + 限流
+│  │  ├─ mon/               # 【标配】系统监控：告警规则 + 告警记录
+│  │  │
+│  │  ├─ tenant/            # 【高级】多租户：租户 + 用户 + 套餐
+│  │  ├─ wo/                # 【高级】工单流转：工单类型 + 工单 + 日志
+│  │  ├─ cal/               # 【高级】日历日程：日程 + 提醒
+│  │  └─ kb/                # 【高级】知识库：分类 + 文档 + 收藏
 │  └─ core/management/commands/init_db.py   # 建库建表与初始化数据
 ├─ frontend/                # Vue3 前端
 │  └─ src/
@@ -135,14 +418,32 @@ django-base-admin/
 │     ├─ utils/request.js   # axios 封装
 │     ├─ layout/            # 侧边栏（三级菜单缩进）、导航栏、布局
 │     ├─ components/workflow/  # 表单渲染、流程查看器、流程详情抽屉
-│     └─ views/             # 登录、首页、system/*、gen/*、student、workflow/*
-│        ├─ file/*          # 附件管理页面
-│        ├─ msg/*           # 消息中心页面
-│        ├─ notice/*        # 公告通知页面
-│        ├─ task/*          # 定时任务页面
-│        ├─ rp/*            # 报表管理页面
-│        ├─ bi/*            # 报表大屏页面
-│        └─ outer/*         # 外部对接页面
+│     └─ views/
+│        ├─ dashboard/      # 【重写】首页 Dashboard：Hero + 统计卡 + 待办 + 时间线 + 九宫格
+│        ├─ system/         # 用户/角色/菜单/部门/字典/配置/日志
+│        ├─ gen/            # 代码生成器
+│        ├─ workflow/       # 工作流：流程管理/审批中心/OA 示例
+│        ├─ student/        # 生成模块示例
+│        ├─ file/           # 附件管理
+│        ├─ msg/            # 消息中心
+│        ├─ notice/         # 公告通知
+│        ├─ task/           # 定时任务
+│        ├─ rp/             # 报表管理
+│        ├─ bi/             # 报表大屏
+│        ├─ outer/          # 外部对接
+│        │
+│        ├─ sys_no/rule/                    # 【标配】编码规则
+│        ├─ imprint/{template,column,print}/ # 【标配】导入/打印模板
+│        ├─ backup/{record,strategy}/        # 【标配】数据备份
+│        ├─ dp/{permission,role_perm}/       # 【标配】数据权限
+│        ├─ dsm/rule/                       # 【标配】字段脱敏
+│        ├─ sec/{ip,login_attempt,rate_limit}/ # 【标配】安全策略
+│        ├─ mon/{rule,record}/               # 【标配】系统监控
+│        │
+│        ├─ tenant/{tenant,package}/         # 【高级】多租户
+│        ├─ wo/{type,order}/                 # 【高级】工单流转
+│        ├─ cal/schedule/                    # 【高级】日历日程（月/周/日）
+│        └─ kb/{category,document}/          # 【高级】知识库（树 + 文档）
 └─ docs/                    # 需求、建表 SQL 与 01~05 总结文档、截图
 ```
 

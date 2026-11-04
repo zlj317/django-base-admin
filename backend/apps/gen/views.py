@@ -193,16 +193,17 @@ class GenTableViewSet(viewsets.ViewSet):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 统一写入时间
 
         def insert(parent_id, menu_name, menu_type, path='', component='', perms='', icon=''):
-            """插入一条菜单记录并返回自增主键，供按钮挂载到菜单下。"""
+            """插入一条菜单记录并返回雪花主键，供按钮挂载到菜单下。"""
+            from common.snowflake import next_id  # 主键统一由后端雪花算法生成
+            menu_id = next_id()  # 先取主键，再随 INSERT 一起写入
             with connection.cursor() as cursor:  # 菜单表由 SQL 维护，这里用原生 SQL 写入
                 # 参数化插入，避免菜单名等文本污染 SQL
                 cursor.execute(
-                    "INSERT INTO sys_menu (parent_id, menu_name, path, component, perms, "
+                    "INSERT INTO sys_menu (id, parent_id, menu_name, path, component, perms, "
                     "menu_type, icon, order_num, visible, status, create_by, create_time, is_deleted) "
-                    "VALUES (%s, %s, %s, %s, %s, %s, %s, 0, '0', '0', %s, %s, 0)",
-                    [parent_id, menu_name, path, component, perms, menu_type, icon, username, now])
-                cursor.execute("SELECT LAST_INSERT_ID()")  # 取本次插入的菜单主键
-                return cursor.fetchone()[0]  # 返回自增 ID
+                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 0, '0', '0', %s, %s, 0)",
+                    [menu_id, parent_id, menu_name, path, component, perms, menu_type, icon, username, now])
+                return menu_id  # 返回本次生成的雪花 ID
 
         if SysMenu.objects.filter(perms=f'{prefix}:list', is_deleted=0).exists():  # 已有列表权限说明注册过
             return  # 已注册过则直接跳过，保证可重复下载

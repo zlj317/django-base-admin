@@ -1,5 +1,6 @@
 """文件模块模型（表结构由 docs 建表 SQL 手工创建，managed=False）。"""
 from django.db import models  # Django ORM 字段与模型基类
+from common.fields import SnowflakeIDField  # 雪花算法主键字段
 
 from common.utils import BaseModel  # 公共字段基类：创建/更新人、逻辑删除
 
@@ -8,7 +9,7 @@ class WfFile(BaseModel):
     """文件表：记录上传文件的元信息与存储路径。"""
     STORAGE_TYPE_CHOICES = (('local', '本地存储'), ('minio', 'MinIO对象存储'))  # 存储方式可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     file_name = models.CharField('存储文件名', max_length=255)  # 服务器端存储名（可能含随机后缀）
     original_name = models.CharField('原始文件名', max_length=255, blank=True, null=True)  # 上传时的原文件名
     file_ext = models.CharField('文件扩展名', max_length=32, blank=True, null=True)  # 如 pdf、xlsx
@@ -37,7 +38,7 @@ class WfFileConfig(BaseModel):
     """文件配置表：以 config_key 唯一标识一项文件相关配置。"""
     CONFIG_TYPE_CHOICES = (('upload', '上传配置'), ('preview', '预览配置'), ('storage', '存储配置'))  # 配置类型可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     config_key = models.CharField('配置键', max_length=100, unique=True)  # 参数唯一键
     config_value = models.TextField('配置值', blank=True, null=True)  # 参数值（支持 JSON 文本）
     config_name = models.CharField('配置名称', max_length=100, blank=True, null=True)  # 显示名称
@@ -52,7 +53,7 @@ class WfFileConfig(BaseModel):
 
 class WfFileRecycle(models.Model):
     """文件回收站表（不继承 BaseModel）：记录被删除的文件，支持恢复。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     file_id = models.BigIntegerField('原文件ID')  # 关联 wf_file 主键
     file_name = models.CharField('文件名', max_length=255, blank=True, null=True)  # 删除时的文件名快照
     delete_user_id = models.BigIntegerField('删除用户ID', blank=True, null=True)  # 操作人用户ID

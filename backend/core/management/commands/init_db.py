@@ -16,6 +16,7 @@ from django.db import connection  # 复用 Django 连接执行建表与初始化
 
 SQL_FILE = r'd:\other\django-base-admin\docs\后台管理系统-初始化建表SQL.sql'  # 初始化建表脚本路径（原始字符串避免转义）
 SQL_WORKFLOW_FILE = r'd:\other\django-base-admin\docs\后台管理系统-工作流建表SQL.sql'  # 工作流 11 张表建表脚本
+SQL_NEW_FEATURES = r'd:\other\django-base-admin\docs\new_features_init.sql'  # 需求4+5+6 新增功能建表脚本
 
 MENUS = [  # 菜单定义：(父 key, key, 名称, 路由, 组件, 权限, 类型, 图标, 排序)
     (None, 'dashboard', '首页', 'dashboard', 'dashboard/index', '', 'C', 'Odometer', 0),  # 首页看板，无需权限
@@ -79,7 +80,8 @@ class Command(BaseCommand):
         # 2. 执行建表 SQL
         self.exec_sql_file(SQL_FILE)  # 全量创建系统基础表，脚本内均为 CREATE TABLE
         self.exec_sql_file(SQL_WORKFLOW_FILE)  # 创建工作流 11 张 wf_ 表（IF NOT EXISTS 幂等）
-        self.stdout.write(self.style.SUCCESS('系统基础表与工作流表创建完成'))  # 提示建表完成
+        self.exec_sql_file(SQL_NEW_FEATURES)  # 创建需求4+5+6 新增功能表（IF NOT EXISTS 幂等）
+        self.stdout.write(self.style.SUCCESS('系统基础表、工作流表与新增功能表创建完成'))  # 提示建表完成
 
         # 3. admin 密码重置为 123456（bcrypt）
         from common.utils import hash_password  # 局部导入，确保 Django 配置已加载完毕
@@ -112,6 +114,30 @@ class Command(BaseCommand):
         seed_bi()
         from apps.outer.seed import seed_outer  # 外部对接
         seed_outer()
+        # ↓↓↓ 需求4：通用标配功能 ↓↓↓
+        from apps.sys_no.seed import seed_sys_no  # 编码规则
+        seed_sys_no()
+        from apps.imprint.seed import seed_imprint  # 导入模板 + 打印模板
+        seed_imprint()
+        from apps.backup.seed import seed_backup  # 数据备份
+        seed_backup()
+        from apps.dp.seed import seed_dp  # 数据权限
+        seed_dp()
+        from apps.dsm.seed import seed_dsm  # 脱敏配置
+        seed_dsm()
+        from apps.mon.seed import seed_mon  # 监控告警
+        seed_mon()
+        from apps.sec.seed import seed_sec  # 安全策略
+        seed_sec()
+        from apps.tenant.seed import seed_tenant  # 多租户
+        seed_tenant()
+        # ↓↓↓ 需求5：高级可选功能 ↓↓↓
+        from apps.wo.seed import seed_wo  # 工单
+        seed_wo()
+        from apps.cal.seed import seed_cal  # 日历日程
+        seed_cal()
+        from apps.kb.seed import seed_kb  # 知识库
+        seed_kb()
         self.stdout.write(self.style.SUCCESS('初始化完成！默认账号 admin / 123456'))  # 收尾提示
 
     def exec_sql_file(self, path):

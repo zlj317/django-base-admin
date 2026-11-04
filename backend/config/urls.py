@@ -15,4 +15,19 @@ urlpatterns = [  # 路由表：按 URL 前缀把各模块的子路由挂载到�
     path('api/rp/', include('apps.report.urls')),  # 报表模块
     path('api/bi/', include('apps.bi.urls')),  # 大屏BI模块
     path('api/outer/', include('apps.outer.urls')),  # 外部接口模块
+    # ↓↓↓ 需求4：通用标配功能 ↓↓↓
+    path('api/sys_no/', include('apps.sys_no.urls')),  # 编码规则
+    path('api/imprint/', include('apps.imprint.urls')),  # 导入模板 + 打印模板
+    path('api/backup/', include('apps.backup.urls')),  # 数据备份
+    path('api/dp/', include('apps.dp.urls')),  # 数据权限
+    path('api/dsm/', include('apps.dsm.urls')),  # 脱敏配置
+    path('api/mon/', include('apps.mon.urls')),  # 监控告警
+    path('api/sec/', include('apps.sec.urls')),  # 安全策略
+    # ↓↓↓ 需求5：高级可选功能 ↓↓↓
+    path('api/tenant/', include('apps.tenant.urls')),  # 多租户
+    path('api/wo/', include('apps.wo.urls')),  # 工单
+    path('api/cal/', include('apps.cal.urls')),  # 日历日程
+    path('api/kb/', include('apps.kb.urls')),  # 知识库
+    # ↓↓↓ 需求6：系统首页 ↓↓↓
+    path('api/home/', include('apps.home.urls')),  # 首页聚合接口
 ]

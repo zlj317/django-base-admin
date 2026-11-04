@@ -29,7 +29,7 @@
       </div>
 
       <el-table v-loading="typeLoading" stripe empty-text="暂无数据" :data="typeList">
-        <el-table-column label="编号" prop="id" width="70" />
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column label="字典名称" prop="dict_name" min-width="140" show-overflow-tooltip />
         <el-table-column label="类型编码" prop="dict_type" min-width="160" show-overflow-tooltip />
         <el-table-column label="状态" width="90" align="center">
@@ -104,7 +104,6 @@
       </div>
 
       <el-table v-loading="dataLoading" stripe empty-text="暂无数据" :data="dataList">
-        <el-table-column label="编号" prop="id" width="70" />
         <el-table-column label="标签" prop="dict_label" min-width="100" show-overflow-tooltip />
         <el-table-column label="键值" prop="dict_value" min-width="90" show-overflow-tooltip />
         <el-table-column label="排序" prop="dict_sort" width="70" align="center" />

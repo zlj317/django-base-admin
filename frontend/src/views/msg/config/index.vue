@@ -34,8 +34,8 @@
         </div>
       </template>
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据" @selection-change="onSelectionChange">
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column type="selection" width="50" />
-        <el-table-column label="编号" prop="id" width="70" />
         <el-table-column label="渠道编码" prop="channel" min-width="120" show-overflow-tooltip />
         <el-table-column label="渠道名称" prop="channel_name" min-width="150" show-overflow-tooltip />
         <el-table-column label="启用" width="90" align="center">

@@ -21,6 +21,7 @@
         :tree-props="{ children: 'children' }"
         :default-expand-all="expanded"
       >
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column label="部门名称" prop="dept_name" min-width="200" />
         <el-table-column label="排序" prop="order_num" width="80" align="center" />
         <el-table-column label="负责人" prop="leader" width="120">

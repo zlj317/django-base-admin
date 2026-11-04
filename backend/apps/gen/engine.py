@@ -481,6 +481,7 @@ def build_vue_page(table, ctx):
     a('      </template>')
     # 斑马纹表格，勾选变化同步到 selectedIds
     a('      <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据" @selection-change="onSelectionChange">')
+    a('        <el-table-column type="index" label="序号" width="70" align="center" />')  # 首列序号，升序展示
     a('        <el-table-column type="selection" width="50" align="center" />')  # 多选列
     for c in ctx['list_cols']:  # 逐列渲染表格列
         if c['form_type'] == 'select' and c['dict_type']:  # 字典字段用标签展示中文

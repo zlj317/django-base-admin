@@ -35,8 +35,8 @@
         </div>
       </template>
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据" @selection-change="onSelectionChange">
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column type="selection" width="50" />
-        <el-table-column label="编号" prop="id" width="70" />
         <el-table-column label="大屏名称" prop="screen_name" min-width="180" show-overflow-tooltip />
         <el-table-column label="刷新秒" prop="refresh_sec" width="90" />
         <el-table-column label="分享链接" prop="share_url" min-width="200" show-overflow-tooltip>

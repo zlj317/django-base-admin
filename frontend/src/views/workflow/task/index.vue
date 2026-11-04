@@ -28,7 +28,7 @@
 
     <el-card shadow="never" class="table-card">
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据">
-        <el-table-column label="编号" prop="id" width="70" align="center" />
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column label="任务节点" prop="task_name" min-width="140" show-overflow-tooltip />
         <el-table-column label="流程名称" prop="model_name" min-width="130" show-overflow-tooltip />
         <el-table-column label="业务单据号" prop="instance_key" min-width="150" show-overflow-tooltip />

@@ -87,6 +87,38 @@ a {
   color: var(--el-text-color-secondary);
 }
 
+.page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 列表操作列：按钮保持单行，避免换行挤压 */
+.el-table .op-col .cell {
+  white-space: nowrap;
+}
+
+.el-table .op-col .el-button {
+  margin-left: 0;
+}
+
+.el-table .op-col .el-button + .el-button {
+  margin-left: 8px;
+}
+
+/* 首页：同一行卡片等高，消除短内容卡片下方的空白 */
+.content-row > .el-col,
+.bottom-row > .el-col,
+.stat-row > .el-col {
+  display: flex;
+}
+
+.content-row > .el-col > .panel,
+.bottom-row > .el-col > .panel {
+  flex: 1;
+  height: 100%;
+}
+
 /* ---------------- 卡片 ---------------- */
 .el-card {
   border: 1px solid #eef1f6;

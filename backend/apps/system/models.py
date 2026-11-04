@@ -1,12 +1,13 @@
 """系统基础模块模型（表结构由 docs 建表 SQL 手工创建，managed=False）。"""
 from django.db import models  # Django ORM 字段与模型基类
+from common.fields import SnowflakeIDField  # 雪花算法主键字段
 
 from common.utils import BaseModel  # 公共字段基类：创建/更新人、逻辑删除
 
 
 class SysDept(BaseModel):
     """部门表：树形组织结构，默认按排序号与主键升序。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     parent_id = models.BigIntegerField('父部门ID', default=0)  # 0 表示顶级部门
     dept_name = models.CharField('部门名称', max_length=50)  # 部门名称
     order_num = models.IntegerField('排序', default=0)  # 显示顺序，越小越靠前
@@ -23,7 +24,7 @@ class SysDept(BaseModel):
 
 class SysUser(BaseModel):
     """用户表：账号、密码及所属部门等基本信息。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     username = models.CharField('用户名', max_length=50, unique=True)  # 登录账号，唯一
     password = models.CharField('密码', max_length=100)  # bcrypt 哈希后的密码
     nickname = models.CharField('昵称', max_length=50, blank=True, null=True)  # 显示昵称
@@ -41,7 +42,7 @@ class SysUser(BaseModel):
 
 class SysRole(BaseModel):
     """角色表：角色编码用于权限标识匹配，data_scope 控制数据范围。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     role_name = models.CharField('角色名称', max_length=50)  # 角色显示名称
     role_key = models.CharField('角色编码', max_length=50, unique=True)  # 权限判断用编码
     role_sort = models.IntegerField('角色排序', default=0)  # 显示顺序
@@ -60,7 +61,7 @@ class SysMenu(BaseModel):
     """菜单表：M 目录 / C 菜单 / F 按钮，树形组织并可挂权限标识。"""
     TYPE_CHOICES = (('M', '目录'), ('C', '菜单'), ('F', '按钮'))  # 菜单类型可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     parent_id = models.BigIntegerField('父级菜单ID', default=0)  # 0 表示顶级菜单
     menu_name = models.CharField('菜单名称', max_length=50)  # 菜单显示名称
     path = models.CharField('路由地址', max_length=200, blank=True, null=True)  # 前端路由
@@ -81,7 +82,7 @@ class SysMenu(BaseModel):
 
 class SysDictType(BaseModel):
     """字典类型表：一个类型下挂多个字典项。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     dict_name = models.CharField('字典名称', max_length=100)  # 类型显示名称
     dict_type = models.CharField('字典类型编码', max_length=100, unique=True)  # 唯一编码
     status = models.BooleanField('状态', default=False)  # 0启用 1禁用
@@ -95,7 +96,7 @@ class SysDictType(BaseModel):
 
 class SysDictData(BaseModel):
     """字典项表：以 dict_type_id 关联字典类型，提供标签与键值。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     dict_type_id = models.BigIntegerField('字典类型ID')  # 所属字典类型主键
     dict_label = models.CharField('字典标签', max_length=100)  # 展示文本
     dict_value = models.CharField('字典键值', max_length=100)  # 实际存储值
@@ -113,7 +114,7 @@ class SysDictData(BaseModel):
 class SysOperLog(models.Model):
     """操作日志表（不继承 BaseModel）：仅保留本表 SQL 中实际存在的字段。"""
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     oper_user = models.CharField('操作人', max_length=64, blank=True, null=True)  # 操作人账号
     module_name = models.CharField('操作模块', max_length=50, blank=True, null=True)  # 模块名
     oper_type = models.CharField('操作类型', max_length=20, blank=True, null=True)  # 增删改查
@@ -134,7 +135,7 @@ class SysOperLog(models.Model):
 
 class SysLoginLog(models.Model):
     """登录日志表（不继承 BaseModel）：记录登录结果与客户端信息。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     username = models.CharField('登录账号', max_length=50, blank=True, null=True)  # 登录账号
     ip = models.CharField('登录IP', max_length=50, blank=True, null=True)  # 客户端 IP
     login_time = models.DateTimeField('登录时间', blank=True, null=True)  # 登录时间
@@ -153,7 +154,7 @@ class SysLoginLog(models.Model):
 
 class SysConfig(BaseModel):
     """参数配置表：以 config_key 唯一标识一项系统参数。"""
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     config_key = models.CharField('配置键', max_length=100, unique=True)  # 参数唯一键
     config_value = models.CharField('配置值', max_length=500, blank=True, null=True)  # 参数值
     config_name = models.CharField('配置名称', max_length=100, blank=True, null=True)  # 参数名

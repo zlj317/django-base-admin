@@ -14,7 +14,7 @@ from django.db import connection
 with connection.cursor() as cursor:
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `biz_student` (
-          `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+          `id`          BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
           `name`        VARCHAR(50)  NOT NULL COMMENT '学生姓名',
           `age`         INT          DEFAULT NULL COMMENT '年龄',
           `gender`      TINYINT(1)   DEFAULT 0 COMMENT '性别（字典sys_user_sex）',

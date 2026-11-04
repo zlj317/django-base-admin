@@ -38,8 +38,8 @@
         </div>
       </template>
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据" @selection-change="onSelectionChange">
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column type="selection" width="50" align="center" />
-        <el-table-column label="编号" prop="id" width="70" align="center" />
         <el-table-column label="表达式名称" prop="expr_name" min-width="150" show-overflow-tooltip />
         <el-table-column label="表达式编码" prop="expr_code" min-width="140" show-overflow-tooltip />
         <el-table-column label="表达式内容" prop="expr_content" min-width="220" show-overflow-tooltip />

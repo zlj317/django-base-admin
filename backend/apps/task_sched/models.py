@@ -1,5 +1,6 @@
 """任务调度模块模型（表结构由 docs 建表 SQL 手工创建，managed=False）。"""
 from django.db import models  # Django ORM 字段与模型基类
+from common.fields import SnowflakeIDField  # 雪花算法主键字段
 
 from common.utils import BaseModel  # 公共字段基类：创建/更新人、逻辑删除
 
@@ -8,7 +9,7 @@ class TaskInfo(BaseModel):
     """定时任务信息表：以 task_key 唯一标识一项可调度的任务。"""
     TASK_TYPE_CHOICES = (('cron', 'Cron表达式'), ('interval', '固定间隔'))  # 调度类型可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     task_name = models.CharField('任务名称', max_length=200)  # 显示名称
     task_key = models.CharField('任务编码', max_length=100, unique=True)  # 唯一编码，程序引用用
     task_type = models.CharField('调度类型', max_length=16, choices=TASK_TYPE_CHOICES, default='cron')  # 类型
@@ -31,7 +32,7 @@ class TaskLog(models.Model):
     """任务执行日志表（不继承 BaseModel）：记录每次调度运行结果。"""
     RUN_STATUS_CHOICES = ((0, '运行中'), (1, '成功'), (2, '失败'))  # 运行状态可选值
 
-    id = models.BigAutoField(primary_key=True)  # 主键，自增
+    id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     task_id = models.BigIntegerField('任务ID')  # 关联 task_info 主键
     task_name = models.CharField('任务名称', max_length=200, blank=True, null=True)  # 任务名称快照
     run_status = models.SmallIntegerField('运行状态', choices=RUN_STATUS_CHOICES, default=0)  # 0/1/2
