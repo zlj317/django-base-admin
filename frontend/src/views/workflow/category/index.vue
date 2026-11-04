@@ -28,7 +28,6 @@
     <el-card shadow="never" class="table-card">
       <template #header>
         <div class="card-header">
-          <span class="card-title">分类列表</span>
           <div class="card-actions">
             <el-button v-perm="'wf:category:create'" type="primary" :icon="Plus" @click="openCreate">新增</el-button>
             <el-button v-perm="'wf:category:delete'" type="danger" plain :icon="Delete" :disabled="!selectedIds.length" @click="handleBatchDelete">批量删除</el-button>

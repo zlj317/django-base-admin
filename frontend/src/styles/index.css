@@ -89,27 +89,28 @@ a {
 
 /* ---------------- 卡片 ---------------- */
 .el-card {
-  border: 1px solid rgba(228, 232, 240, 0.85);
-  border-radius: var(--app-radius);
-  box-shadow: var(--app-card-shadow);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  border: 1px solid #eef1f6;
+  border-radius: 6px;
+  box-shadow: none;
+  transition: none;
   overflow: hidden;
 }
 
 .el-card:hover {
-  box-shadow: var(--app-card-shadow-hover);
+  box-shadow: none;
 }
 
 .el-card__header {
-  padding: 14px 18px;
+  padding: 12px 18px;
   border-bottom: 1px solid #eef1f6;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--el-text-color-primary);
+  background: #fff;
 }
 
 .el-card__body {
-  padding: 18px;
+  padding: 16px 18px;
 }
 
 /* 查询卡片：去掉多余底部留白 */
@@ -125,29 +126,42 @@ a {
   margin-bottom: 16px;
 }
 
-/* 表格卡片 */
+/* 表格卡片：工具栏与表格紧贴，分页跟随表格在卡片底部 */
+.table-card {
+  border-radius: 6px;
+}
+
 .table-card .el-card__body {
-  padding: 16px 18px 6px;
+  padding: 12px 18px 14px;
 }
 
 /* ---------------- 按钮 ---------------- */
 .el-button {
-  border-radius: 6px;
+  border-radius: 4px;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .el-button--primary:not(.is-link):not(.is-text) {
-  box-shadow: 0 2px 8px rgba(74, 108, 247, 0.28);
+  box-shadow: none;
 }
 
 .el-button--primary:not(.is-link):not(.is-text):hover {
-  box-shadow: 0 4px 12px rgba(74, 108, 247, 0.36);
-  transform: translateY(-1px);
+  box-shadow: none;
+  transform: none;
+  filter: brightness(0.96);
 }
 
 .el-button.is-link {
   font-weight: 500;
+}
+
+.el-button--default,
+.el-button--primary.is-plain,
+.el-button--success.is-plain,
+.el-button--warning.is-plain,
+.el-button--danger.is-plain {
+  border-radius: 4px;
 }
 
 /* ---------------- 输入 / 选择 ---------------- */
@@ -167,21 +181,25 @@ a {
 /* ---------------- 表格 ---------------- */
 .el-table {
   --el-table-border-color: #eef1f6;
-  --el-table-header-bg-color: #f8fafd;
+  --el-table-header-bg-color: #fafbfc;
   --el-table-header-text-color: #1f2937;
-  --el-table-row-hover-bg-color: #f4f7ff;
-  border-radius: 8px;
-  font-size: 14px;
+  --el-table-row-hover-bg-color: #f2f6ff;
+  border-radius: 0;
+  font-size: 13px;
+  border-top: 1px solid #eef1f6;
+  border-bottom: 1px solid #eef1f6;
 }
 
 .el-table th.el-table__cell {
-  background: #f8fafd !important;
+  background: #fafbfc !important;
   font-weight: 600;
-  height: 46px;
+  height: 42px;
+  border-bottom: 1px solid #e5e7eb !important;
 }
 
 .el-table td.el-table__cell {
-  padding: 11px 0;
+  padding: 9px 0;
+  border-bottom: 1px solid #f2f4f7 !important;
 }
 
 .el-table__inner-wrapper::before {
@@ -189,7 +207,11 @@ a {
 }
 
 .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
-  background: #f4f7ff !important;
+  background: #f2f6ff !important;
+}
+
+.el-table .cell {
+  line-height: 1.5;
 }
 
 /* ---------------- 弹窗 ---------------- */
@@ -231,12 +253,22 @@ a {
 .el-pagination {
   display: flex;
   justify-content: flex-end;
-  padding: 16px 0 10px;
+  padding: 12px 0 4px;
+  gap: 0;
 }
 
 .el-pagination.is-background .el-pager li {
-  border-radius: 6px;
+  border-radius: 4px;
   font-weight: 500;
+  min-width: 28px;
+  height: 28px;
+  line-height: 28px;
+  font-size: 13px;
+}
+
+.el-pagination.is-background .el-pager li.is-active {
+  background: #4a6cf7;
+  color: #fff;
 }
 
 .pagination-wrap {
@@ -244,8 +276,33 @@ a {
   justify-content: flex-end;
 }
 
-.pagination-wrap .el-pagination {
-  padding: 16px 0 6px;
+.table-card .pagination-wrap {
+  padding: 10px 0 0;
+}
+
+.table-card .pagination-wrap .el-pagination {
+  padding: 0;
+}
+
+.table-card .pagination-wrap .el-pagination__total,
+.table-card .pagination-wrap .el-pagination__jump {
+  color: #8a94a6;
+  font-size: 13px;
+}
+
+.table-card .pagination-wrap .el-pagination__sizes .el-select {
+  height: 28px;
+}
+
+.table-card .pagination-wrap .btn-prev,
+.table-card .pagination-wrap .btn-next {
+  min-width: 28px;
+  height: 28px;
+  line-height: 28px;
+}
+
+.table-card .pagination-wrap .el-pagination__jump .el-input__wrapper {
+  height: 28px;
 }
 
 /* ---------------- 表单 ---------------- */
@@ -296,8 +353,9 @@ a {
 .toolbar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 13px;
 }
 
 .toolbar .el-button + .el-button {

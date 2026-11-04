@@ -59,6 +59,20 @@ export const constantRoutes = [
     ]
   },
   {
+    // 大屏预览/展示页（不挂后台布局，铺满整个窗口）
+    path: '/bi/view/:id',
+    name: 'BiScreenView',
+    component: () => import('@/views/bi/screen/view.vue'),
+    meta: { title: '大屏预览' }
+  },
+  {
+    // 大屏分享访问页（按 share_url 中的 token 打开）
+    path: '/bi/share/:token',
+    name: 'BiScreenShare',
+    component: () => import('@/views/bi/screen/view.vue'),
+    meta: { title: '大屏分享' }
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: () => import('@/views/error/404.vue'),

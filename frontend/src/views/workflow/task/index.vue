@@ -27,11 +27,6 @@
     </el-card>
 
     <el-card shadow="never" class="table-card">
-      <template #header>
-        <div class="card-header">
-          <span class="card-title">任务列表</span>
-        </div>
-      </template>
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无数据">
         <el-table-column label="编号" prop="id" width="70" align="center" />
         <el-table-column label="任务节点" prop="task_name" min-width="140" show-overflow-tooltip />

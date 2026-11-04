@@ -27,7 +27,6 @@
     <el-card shadow="never" class="table-card">
       <template #header>
         <div class="card-header">
-          <span class="card-title">我发起的流程</span>
           <div class="card-actions">
             <el-button type="primary" :icon="Plus" @click="goStart">发起流程</el-button>
           </div>

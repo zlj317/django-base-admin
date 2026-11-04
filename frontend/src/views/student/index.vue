@@ -46,7 +46,6 @@
     <el-card shadow="never" class="table-card">
       <template #header>
         <div class="card-header">
-          <span class="card-title">学生信息表列表</span>
           <div class="card-actions">
             <el-button v-perm="'student:create'" type="primary" :icon="Plus" @click="openCreate">新增</el-button>
             <el-button v-perm="'student:import'" type="success" plain :icon="Upload" @click="importVisible = true">导入</el-button>
@@ -324,11 +323,6 @@ getList()
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-.card-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: #1f2937;
 }
 .card-actions {
   display: flex;

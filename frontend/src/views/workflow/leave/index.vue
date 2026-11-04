@@ -28,11 +28,6 @@
     </el-card>
 
     <el-card shadow="never" class="table-card">
-      <template #header>
-        <div class="card-header">
-          <span class="card-title">请假申请单</span>
-        </div>
-      </template>
       <el-table v-loading="loading" :data="rows" stripe empty-text="暂无请假流程数据">
         <el-table-column label="编号" prop="id" width="70" align="center" />
         <el-table-column label="业务单据号" prop="biz_key" min-width="160" show-overflow-tooltip />

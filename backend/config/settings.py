@@ -19,6 +19,13 @@ INSTALLED_APPS = [  # 已启用应用：contrib 基础能力 + DRF + 跨域 + �
     'core',  # 自定义管理命令（init_db）
     # ↓↓↓ 由代码生成器生成的业务模块（新增业务表后在此追加） ↓↓↓
     'apps.student',  # 示例业务模块：学生表
+    'apps.file',  # 文件管理模块
+    'apps.msg',  # 消息通知模块
+    'apps.notice',  # 公告模块
+    'apps.task_sched',  # 任务调度模块
+    'apps.report',  # 报表模块
+    'apps.bi',  # 大屏BI模块
+    'apps.outer',  # 外部接口模块
 ]
 
 MIDDLEWARE = [  # 中间件按顺序包装请求/响应，越靠前越外层

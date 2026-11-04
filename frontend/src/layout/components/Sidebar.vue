@@ -102,13 +102,31 @@ const visibleMenus = computed(() =>
   transition: background 0.2s ease, color 0.2s ease;
 }
 
+/* 二级菜单：标题与叶子统一右移，和一级形成明显层级 */
+.sidebar-scroll :deep(.menu-level-2 > .el-sub-menu__title) {
+  padding-left: 34px !important;
+  font-size: 13.5px;
+}
+
+.sidebar-scroll :deep(.menu-level-2.el-menu-item) {
+  padding-left: 40px !important;
+}
+
+/* 三级菜单：在二级基础上继续右移，形成第三层从属关系 */
+.sidebar-scroll :deep(.menu-level-3 > .el-sub-menu__title) {
+  padding-left: 58px !important;
+}
+
+.sidebar-scroll :deep(.menu-level-3.el-menu-item) {
+  padding-left: 64px !important;
+}
+
+/* 折叠菜单下的叶子项通用样式 */
 .sidebar-scroll :deep(.el-sub-menu .el-menu-item) {
   min-width: 0;
   margin: 3px 10px 3px 0;
   border-radius: 8px;
   font-size: 13px;
-  /* 折叠菜单下的子菜单统一向右缩进，强化父子从属关系 */
-  padding-left: 40px !important;
 }
 
 .sidebar-scroll :deep(.el-menu-item:hover),

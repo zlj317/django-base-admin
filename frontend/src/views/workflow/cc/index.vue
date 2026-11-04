@@ -10,7 +10,6 @@
     <el-card shadow="never" class="table-card">
       <template #header>
         <div class="card-header">
-          <span class="card-title">抄送列表</span>
           <div class="card-actions">
             <el-button :icon="Refresh" @click="getList">刷新</el-button>
           </div>

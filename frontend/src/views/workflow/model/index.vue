@@ -34,7 +34,6 @@
     <el-card shadow="never" class="table-card">
       <template #header>
         <div class="card-header">
-          <span class="card-title">模型列表</span>
           <div class="card-actions">
             <el-button v-perm="'wf:model:create'" type="primary" :icon="Plus" @click="openCreate">新增模型</el-button>
             <el-button v-perm="'wf:model:delete'" type="danger" plain :icon="Delete" :disabled="!selectedIds.length" @click="handleBatchDelete">批量删除</el-button>

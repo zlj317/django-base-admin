@@ -97,6 +97,21 @@ class Command(BaseCommand):
         self.init_menus()  # 幂等：已有菜单时内部会自动跳过
         from apps.workflow.seed import seed_workflow  # 局部导入，避免命令加载期依赖工作流模型
         seed_workflow()  # 写入工作流程菜单、按钮权限与请假/报销演示数据（幂等）
+        # ↓↓↓ 以下为业务模块菜单种子（幂等可重复执行） ↓↓↓
+        from apps.file.seed import seed_file  # 文件管理
+        seed_file()
+        from apps.msg.seed import seed_msg  # 消息中心
+        seed_msg()
+        from apps.notice.seed import seed_notice  # 公告通知
+        seed_notice()
+        from apps.task_sched.seed import seed_task_sched  # 定时任务
+        seed_task_sched()
+        from apps.report.seed import seed_report  # 报表管理
+        seed_report()
+        from apps.bi.seed import seed_bi  # 大屏BI
+        seed_bi()
+        from apps.outer.seed import seed_outer  # 外部对接
+        seed_outer()
         self.stdout.write(self.style.SUCCESS('初始化完成！默认账号 admin / 123456'))  # 收尾提示
 
     def exec_sql_file(self, path):

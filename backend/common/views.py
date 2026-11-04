@@ -5,7 +5,7 @@ from rest_framework import viewsets  # 提供 ViewSet 基类与 action 语义
 
 from common.pagination import StandardPagination  # 统一分页输出
 from common.permissions import PermissionCheck  # 登录 + 权限标识校验
-from common.response import ok  # 统一成功响应
+from common.response import fail, ok  # 统一成功/失败响应
 
 
 class CrudViewSet(viewsets.ViewSet):
@@ -66,12 +66,15 @@ class CrudViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)  # 校验失败交给全局异常处理器转 400
         now = time.strftime('%Y-%m-%d %H:%M:%S')  # 统一时间格式，与手写 SQL 的写入方式保持一致
         user = getattr(request, 'user_info', None)  # 当前登录用户，用于审计字段
-        instance = serializer.save(
-            create_by=user.username if user else '',  # 未登录时留空（正常流程不会出现）
-            create_time=now,  # 创建时间
-            update_by=user.username if user else '',  # 初始更新人与创建人一致
-            update_time=now,  # 初始更新时间
-        )
+        audit = {}  # 仅对继承 BaseModel 的模型补审计字段，日志类模型无这些列
+        if hasattr(self.model, 'create_by'):
+            audit = dict(
+                create_by=user.username if user else '',  # 未登录时留空（正常流程不会出现）
+                create_time=now,  # 创建时间
+                update_by=user.username if user else '',  # 初始更新人与创建人一致
+                update_time=now,  # 初始更新时间
+            )
+        instance = serializer.save(**audit)
         self.after_create(request, instance)  # 子类可在此做关联数据写入
         return ok(self.get_serializer_class()(instance).data, '新增成功')  # 返回落库后的完整数据
 
@@ -83,10 +86,13 @@ class CrudViewSet(viewsets.ViewSet):
         serializer = self.serializer_class(instance, data=request.data, partial=True)  # partial 允许只传变更字段
         serializer.is_valid(raise_exception=True)  # 校验失败统一转 400
         user = getattr(request, 'user_info', None)  # 操作人，用于审计字段
-        serializer.save(
-            update_by=user.username if user else '',  # 更新人账号
-            update_time=time.strftime('%Y-%m-%d %H:%M:%S'),  # 更新时刻
-        )
+        audit = {}  # 日志类模型没有审计列，跳过即可
+        if hasattr(self.model, 'update_by'):
+            audit = dict(
+                update_by=user.username if user else '',  # 更新人账号
+                update_time=time.strftime('%Y-%m-%d %H:%M:%S'),  # 更新时刻
+            )
+        serializer.save(**audit)
         self.after_update(request, instance)  # 子类钩子，如同步更新关联表
         return ok(self.serializer_class(instance).data, '修改成功')  # 返回最新对象
 
@@ -96,11 +102,34 @@ class CrudViewSet(viewsets.ViewSet):
         if not ids:
             return ok(None, '请选择要删除的数据')  # 未选数据时给出提示而不是报错
         user = getattr(request, 'user_info', None)  # 操作人，用于记录删除者
-        self.get_queryset().filter(id__in=ids).update(
-            is_deleted=1, update_by=user.username if user else '')  # 批量置删除标记，数据保留可追溯
+        queryset = self.get_queryset().filter(id__in=ids)  # 先定位本次要删除的记录
+        if hasattr(self.model, 'is_deleted'):
+            queryset.update(
+                is_deleted=1, update_by=user.username if user else '')  # 业务表统一逻辑删除，数据保留可追溯
+        else:
+            queryset.delete()  # 日志类模型无逻辑删除列，直接物理删除
         return ok(None, '删除成功')  # 无需回传数据
 
     # ---- 钩子 ----
+    def status(self, request, pk=None):
+        """启用/停用：按请求体的 status 或 enabled 字段更新指定记录。"""
+        instance = self.get_queryset().filter(pk=pk).first()  # 只在未删除数据中查找
+        if not instance:
+            return self._not_found()  # 不存在时返回业务码 404
+        data = request.data or {}
+        fields = [f for f in ('status', 'enabled') if f in data]  # 兼容两种状态字段名
+        if not fields:
+            return fail('未提供状态字段', code=400)  # 参数缺失给出明确提示
+        for field in fields:
+            setattr(instance, field, data[field])  # 逐个赋值，兼容 status/enabled
+        user = getattr(request, 'user_info', None)
+        if hasattr(instance, 'update_by'):
+            instance.update_by = user.username if user else ''
+        if hasattr(instance, 'update_time'):
+            instance.update_time = time.strftime('%Y-%m-%d %H:%M:%S')
+        instance.save()  # 只保存本次改动
+        return ok(self.serializer_class(instance).data, '状态更新成功')
+
     def after_create(self, request, instance):
         """新增后的扩展点，默认不做任何事。"""
         pass  # 子类按需覆盖
