@@ -39,7 +39,7 @@
       <template #header>
         <div class="card-header">
           <div class="card-actions">
-            <el-button v-perm="'msg:record:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchDelete">批量删除</el-button>
+            <el-button v-perm="'msg:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchDelete">批量删除</el-button>
           </div>
         </div>
       </template>
@@ -63,8 +63,8 @@
         <el-table-column label="创建时间" prop="create_time" width="170" />
         <el-table-column label="操作" width="200" fixed="right" class-name="op-col">
           <template #default="{ row }">
-            <el-button v-if="!row.is_read" v-perm="'msg:record:update'" link type="primary" @click="handleMarkRead(row)">标记已读</el-button>
-            <el-button v-perm="'msg:record:delete'" link type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button v-if="!row.is_read" v-perm="'msg:update'" link type="primary" @click="handleMarkRead(row)">标记已读</el-button>
+            <el-button v-perm="'msg:delete'" link type="danger" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

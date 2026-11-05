@@ -318,7 +318,7 @@ function openCreate() {
 
 async function openEdit(row) {
   resetForm()
-  const res = await request.get(`/system/user/${row.id}/`)
+  const res = await request.get(`/system/user/${row.id}`)
   const detail = res.data || {}
   Object.assign(form, {
     id: detail.id,

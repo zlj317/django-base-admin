@@ -3,14 +3,12 @@ from django.urls import path  # 路由声明函数
 
 from apps.system.views import AuthViewSet  # 认证视图集合
 
-auth = AuthViewSet.as_view({
-    'post': 'login',  # 登录
-    'get': 'userinfo',  # 获取当前用户信息
-    'delete': 'logout',  # 退出登录
-})
+login_view = AuthViewSet.as_view({'post': 'login'})  # 登录仅接受 POST
+userinfo_view = AuthViewSet.as_view({'get': 'userinfo'})  # 用户信息仅接受 GET
+logout_view = AuthViewSet.as_view({'post': 'logout', 'delete': 'logout'})  # 退出兼容 POST/DELETE
 
 urlpatterns = [
-    path('login', auth),  # 登录接口
-    path('userinfo', auth),  # 用户信息接口
-    path('logout', auth),  # 退出接口
+    path('login', login_view),  # 登录接口
+    path('userinfo', userinfo_view),  # 用户信息接口
+    path('logout', logout_view),  # 退出接口
 ]

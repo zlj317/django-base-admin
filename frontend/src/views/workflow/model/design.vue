@@ -341,7 +341,7 @@ onBeforeUnmount(() => {
 .designer-canvas {
   flex: 1;
   min-width: 0;
-  background: #fff;
+  background: var(--app-surface);
   border: 1px solid var(--el-border-color-lighter);
   border-radius: 8px;
   overflow: hidden;
@@ -349,7 +349,7 @@ onBeforeUnmount(() => {
 .props-panel {
   width: 320px;
   flex: none;
-  background: #fff;
+  background: var(--app-surface);
   border: 1px solid var(--el-border-color-lighter);
   border-radius: 8px;
   padding: 12px;

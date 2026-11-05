@@ -227,13 +227,13 @@ const rules = { doc_title: [{ required: true, message: '请输入标题', trigge
 // 统计
 const stats = reactive({ total_documents: 0, total_reads: 0, today_new: 0, published: 0 })
 const statCards = [
-  { key: 'total_documents', label: '总文档数', icon: Document, color: 'blue', bg: 'linear-gradient(135deg, #4a6cf7, #6366f1)' },
-  { key: 'total_reads', label: '总阅读数', icon: View, color: 'purple', bg: 'linear-gradient(135deg, #8b5cf6, #a78bfa)' },
-  { key: 'today_new', label: '今日新增', icon: TrendCharts, color: 'green', bg: 'linear-gradient(135deg, #22c55e, #4ade80)' },
-  { key: 'published', label: '已发布', icon: Tickets, color: 'orange', bg: 'linear-gradient(135deg, #f59e0b, #fbbf24)' }
+  { key: 'total_documents', label: '总文档数', icon: Document, color: 'blue', bg: 'linear-gradient(135deg, var(--chart-1), color-mix(in srgb, var(--chart-1) 72%, #ffffff))' },
+  { key: 'total_reads', label: '总阅读数', icon: View, color: 'purple', bg: 'linear-gradient(135deg, var(--chart-4), color-mix(in srgb, var(--chart-4) 72%, #ffffff))' },
+  { key: 'today_new', label: '今日新增', icon: TrendCharts, color: 'green', bg: 'linear-gradient(135deg, var(--chart-5), color-mix(in srgb, var(--chart-5) 72%, #ffffff))' },
+  { key: 'published', label: '已发布', icon: Tickets, color: 'orange', bg: 'linear-gradient(135deg, var(--chart-3), color-mix(in srgb, var(--chart-3) 72%, #ffffff))' }
 ]
 
-const tagColors = ['#4a6cf7', '#8b5cf6', '#22c55e', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899', '#64748b']
+const tagColors = ['var(--chart-1)', 'var(--chart-4)', 'var(--chart-5)', 'var(--chart-3)', 'var(--chart-6)', 'var(--chart-2)', 'var(--chart-6)', 'var(--app-text-3)']
 const hotTags = ref([
   { name: '教程', count: 24 },
   { name: 'API', count: 18 },
@@ -326,8 +326,8 @@ onMounted(() => { fetchList(); loadCategoryOptions(); loadStats() })
 
 .mini-stat {
   display: flex; align-items: center; gap: 12px;
-  padding: 16px 18px; background: #fff; border-radius: 12px;
-  border: 1px solid #f1f5f9; box-shadow: 0 2px 8px rgba(30, 41, 59, 0.04);
+  padding: 16px 18px; background: var(--app-surface); border-radius: 12px;
+  border: 1px solid var(--app-border-light); box-shadow: 0 2px 8px rgba(30, 41, 59, 0.04);
   transition: transform 0.15s;
 }
 .mini-stat:hover { transform: translateY(-2px); }
@@ -336,17 +336,17 @@ onMounted(() => { fetchList(); loadCategoryOptions(); loadStats() })
   width: 44px; height: 44px; border-radius: 12px; color: #fff; flex-shrink: 0;
 }
 .ms-info { flex: 1; min-width: 0; }
-.ms-value { font-size: 22px; font-weight: 700; color: #1f2937; font-variant-numeric: tabular-nums; }
-.ms-label { font-size: 12px; color: #6b7280; margin-top: 2px; }
+.ms-value { font-size: 22px; font-weight: 700; color: var(--app-text-1); font-variant-numeric: tabular-nums; }
+.ms-label { font-size: 12px; color: var(--app-text-2); margin-top: 2px; }
 
-.tags-card { border-radius: 14px; border: 1px solid #f1f5f9; }
-.tags-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600; font-size: 14px; color: #1f2937; }
+.tags-card { border-radius: 14px; border: 1px solid var(--app-border-light); }
+.tags-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600; font-size: 14px; color: var(--app-text-1); }
 .panel-dot { width: 4px; height: 16px; border-radius: 3px; background: linear-gradient(180deg, #8b5cf6, #a78bfa); }
 .tags-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
 .tag-cloud-item { cursor: pointer; transition: transform 0.15s; font-size: 13px; height: 28px; padding: 0 12px; line-height: 26px; }
 .tag-cloud-item:hover { transform: scale(1.05); }
 
-.search-card, .table-card { border-radius: 14px; border: 1px solid #f1f5f9; }
+.search-card, .table-card { border-radius: 14px; border: 1px solid var(--app-border-light); }
 
 .tag-cell { display: flex; flex-wrap: wrap; gap: 3px; }
 .mini-tag { max-width: 120px; }
@@ -356,7 +356,7 @@ onMounted(() => { fetchList(); loadCategoryOptions(); loadStats() })
 }
 
 .read-body { padding: 0 6px; }
-.read-meta { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 20px; padding: 12px 14px; background: #f8fafc; border-radius: 8px; }
-.rm-item { font-size: 12px; color: #6b7280; }
+.read-meta { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 20px; padding: 12px 14px; background: var(--app-surface-2); border-radius: 8px; }
+.rm-item { font-size: 12px; color: var(--app-text-2); }
 .read-content { font-size: 14px; color: #374151; line-height: 1.9; white-space: pre-wrap; word-break: break-word; }
 </style>

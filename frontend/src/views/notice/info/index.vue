@@ -34,8 +34,8 @@
       <template #header>
         <div class="card-header">
           <div class="card-actions">
-            <el-button v-perm="'notice:info:create'" type="primary" :icon="Plus" @click="openCreate">新增</el-button>
-            <el-button v-perm="'notice:info:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchDelete">批量删除</el-button>
+            <el-button v-perm="'notice:create'" type="primary" :icon="Plus" @click="openCreate">新增</el-button>
+            <el-button v-perm="'notice:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchDelete">批量删除</el-button>
           </div>
         </div>
       </template>
@@ -67,10 +67,10 @@
         <el-table-column label="创建时间" prop="create_time" width="170" />
         <el-table-column label="操作" width="220" fixed="right" class-name="op-col">
           <template #default="{ row }">
-            <el-button v-perm="'notice:info:update'" link type="primary" @click="openEdit(row)">编辑</el-button>
-            <el-button v-if="row.status===0" v-perm="'notice:info:publish'" link type="success" @click="handlePublish(row)">发布</el-button>
-            <el-button v-if="row.status===1" v-perm="'notice:info:offline'" link type="warning" @click="handleOffline(row)">下线</el-button>
-            <el-button v-perm="'notice:info:delete'" link type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button v-perm="'notice:update'" link type="primary" @click="openEdit(row)">编辑</el-button>
+            <el-button v-if="row.status===0" v-perm="'notice:update'" link type="success" @click="handlePublish(row)">发布</el-button>
+            <el-button v-if="row.status===1" v-perm="'notice:update'" link type="warning" @click="handleOffline(row)">下线</el-button>
+            <el-button v-perm="'notice:delete'" link type="danger" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

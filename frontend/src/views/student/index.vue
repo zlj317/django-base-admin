@@ -312,7 +312,7 @@ getList()
   margin: 0;
   font-size: 20px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--app-text-1);
   letter-spacing: 0.5px;
 }
 .page-title-wrap .sub {

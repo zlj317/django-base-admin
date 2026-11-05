@@ -39,8 +39,8 @@
       <template #header>
         <div class="card-header">
           <div class="card-actions">
-            <el-button v-perm="'msg:template:create'" type="primary" :icon="Plus" @click="openCreate">新增</el-button>
-            <el-button v-perm="'msg:template:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchDelete">批量删除</el-button>
+            <el-button v-perm="'msg:create'" type="primary" :icon="Plus" @click="openCreate">新增</el-button>
+            <el-button v-perm="'msg:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchDelete">批量删除</el-button>
           </div>
         </div>
       </template>
@@ -54,14 +54,14 @@
         <el-table-column label="渠道" prop="channel" width="100" />
         <el-table-column label="状态" width="90" align="center">
           <template #default="{ row }">
-            <el-switch v-model="row.status" :active-value="1" :inactive-value="0" v-perm="'msg:template:update'" @change="handleStatusChange(row)" />
+            <el-switch v-model="row.status" :active-value="1" :inactive-value="0" v-perm="'msg:update'" @change="handleStatusChange(row)" />
           </template>
         </el-table-column>
         <el-table-column label="创建时间" prop="create_time" width="170" />
         <el-table-column label="操作" width="180" fixed="right" class-name="op-col">
           <template #default="{ row }">
-            <el-button v-perm="'msg:template:update'" link type="primary" @click="openEdit(row)">编辑</el-button>
-            <el-button v-perm="'msg:template:delete'" link type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button v-perm="'msg:update'" link type="primary" @click="openEdit(row)">编辑</el-button>
+            <el-button v-perm="'msg:delete'" link type="danger" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

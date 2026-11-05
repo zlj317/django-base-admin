@@ -25,10 +25,14 @@ import Navbar from './components/Navbar.vue'
 }
 
 .layout-aside {
-  background-color: #ffffff;
+  background-color: var(--app-sidebar-bg);
   transition: width 0.2s;
-  box-shadow: 2px 0 12px rgba(30, 41, 59, 0.04);
+  box-shadow: 2px 0 12px rgba(29, 33, 41, 0.05);
   z-index: 3;
+}
+
+html.dark .layout-aside {
+  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.4);
 }
 
 .layout-body {
@@ -37,9 +41,9 @@ import Navbar from './components/Navbar.vue'
 
 .layout-header {
   padding: 0;
-  background-color: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid #eef1f6;
+  background-color: var(--app-header-bg);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--app-border-light);
   z-index: 5;
 }
 

@@ -6,6 +6,7 @@
       </el-breadcrumb-item>
     </el-breadcrumb>
     <div class="navbar-right">
+      <ThemeSwitch />
       <el-dropdown trigger="click" @command="handleCommand">
         <span class="user-entry">
           <el-avatar :size="30" :src="auth.user.avatar || undefined" class="user-avatar">
@@ -32,6 +33,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { auth, logout } from '@/store/auth'
 import { clearDynamicRoutes } from '@/router'
 import { ArrowDown, SwitchButton } from '@element-plus/icons-vue'
+import ThemeSwitch from '@/components/ThemeSwitch.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -68,18 +70,23 @@ async function handleCommand(command) {
 }
 
 .navbar-breadcrumb :deep(.el-breadcrumb__inner) {
-  color: #8a94a6;
+  color: var(--app-text-3);
   font-weight: 500;
 }
 
 .navbar-breadcrumb :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
-  color: #1f2937;
+  color: var(--app-text-1);
   font-weight: 600;
+}
+
+.navbar-breadcrumb :deep(.el-breadcrumb__separator) {
+  color: var(--app-text-4);
 }
 
 .navbar-right {
   display: flex;
   align-items: center;
+  gap: 4px;
 }
 
 .user-entry {
@@ -87,31 +94,31 @@ async function handleCommand(command) {
   align-items: center;
   gap: 9px;
   padding: 5px 10px 5px 6px;
-  border-radius: 8px;
+  border-radius: var(--app-radius-md);
   cursor: pointer;
-  color: var(--el-text-color-primary);
+  color: var(--app-text-1);
   outline: none;
   transition: background 0.2s ease;
 }
 
 .user-entry:hover {
-  background: #f4f7ff;
+  background: var(--brand-primary-soft);
 }
 
 .user-avatar {
   color: #fff;
   font-weight: 600;
-  background: linear-gradient(135deg, #4a6cf7 0%, #7a92f9 100%);
-  box-shadow: 0 2px 6px rgba(74, 108, 247, 0.3);
+  background: var(--brand-gradient);
+  box-shadow: 0 2px 6px var(--brand-glow);
 }
 
 .user-name {
-  font-size: 14px;
+  font-size: var(--app-font-base);
   font-weight: 500;
 }
 
 .user-arrow {
-  color: #8a94a6;
+  color: var(--app-text-3);
   font-size: 12px;
 }
 </style>

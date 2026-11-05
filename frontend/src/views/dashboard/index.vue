@@ -240,31 +240,31 @@ const todayText = computed(() => {
 
 // 快捷入口
 const quickEntries = [
-  { title: '新建用户', icon: UserFilled, path: '/system/user', bg: 'linear-gradient(135deg, #4a6cf7, #7a92f9)' },
-  { title: '新建菜单', icon: Setting, path: '/system/menu', bg: 'linear-gradient(135deg, #12b76a, #4ad991)' },
-  { title: '任务调度', icon: Calendar, path: '/task', bg: 'linear-gradient(135deg, #f59e0b, #fbbf24)' },
-  { title: '数据备份', icon: Files, path: '/system/record', bg: 'linear-gradient(135deg, #8b5cf6, #b08bfa)' }
+  { title: '新建用户', icon: UserFilled, path: '/system/user', bg: 'linear-gradient(135deg, var(--chart-1), color-mix(in srgb, var(--chart-1) 72%, #ffffff))' },
+  { title: '新建菜单', icon: Setting, path: '/system/menu', bg: 'linear-gradient(135deg, var(--chart-5), color-mix(in srgb, var(--chart-5) 72%, #ffffff))' },
+  { title: '任务调度', icon: Calendar, path: '/task', bg: 'linear-gradient(135deg, var(--chart-3), color-mix(in srgb, var(--chart-3) 72%, #ffffff))' },
+  { title: '数据备份', icon: Files, path: '/system/record', bg: 'linear-gradient(135deg, var(--chart-4), color-mix(in srgb, var(--chart-4) 72%, #ffffff))' }
 ]
 
 // 常用功能九宫格
 const commonEntries = [
-  { title: '文件上传', desc: '文件管理', icon: FolderOpened, path: '/file', bg: 'linear-gradient(135deg, #6366f1, #818cf8)' },
-  { title: '报表生成', desc: '数据报表', icon: DataAnalysis, path: '/rp/template', bg: 'linear-gradient(135deg, #06b6d4, #22d3ee)' },
-  { title: '大屏预览', desc: 'BI可视化', icon: Monitor, path: '/bi', bg: 'linear-gradient(135deg, #14b8a6, #2dd4bf)' },
-  { title: '工单处理', desc: '工单系统', icon: Tickets, path: '/wo/order', bg: 'linear-gradient(135deg, #f59e0b, #fbbf24)' },
-  { title: '知识库', desc: '文档管理', icon: Document, path: '/kb/document', bg: 'linear-gradient(135deg, #ec4899, #f472b6)' },
-  { title: '定时任务', desc: '任务调度', icon: Calendar, path: '/task', bg: 'linear-gradient(135deg, #8b5cf6, #a78bfa)' },
-  { title: '字典管理', desc: '字典维护', icon: MagicStick, path: '/system/dict', bg: 'linear-gradient(135deg, #4a6cf7, #6366f1)' },
-  { title: '角色权限', desc: 'RBAC', icon: Bell, path: '/system/role', bg: 'linear-gradient(135deg, #ef4444, #f87171)' },
-  { title: '日志审计', desc: '操作日志', icon: Clock, path: '/system/operlog', bg: 'linear-gradient(135deg, #64748b, #94a3b8)' }
+  { title: '文件上传', desc: '文件管理', icon: FolderOpened, path: '/file', bg: 'linear-gradient(135deg, var(--chart-1), color-mix(in srgb, var(--chart-1) 72%, #ffffff))' },
+  { title: '报表生成', desc: '数据报表', icon: DataAnalysis, path: '/rp/template', bg: 'linear-gradient(135deg, var(--chart-2), color-mix(in srgb, var(--chart-2) 72%, #ffffff))' },
+  { title: '大屏预览', desc: 'BI可视化', icon: Monitor, path: '/bi', bg: 'linear-gradient(135deg, var(--chart-2), color-mix(in srgb, var(--chart-2) 72%, #ffffff))' },
+  { title: '工单处理', desc: '工单系统', icon: Tickets, path: '/wo/order', bg: 'linear-gradient(135deg, var(--chart-3), color-mix(in srgb, var(--chart-3) 72%, #ffffff))' },
+  { title: '知识库', desc: '文档管理', icon: Document, path: '/kb/document', bg: 'linear-gradient(135deg, var(--chart-6), color-mix(in srgb, var(--chart-6) 72%, #ffffff))' },
+  { title: '定时任务', desc: '任务调度', icon: Calendar, path: '/task', bg: 'linear-gradient(135deg, var(--chart-4), color-mix(in srgb, var(--chart-4) 72%, #ffffff))' },
+  { title: '字典管理', desc: '字典维护', icon: MagicStick, path: '/system/dict', bg: 'linear-gradient(135deg, var(--chart-1), color-mix(in srgb, var(--chart-1) 72%, #ffffff))' },
+  { title: '角色权限', desc: 'RBAC', icon: Bell, path: '/system/role', bg: 'linear-gradient(135deg, var(--chart-6), color-mix(in srgb, var(--chart-6) 72%, #ffffff))' },
+  { title: '日志审计', desc: '操作日志', icon: Clock, path: '/system/operlog', bg: 'linear-gradient(135deg, var(--app-text-3), color-mix(in srgb, var(--app-text-3) 72%, #ffffff))' }
 ]
 
 // 统计卡片配置
 const statCards = [
-  { key: 'todos', label: '今日待办', icon: Tickets, color: 'blue', bg: 'linear-gradient(135deg, #4a6cf7, #6366f1)', tip: '待办审批与工单', spark: '0,24 14,16 28,20 42,10 56,14 70,6 80,12' },
-  { key: 'messages', label: '未读消息', icon: Bell, color: 'purple', bg: 'linear-gradient(135deg, #8b5cf6, #a78bfa)', tip: '站内消息未读', spark: '0,18 14,22 28,14 42,18 56,10 70,14 80,8' },
-  { key: 'workflows', label: '运行中工作流', icon: TrendCharts, color: 'green', bg: 'linear-gradient(135deg, #22c55e, #4ade80)', tip: '流程实例总数', spark: '0,14 14,10 28,18 42,12 56,16 70,14 80,20' },
-  { key: 'new_users', label: '今日新增用户', icon: UserFilled, color: 'orange', bg: 'linear-gradient(135deg, #f59e0b, #fbbf24)', tip: '今日注册用户', spark: '0,22 14,18 28,20 42,14 56,18 70,8 80,10' }
+  { key: 'todos', label: '今日待办', icon: Tickets, color: 'blue', bg: 'linear-gradient(135deg, var(--chart-1), color-mix(in srgb, var(--chart-1) 72%, #ffffff))', tip: '待办审批与工单', spark: '0,24 14,16 28,20 42,10 56,14 70,6 80,12' },
+  { key: 'messages', label: '未读消息', icon: Bell, color: 'purple', bg: 'linear-gradient(135deg, var(--chart-4), color-mix(in srgb, var(--chart-4) 72%, #ffffff))', tip: '站内消息未读', spark: '0,18 14,22 28,14 42,18 56,10 70,14 80,8' },
+  { key: 'workflows', label: '运行中工作流', icon: TrendCharts, color: 'green', bg: 'linear-gradient(135deg, var(--chart-5), color-mix(in srgb, var(--chart-5) 72%, #ffffff))', tip: '流程实例总数', spark: '0,14 14,10 28,18 42,12 56,16 70,14 80,20' },
+  { key: 'new_users', label: '今日新增用户', icon: UserFilled, color: 'orange', bg: 'linear-gradient(135deg, var(--chart-3), color-mix(in srgb, var(--chart-3) 72%, #ffffff))', tip: '今日注册用户', spark: '0,22 14,18 28,20 42,14 56,18 70,8 80,10' }
 ]
 
 // 概览数据
@@ -280,9 +280,9 @@ const activities = ref([])
 
 const diskColor = computed(() => {
   const p = monitor.disk_percent || 0
-  if (p > 80) return '#ef4444'
-  if (p > 60) return '#f59e0b'
-  return '#22c55e'
+  if (p > 80) return 'var(--app-danger)'
+  if (p > 60) return 'var(--app-warning)'
+  return 'var(--app-success)'
 })
 
 function getStatValue(key) {
@@ -347,9 +347,9 @@ onMounted(() => {
   gap: 20px;
   padding: 28px 32px;
   margin-bottom: 18px;
-  background: linear-gradient(120deg, #4a6cf7 0%, #6a83f9 40%, #8b5cf6 75%, #a78bfa 100%);
-  border-radius: 16px;
-  box-shadow: 0 10px 36px rgba(74, 108, 247, 0.28);
+  background: var(--brand-gradient);
+  border-radius: var(--app-radius-xl);
+  box-shadow: 0 10px 36px var(--brand-glow);
   overflow: hidden;
   color: #fff;
 }
@@ -372,7 +372,7 @@ onMounted(() => {
 }
 
 .hero-avatar {
-  color: #4a6cf7;
+  color: var(--brand-primary);
   background: #fff;
   font-size: 22px;
   font-weight: 700;
@@ -440,16 +440,17 @@ onMounted(() => {
   align-items: center;
   gap: 14px;
   padding: 20px 22px;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 2px 12px rgba(30, 41, 59, 0.06);
-  border: 1px solid #f1f5f9;
+  background: var(--app-surface);
+  border-radius: var(--app-radius-lg);
+  box-shadow: var(--app-shadow-sm);
+  border: 1px solid var(--app-border-light);
   overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 .stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 24px rgba(30, 41, 59, 0.1);
+  box-shadow: var(--app-shadow-md);
+  border-color: var(--brand-primary-border);
 }
 .stat-icon-wrap {
   display: flex;
@@ -466,14 +467,14 @@ onMounted(() => {
 .stat-value {
   font-size: 28px;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--app-text-1);
   line-height: 1.1;
   font-variant-numeric: tabular-nums;
 }
 .stat-label {
   margin-top: 4px;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--app-text-3);
 }
 .stat-trend {
   display: flex;
@@ -482,9 +483,9 @@ onMounted(() => {
   margin-top: 6px;
   font-size: 12px;
 }
-.trend-up { color: #22c55e; font-weight: 600; }
-.trend-down { color: #ef4444; font-weight: 600; }
-.trend-tip { color: #9ca3af; margin-left: 2px; }
+.trend-up { color: var(--app-success); font-weight: 600; }
+.trend-down { color: var(--app-danger); font-weight: 600; }
+.trend-tip { color: var(--app-text-3); margin-left: 2px; }
 
 .stat-spark {
   position: absolute;
@@ -494,10 +495,10 @@ onMounted(() => {
   width: 80px;
   height: 36px;
 }
-.stat-blue .stat-spark { color: #4a6cf7; }
-.stat-purple .stat-spark { color: #8b5cf6; }
-.stat-green .stat-spark { color: #22c55e; }
-.stat-orange .stat-spark { color: #f59e0b; }
+.stat-blue .stat-spark { color: var(--chart-1); }
+.stat-purple .stat-spark { color: var(--chart-4); }
+.stat-green .stat-spark { color: var(--chart-5); }
+.stat-orange .stat-spark { color: var(--chart-3); }
 
 /* ============ 面板通用 ============ */
 .content-row, .bottom-row { margin-bottom: 18px; }
@@ -508,20 +509,20 @@ onMounted(() => {
 .bottom-row > .el-col,
 .stat-row > .el-col { display: flex; }
 
-.panel { border-radius: 14px; border: 1px solid #f1f5f9; display: flex; flex-direction: column; height: 100%; }
-.panel :deep(.el-card__header) { padding: 14px 20px; border-bottom: 1px solid #f1f5f9; }
+.panel { border-radius: var(--app-radius-lg); border: 1px solid var(--app-border-light); display: flex; flex-direction: column; height: 100%; }
+.panel :deep(.el-card__header) { padding: 14px 20px; border-bottom: 1px solid var(--app-border-light); }
 .panel :deep(.el-card__body) { padding: 16px 20px; flex: 1; display: flex; flex-direction: column; }
 .stat-card { width: 100%; }
 
 .panel-header { display: flex; align-items: center; justify-content: space-between; }
 .panel-title {
-  display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: #1f2937;
+  display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--app-text-1);
 }
 .panel-dot { width: 4px; height: 16px; border-radius: 3px; }
-.dot-blue { background: linear-gradient(180deg, #4a6cf7, #6366f1); }
-.dot-purple { background: linear-gradient(180deg, #8b5cf6, #a78bfa); }
-.dot-green { background: linear-gradient(180deg, #22c55e, #4ade80); }
-.dot-orange { background: linear-gradient(180deg, #f59e0b, #fbbf24); }
+.dot-blue { background: linear-gradient(180deg, var(--chart-1), var(--chart-1)); }
+.dot-purple { background: linear-gradient(180deg, var(--chart-4), var(--chart-4)); }
+.dot-green { background: linear-gradient(180deg, var(--chart-5), var(--chart-5)); }
+.dot-orange { background: linear-gradient(180deg, var(--chart-3), var(--chart-3)); }
 .panel-count { margin-left: 4px; }
 .status-tag { font-weight: 500; }
 
@@ -530,31 +531,31 @@ onMounted(() => {
 .todo-item { flex: 1; }
 .empty-hint {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 10px; padding: 30px 0; color: #9ca3af; font-size: 13px;
+  gap: 10px; padding: 30px 0; color: var(--app-text-3); font-size: 13px;
 }
 .todo-item {
   display: flex; align-items: center; justify-content: space-between;
   gap: 12px; padding: 12px 14px; margin-bottom: 10px;
-  background: #f8fafc; border-radius: 10px; cursor: pointer;
+  background: var(--app-surface-2); border-radius: var(--app-radius-md); cursor: pointer;
   transition: background 0.15s, transform 0.15s;
 }
-.todo-item:hover { background: #eef1ff; transform: translateX(2px); }
+.todo-item:hover { background: var(--brand-primary-soft); transform: translateX(2px); }
 .todo-left { flex: 1; min-width: 0; }
 .todo-type {
-  display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;
+  display: inline-block; padding: 2px 8px; border-radius: var(--app-radius-xs); font-size: 11px; font-weight: 600;
   margin-bottom: 6px;
 }
-.type-workflow { background: #eef1ff; color: #4a6cf7; }
-.type-wo { background: #fef3c7; color: #d97706; }
-.type-cal { background: #dcfce7; color: #16a34a; }
-.todo-title { font-size: 14px; color: #1f2937; font-weight: 500; margin-bottom: 4px; }
-.todo-meta { font-size: 12px; color: #9ca3af; display: flex; gap: 14px; }
+.type-workflow { background: var(--brand-primary-soft); color: var(--brand-primary); }
+.type-wo { background: color-mix(in srgb, var(--app-warning) 14%, transparent); color: var(--app-warning); }
+.type-cal { background: color-mix(in srgb, var(--app-success) 14%, transparent); color: var(--app-success); }
+.todo-title { font-size: 14px; color: var(--app-text-1); font-weight: 500; margin-bottom: 4px; }
+.todo-meta { font-size: 12px; color: var(--app-text-3); display: flex; gap: 14px; }
 
 /* ============ 最新动态 ============ */
 .activity-body { flex: 1; }
 .activity-item { display: flex; align-items: center; gap: 8px; }
 .activity-tag { flex-shrink: 0; }
-.activity-text { font-size: 13px; color: #374151; }
+.activity-text { font-size: 13px; color: var(--app-text-2); }
 
 /* ============ 系统监控 ============ */
 .monitor-body { padding: 4px 0; flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; }
@@ -564,10 +565,10 @@ onMounted(() => {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 8px; font-size: 13px;
 }
-.monitor-label { display: flex; align-items: center; gap: 6px; color: #4b5563; }
-.monitor-val { color: #6b7280; font-variant-numeric: tabular-nums; }
+.monitor-label { display: flex; align-items: center; gap: 6px; color: var(--app-text-2); }
+.monitor-val { color: var(--app-text-3); font-variant-numeric: tabular-nums; }
 .monitor-meta {
-  display: flex; gap: 16px; margin-top: 8px; font-size: 12px; color: #9ca3af;
+  display: flex; gap: 16px; margin-top: 8px; font-size: 12px; color: var(--app-text-3);
 }
 
 /* ============ 常用功能 ============ */
@@ -576,20 +577,20 @@ onMounted(() => {
 }
 .common-item {
   display: flex; align-items: center; gap: 12px;
-  padding: 14px 12px; background: #f8fafc; border-radius: 10px;
+  padding: 14px 12px; background: var(--app-surface-2); border-radius: var(--app-radius-md);
   cursor: pointer; transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
 }
 .common-item:hover {
-  background: #fff; transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(30, 41, 59, 0.08);
+  background: var(--app-surface); transform: translateY(-2px);
+  box-shadow: var(--app-shadow-md);
 }
 .ci-icon {
   display: flex; align-items: center; justify-content: center;
-  width: 42px; height: 42px; border-radius: 10px; color: #fff; flex-shrink: 0;
+  width: 42px; height: 42px; border-radius: var(--app-radius-md); color: #fff; flex-shrink: 0;
 }
 .ci-text { flex: 1; min-width: 0; }
-.ci-title { font-size: 13px; font-weight: 600; color: #1f2937; }
-.ci-desc { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+.ci-title { font-size: 13px; font-weight: 600; color: var(--app-text-1); }
+.ci-desc { font-size: 11px; color: var(--app-text-3); margin-top: 2px; }
 
 /* 小屏适配 */
 @media (max-width: 768px) {

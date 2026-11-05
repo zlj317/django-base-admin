@@ -50,6 +50,17 @@ class UserViewSet(CrudViewSet):
         if role_ids is not None:  # 区分“未传”与“清空”
             save_user_roles(instance.id, role_ids)  # 覆盖保存
 
+    def retrieve(self, request, pk=None):
+        """查询单个用户详情：列表字段 + 角色ID，供编辑弹窗回填。"""
+        user = self.get_queryset().filter(pk=pk).first()  # 查未删除用户
+        if not user:
+            return fail('用户不存在', code=404)  # 用户不存在
+        data = dict(UserListSerializer(user).data)  # 复用列表序列化字段
+        with connection.cursor() as cursor:  # 角色关联存于中间表
+            cursor.execute("SELECT role_id FROM sys_user_role WHERE user_id = %s", [pk])  # 查角色ID
+            data['role_ids'] = [row[0] for row in cursor.fetchall()]  # 供前端多选回填
+        return ok(data)  # 返回用户详情
+
     @action(detail=True, methods=['put'], url_path='reset_pwd')
     def reset_pwd(self, request, pk=None):
         """重置指定用户密码（仅更新密码与审计字段）。"""

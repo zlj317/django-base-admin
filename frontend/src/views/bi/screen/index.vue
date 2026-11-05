@@ -29,8 +29,8 @@
       <template #header>
         <div class="card-header">
           <div class="card-actions">
-            <el-button v-perm="'bi:screen:create'" type="primary" :icon="Plus" @click="openCreate">新增</el-button>
-            <el-button v-perm="'bi:screen:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchDelete">批量删除</el-button>
+            <el-button v-perm="'bi:create'" type="primary" :icon="Plus" @click="openCreate">新增</el-button>
+            <el-button v-perm="'bi:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchDelete">批量删除</el-button>
           </div>
         </div>
       </template>
@@ -54,10 +54,10 @@
         <el-table-column label="操作" width="330" fixed="right" class-name="op-col">
           <template #default="{ row }">
             <el-button link type="warning" @click="handleView(row)">预览</el-button>
-            <el-button v-perm="'bi:screen:update'" link type="primary" @click="openEdit(row)">编辑</el-button>
-            <el-button v-if="row.status===0" v-perm="'bi:screen:publish'" link type="success" @click="handlePublish(row)">发布</el-button>
+            <el-button v-perm="'bi:update'" link type="primary" @click="openEdit(row)">编辑</el-button>
+            <el-button v-if="row.status===0" v-perm="'bi:publish'" link type="success" @click="handlePublish(row)">发布</el-button>
             <el-button v-if="row.status===1 && row.share_url" link type="success" @click="handleShare(row)">分享</el-button>
-            <el-button v-perm="'bi:screen:delete'" link type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button v-perm="'bi:delete'" link type="danger" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

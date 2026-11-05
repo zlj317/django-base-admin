@@ -5,6 +5,7 @@ from apps.system.models import SysMenu, SysRole
 
 MENUS = [
     ('系统管理', 'backup_record', '数据备份管理', 'record', 'backup/record/index', 'backup:list', 'C', 'FolderChecked', 1),
+    ('系统管理', 'backup_strategy', '备份策略', 'strategy', 'backup/strategy/index', 'backup:list', 'C', 'SetUp', 2),
 ]
 
 BUTTONS = {

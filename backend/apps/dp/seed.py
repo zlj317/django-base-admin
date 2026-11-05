@@ -5,6 +5,7 @@ from apps.system.models import SysMenu, SysRole
 
 MENUS = [
     ('系统管理', 'sys_data_permission', '数据权限配置', 'permission', 'dp/permission/index', 'dp:list', 'C', 'Umbrella', 1),
+    ('系统管理', 'sys_role_data_permission', '角色数据权限', 'role_perm', 'dp/role_perm/index', 'dp:list', 'C', 'Avatar', 2),
 ]
 
 BUTTONS = {

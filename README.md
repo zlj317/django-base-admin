@@ -286,6 +286,16 @@ flowchart LR
 |---|
 | <img src="docs/images/13-student.png" alt="生成模块示例" width="100%"> |
 
+**UI 主题与暗色模式**
+
+| 主题设置面板（明暗 + 5 套主题色） | 角色管理（深色） |
+|---|---|
+| <img src="docs/images/ui/04-theme-panel.png" alt="主题设置面板" width="100%"> | <img src="docs/images/ui/05-role-dark.png" alt="角色管理深色" width="100%"> |
+
+| 仪表盘（浅色） | 仪表盘（深色 + 紫色主题） |
+|---|---|
+| <img src="docs/images/ui/02-dashboard-light.png" alt="仪表盘浅色" width="100%"> | <img src="docs/images/ui/07-dashboard-dark-purple.png" alt="仪表盘深色紫色主题" width="100%"> |
+
 **附加模块页面预览**
 
 | 附件管理 - 附件列表 | 附件管理 - 预览与编辑 |
@@ -346,6 +356,14 @@ flowchart LR
 
 - 重写首页：渐变 Hero + 4 统计卡（用户数/待办/告警/今日访问）、待办事项列表（联动工作流 + 工单 + 日程）、系统动态时间线（最近操作日志 + 告警）、九宫格常用功能快捷入口（可自定义）。
 
+### UI 主题与设计规范
+
+- **明暗双模式**：浅色 / 深色一键切换，同时覆盖 Element Plus 与 Arco Design 组件；暗色下统一收敛边框、表面与文字对比度。
+- **5 套主题色**：深海蓝 `#165dff`（默认）、青碧绿 `#0fc6c2`、幻夜紫 `#722ed1`、活力橙 `#ff7d00`、玫瑰红 `#f5319d`，每套自带 6 色图表色板。
+- **切换方式**：顶栏右侧「主题设置」（太阳/月亮图标）→ 面板内选择外观模式与主题色，切换即时生效；选择写入 `localStorage["app-theme"]`（`{ mode, palette }`），刷新后自动恢复且首屏不闪烁。
+- **设计令牌**：`frontend/src/styles/tokens.css` 统一定义 `--app-*`（文本 / 表面 / 边框 / 圆角 / 间距 / 字号 / 阴影 / 表格密度 / 状态色）、`--brand-*`（主色派生）与 `--chart-1..6`；主题运行时 `frontend/src/theme/index.js` 将主色写入 `--el-color-primary`、`--primary-1..10` 等变量，页面不写死颜色。
+- **组件策略**：业务控件沿用 Element Plus；顶栏主题面板按需引入 Arco Design Vue（`Popover / RadioGroup / Radio`）；表格、弹窗、分页、表单、标签由全局样式一次换肤。
+
 ### 数据与展示约定
 
 - **雪花主键**：所有数据表 `id` 为 `BIGINT`，数据库不使用 `AUTO_INCREMENT`，统一由后端 `common/snowflake.py` 生成；模型字段使用 `common/fields.py` 的 `SnowflakeIDField`。
@@ -355,7 +373,7 @@ flowchart LR
 
 ---
 
-- **工程规范**：统一响应 `{code, msg, data}`（HTTP 状态恒 200）、统一分页、全局异常处理、逻辑删除 `is_deleted`、操作日志中间件、`managed=False` 的 SQL-first 表结构、Element Plus 主题定制。
+- **工程规范**：统一响应 `{code, msg, data}`（HTTP 状态恒 200）、统一分页、全局异常处理、逻辑删除 `is_deleted`、操作日志中间件、`managed=False` 的 SQL-first 表结构、Element Plus 业务组件 + Arco Design Vue 主题面板、CSS 设计令牌驱动明暗模式与多主题。
 - **中英文文档**：本 README 提供中英文切换，`docs/` 下提供结构图、功能说明、运行部署与零基础学习路线。
 
 ## 技术栈
@@ -366,7 +384,7 @@ flowchart LR
 | 认证 | 自研 JWT + bcrypt | `Authorization: Bearer`，`X-Refresh-Token` 静默续期 |
 | 数据库 | MySQL 8 | 表由 SQL 脚本创建，模型 `managed=False` |
 | 前端 | Vue 3（Composition API）+ Vite 5 | 无 Pinia，使用 `reactive` 轻量状态 |
-| UI | Element Plus 2.x | 全局 CSS 变量主题覆盖 |
+| UI | Element Plus 2.x + Arco Design Vue 2.59 | 业务控件用 Element Plus；顶栏主题面板按需引入 Arco；设计令牌统一明暗模式与 5 套主题色 |
 | 工作流 | 自研 Python BPMN 引擎 + bpmn-js | 解析 BPMN XML、Token 流转、网关与审批人策略；前端 Modeler 设计 / Viewer 轨迹高亮 |
 | 定时任务 | Celery + Redis Broker | CRON / 间隔调度、失败重试、手动触发，内置 4 个系统模板 |
 | 消息推送 | Django Channels + Redis WebSocket | 站内消息实时推送、未读红点提醒；预留短信/邮件/Webhook 渠道 |
@@ -588,6 +606,16 @@ An admin system built with **Django 4.2 + DRF + MySQL 8 + Vue 3 + Element Plus**
 |---|
 | <img src="docs/images/13-student.png" alt="Generated module" width="100%"> |
 
+**UI Themes & Dark Mode**
+
+| Theme panel (mode + 5 palettes) | Role list (dark) |
+|---|---|
+| <img src="docs/images/ui/04-theme-panel.png" alt="Theme panel" width="100%"> | <img src="docs/images/ui/05-role-dark.png" alt="Role list dark" width="100%"> |
+
+| Dashboard (light) | Dashboard (dark + purple) |
+|---|---|
+| <img src="docs/images/ui/02-dashboard-light.png" alt="Dashboard light" width="100%"> | <img src="docs/images/ui/07-dashboard-dark-purple.png" alt="Dashboard dark purple" width="100%"> |
+
 **Additional Module Previews**
 
 | File - Attachment List | File - Preview & Edit |
@@ -625,7 +653,8 @@ An admin system built with **Django 4.2 + DRF + MySQL 8 + Vue 3 + Element Plus**
 - **Report management**: low-code drag-and-drop designer (lowcode-report), MySQL + API dual data sources, template versioning and role permission, manual / scheduled Excel & PDF generation, auto-save to attachment module, generation records with kkFileView preview, WebSocket real-time queries.
 - **BI dashboards**: drag-and-drop canvas (datart), line/bar/pie/number indicator/table/map components, MySQL/API datasets, shareable URL with access password, configurable auto-refresh seconds, snapshot archive, access log.
 - **External integration**: external API config (GET/POST/PUT/DELETE, headers/query, Token/Basic auth), one-click connectivity test, full request log (params/response/duration/status/error), manual/scheduled sync tasks that pull external data into local tables; report and BI modules directly pick configured APIs as data sources.
-- **Engineering conventions**: unified response `{code, msg, data}` (HTTP status always 200), unified pagination, global exception handler, logical delete `is_deleted`, operation-log middleware, SQL-first schema with `managed=False`, custom Element Plus theme.
+- **UI themes & design tokens**: light/dark modes plus 5 palettes (deep blue, teal, purple, orange, rose); the top-bar theme switcher persists to `localStorage["app-theme"]`; `tokens.css` defines `--app-*` / `--brand-*` / `--chart-1..6` tokens that drive Element Plus, Arco Design and custom styles, so tables, dialogs, charts and dark-mode borders follow instantly.
+- **Engineering conventions**: unified response `{code, msg, data}` (HTTP status always 200), unified pagination, global exception handler, logical delete `is_deleted`, operation-log middleware, SQL-first schema with `managed=False`, Element Plus business components + on-demand Arco Design Vue theme panel, design tokens for light/dark and multi-theme.
 - **Bilingual docs**: this README supports Chinese/English switching; the `docs/` folder contains architecture, feature, run/deploy and beginner guides.
 
 ## Tech Stack
@@ -636,7 +665,7 @@ An admin system built with **Django 4.2 + DRF + MySQL 8 + Vue 3 + Element Plus**
 | Auth | Custom JWT + bcrypt | `Authorization: Bearer`, `X-Refresh-Token` silent renewal |
 | Database | MySQL 8 | Schema created by SQL script, models use `managed=False` |
 | Frontend | Vue 3 (Composition API) + Vite 5 | No Pinia; a lightweight `reactive` store |
-| UI | Element Plus 2.x | Global CSS variable theme overrides |
+| UI | Element Plus 2.x + Arco Design Vue 2.59 | Element Plus for business components; Arco imported on demand for the top-bar theme panel; design tokens drive light/dark and 5 palettes |
 | Workflow | Custom Python BPMN engine + bpmn-js | Parses BPMN XML, token flow, gateways and approver strategies; Modeler for design, Viewer with active-node highlighting |
 | Scheduler | Celery + Redis Broker | Cron / interval scheduling, auto-retry, one-shot manual trigger, 4 built-in system templates |
 | WebSocket | Django Channels + Redis | Real-time in-site message push, unread red dots; SMS/email/Webhook channels reserved |

@@ -1,7 +1,9 @@
 """数据备份模块视图集。"""
 import datetime
+import json
 import time as _time
 
+from django.http import HttpResponse
 from rest_framework.decorators import action
 
 from common.response import ok
@@ -38,6 +40,27 @@ class BackupRecordViewSet(CrudViewSet):
             remark='手动触发的模拟备份',
         )
         return ok(BackupRecordSerializer(row).data, '手动备份成功')
+
+    @action(detail=True, methods=['get'])
+    def download(self, request, pk=None):
+        """下载备份文件（模拟）：输出该备份记录的元信息 JSON。"""
+        row = self.get_queryset().filter(pk=pk).first()  # 查未删除的备份记录
+        if not row:
+            return self._not_found()  # 记录不存在
+        payload = {
+            'backup_name': row.backup_name,
+            'backup_type': row.backup_type,
+            'db_name': row.db_name,
+            'backup_status': row.backup_status,
+            'backup_time': str(row.backup_time) if row.backup_time else '',
+            'file_size': row.file_size,
+            'remark': row.remark,
+            'notice': '演示环境未生成真实备份文件，此处返回备份元信息',
+        }
+        resp = HttpResponse(json.dumps(payload, ensure_ascii=False, indent=2),
+                            content_type='application/json; charset=utf-8')
+        resp['Content-Disposition'] = f'attachment; filename="backup_{row.id}.json"'  # 浏览器下载文件名兜底
+        return resp
 
 
 class BackupStrategyViewSet(CrudViewSet):

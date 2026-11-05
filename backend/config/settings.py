@@ -93,6 +93,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny'],  # 默认放行，由视图按需叠加权限
     'EXCEPTION_HANDLER': 'common.exception.exception_handler',  # 统一错误码封装，HTTP 状态恒为 200
     'UNAUTHENTICATED_USER': None,  # 不用 Django 的 User 对象，认证结果由 user_info 承载
+    'DEFAULT_RENDERER_CLASSES': ['common.response.BigIntJSONRenderer'],  # 雪花主键转字符串，避免前端精度丢失
     'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',  # 时间统一输出 yyyy-MM-dd HH:mm:ss，避免 ISO 的 T 分隔
     'DATE_FORMAT': '%Y-%m-%d',  # 日期统一输出 yyyy-MM-dd
     'TIME_FORMAT': '%H:%M:%S',  # 时间仅输出时分秒

@@ -5,6 +5,7 @@ from apps.system.models import SysMenu, SysRole
 
 MENUS = [
     ('系统管理', 'imp_template', '导入模板管理', 'template', 'imprint/template/index', 'imprint:list', 'C', 'Upload', 1),
+    ('系统管理', 'imp_column', '导入模板列', 'column', 'imprint/column/index', 'imprint:list', 'C', 'Grid', 3),
     ('系统管理', 'print_template', '打印模板管理', 'print', 'imprint/print/index', 'imprint:list', 'C', 'Printer', 2),
 ]
 

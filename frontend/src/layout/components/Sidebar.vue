@@ -10,8 +10,8 @@
       <el-menu
         :default-active="activeMenu"
         background-color="transparent"
-        text-color="#4b5563"
-        active-text-color="#4a6cf7"
+        text-color="var(--app-text-2)"
+        active-text-color="var(--brand-primary)"
         :unique-opened="false"
         router
       >
@@ -44,8 +44,8 @@ const visibleMenus = computed(() =>
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: linear-gradient(180deg, #ffffff 0%, #f7f9ff 100%);
-  border-right: 1px solid #eef1f6;
+  background: var(--app-sidebar-bg);
+  border-right: 1px solid var(--app-border-light);
 }
 
 .sidebar-logo {
@@ -54,10 +54,10 @@ const visibleMenus = computed(() =>
   gap: 10px;
   height: 56px;
   padding: 0 18px;
-  background: linear-gradient(135deg, #4a6cf7 0%, #6f8bff 100%);
+  background: var(--brand-gradient);
   color: #fff;
   flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(74, 108, 247, 0.28);
+  box-shadow: 0 4px 14px var(--brand-glow);
   z-index: 2;
 }
 
@@ -70,7 +70,7 @@ const visibleMenus = computed(() =>
   color: #fff;
   background: rgba(255, 255, 255, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 8px;
+  border-radius: var(--app-radius-md);
 }
 
 .logo-title {
@@ -131,19 +131,19 @@ const visibleMenus = computed(() =>
 
 .sidebar-scroll :deep(.el-menu-item:hover),
 .sidebar-scroll :deep(.el-sub-menu__title:hover) {
-  background-color: #eef1ff;
-  color: #4a6cf7;
+  background-color: var(--brand-primary-soft);
+  color: var(--brand-primary);
 }
 
 .sidebar-scroll :deep(.el-menu-item.is-active) {
-  background: linear-gradient(90deg, #eef1ff 0%, #f6f8ff 100%);
-  color: #4a6cf7;
+  background: var(--brand-primary-soft);
+  color: var(--brand-primary);
   font-weight: 600;
-  box-shadow: inset 3px 0 0 #4a6cf7;
+  box-shadow: inset 3px 0 0 var(--brand-primary);
 }
 
 .sidebar-scroll :deep(.el-sub-menu.is-active > .el-sub-menu__title) {
-  color: #4a6cf7;
+  color: var(--brand-primary);
   font-weight: 600;
 }
 

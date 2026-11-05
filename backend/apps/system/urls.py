@@ -20,6 +20,7 @@ def crud(prefix, viewset, extras=None):
 
 
 urlpatterns = crud('user', views.UserViewSet, {
+    '<int:pk>': {'get': 'retrieve'},  # 用户详情（编辑回填）
     'reset_pwd/<int:pk>': {'put': 'reset_pwd'},  # 重置密码
     'status/<int:pk>': {'put': 'status'},  # 启用/停用
     'assign_roles/<int:pk>': {'put': 'assign_roles'},  # 分配角色

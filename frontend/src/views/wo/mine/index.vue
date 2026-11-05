@@ -220,13 +220,13 @@ onMounted(() => { fetchList(); loadOptions() })
 .detail-body { padding: 0 6px; }
 .detail-section { margin-top: 20px; }
 .detail-section-title {
-  font-size: 14px; font-weight: 600; color: #1f2937; margin-bottom: 10px;
-  padding-bottom: 6px; border-bottom: 1px solid #f1f5f9;
+  font-size: 14px; font-weight: 600; color: var(--app-text-1); margin-bottom: 10px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--app-border-light);
 }
-.detail-content { font-size: 13px; color: #4b5563; line-height: 1.8; padding: 12px 14px; background: #f8fafc; border-radius: 8px; white-space: pre-wrap; word-break: break-word; }
-.muted { color: #9ca3af; }
-.log-remark { margin-top: 6px; font-size: 12px; color: #6b7280; }
-.empty-tip { color: #9ca3af; font-size: 12px; padding: 10px 0; }
+.detail-content { font-size: 13px; color: var(--app-text-2); line-height: 1.8; padding: 12px 14px; background: var(--app-surface-2); border-radius: 8px; white-space: pre-wrap; word-break: break-word; }
+.muted { color: var(--app-text-3); }
+.log-remark { margin-top: 6px; font-size: 12px; color: var(--app-text-2); }
+.empty-tip { color: var(--app-text-3); font-size: 12px; padding: 10px 0; }
 .op-btns { display: flex; flex-wrap: nowrap; align-items: center; white-space: nowrap; }
 .op-btns .el-button { margin-left: 0; padding: 0 4px; }
 </style>

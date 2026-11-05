@@ -22,8 +22,8 @@
       <template #header>
         <div class="card-header">
           <div class="card-actions">
-            <el-button v-perm="'file:recycle:restore'" type="success" plain :icon="RefreshRight" :disabled="!selection.length" @click="handleBatchRestore">批量恢复</el-button>
-            <el-button v-perm="'file:recycle:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchHardDelete">批量彻底删除</el-button>
+            <el-button v-perm="'file:restore'" type="success" plain :icon="RefreshRight" :disabled="!selection.length" @click="handleBatchRestore">批量恢复</el-button>
+            <el-button v-perm="'file:hardDelete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchHardDelete">批量彻底删除</el-button>
           </div>
         </div>
       </template>
@@ -40,8 +40,8 @@
         <el-table-column label="删除时间" prop="delete_time" width="170" />
         <el-table-column label="操作" width="200" fixed="right" class-name="op-col">
           <template #default="{ row }">
-            <el-button v-perm="'file:recycle:restore'" link type="success" @click="handleRestore(row)">恢复</el-button>
-            <el-button v-perm="'file:recycle:delete'" link type="danger" @click="handleHardDelete(row)">彻底删除</el-button>
+            <el-button v-perm="'file:restore'" link type="success" @click="handleRestore(row)">恢复</el-button>
+            <el-button v-perm="'file:hardDelete'" link type="danger" @click="handleHardDelete(row)">彻底删除</el-button>
           </template>
         </el-table-column>
       </el-table>

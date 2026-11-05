@@ -34,8 +34,8 @@
       <template #header>
         <div class="card-header">
           <div class="card-actions">
-            <el-button v-perm="'bi:dataset:create'" type="primary" :icon="Plus" @click="openCreate">新增</el-button>
-            <el-button v-perm="'bi:dataset:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchDelete">批量删除</el-button>
+            <el-button v-perm="'bi:create'" type="primary" :icon="Plus" @click="openCreate">新增</el-button>
+            <el-button v-perm="'bi:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchDelete">批量删除</el-button>
           </div>
         </div>
       </template>
@@ -56,15 +56,15 @@
         <el-table-column label="配置" prop="ds_config" min-width="220" show-overflow-tooltip />
         <el-table-column label="状态" width="90" align="center">
           <template #default="{ row }">
-            <el-switch v-model="row.status" :active-value="1" :inactive-value="0" v-perm="'bi:dataset:update'" @change="handleStatusChange(row)" />
+            <el-switch v-model="row.status" :active-value="1" :inactive-value="0" v-perm="'bi:update'" @change="handleStatusChange(row)" />
           </template>
         </el-table-column>
         <el-table-column label="备注" prop="remark" min-width="160" show-overflow-tooltip />
         <el-table-column label="创建时间" prop="create_time" width="170" />
         <el-table-column label="操作" width="180" fixed="right" class-name="op-col">
           <template #default="{ row }">
-            <el-button v-perm="'bi:dataset:update'" link type="primary" @click="openEdit(row)">编辑</el-button>
-            <el-button v-perm="'bi:dataset:delete'" link type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button v-perm="'bi:update'" link type="primary" @click="openEdit(row)">编辑</el-button>
+            <el-button v-perm="'bi:delete'" link type="danger" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

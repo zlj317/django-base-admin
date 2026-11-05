@@ -5,6 +5,7 @@ from apps.system.models import SysMenu, SysRole
 
 MENUS = [
     ('system', 'mon', '监控告警', 'mon', 'mon/rule/index', 'mon:rule:list', 'C', 'Warning', 5),
+    ('system', 'mon_record', '告警记录', 'mon_record', 'mon/record/index', 'mon:rule:list', 'C', 'Bell', 6),
 ]
 
 BUTTONS = {

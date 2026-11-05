@@ -28,8 +28,8 @@
       <template #header>
         <div class="card-header">
           <div class="card-actions">
-            <el-button v-perm="'msg:config:create'" type="primary" :icon="Plus" @click="openCreate">新增</el-button>
-            <el-button v-perm="'msg:config:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchDelete">批量删除</el-button>
+            <el-button v-perm="'msg:create'" type="primary" :icon="Plus" @click="openCreate">新增</el-button>
+            <el-button v-perm="'msg:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchDelete">批量删除</el-button>
           </div>
         </div>
       </template>
@@ -40,7 +40,7 @@
         <el-table-column label="渠道名称" prop="channel_name" min-width="150" show-overflow-tooltip />
         <el-table-column label="启用" width="90" align="center">
           <template #default="{ row }">
-            <el-switch v-model="row.enabled" :active-value="1" :inactive-value="0" v-perm="'msg:config:update'" @change="handleStatusChange(row)" />
+            <el-switch v-model="row.enabled" :active-value="1" :inactive-value="0" v-perm="'msg:update'" @change="handleStatusChange(row)" />
           </template>
         </el-table-column>
         <el-table-column label="配置JSON" prop="config_json" min-width="240" show-overflow-tooltip />
@@ -48,8 +48,8 @@
         <el-table-column label="创建时间" prop="create_time" width="170" />
         <el-table-column label="操作" width="180" fixed="right" class-name="op-col">
           <template #default="{ row }">
-            <el-button v-perm="'msg:config:update'" link type="primary" @click="openEdit(row)">编辑</el-button>
-            <el-button v-perm="'msg:config:delete'" link type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button v-perm="'msg:update'" link type="primary" @click="openEdit(row)">编辑</el-button>
+            <el-button v-perm="'msg:delete'" link type="danger" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -118,7 +118,7 @@ const rules = {
 }
 
 function apiUrl(action) {
-  const base = '/msg/config'
+  const base = '/msg/push_config'
   return {
     list: base + '/list',
     create: base + '/create',
@@ -157,7 +157,7 @@ async function submitForm() {
 }
 
 async function handleStatusChange(row) {
-  await request.put(`/msg/config/status/${row.id}`, { enabled: row.enabled })
+  await request.put(`/msg/push_config/status/${row.id}`, { enabled: row.enabled })
   ElMessage.success(row.enabled === 1 ? '已启用' : '已停用')
 }
 

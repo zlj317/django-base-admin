@@ -21,6 +21,7 @@ def crud(prefix, viewset, extras=None):
 
 urlpatterns = crud('record', views.BackupRecordViewSet, {
     'manual': {'post': 'manual_backup'},
+    'download/<int:pk>': {'get': 'download'},  # 下载备份（演示环境返回元信息）
 }) + crud('strategy', views.BackupStrategyViewSet, {
     'status/<int:pk>': {'put': 'status'},
 })

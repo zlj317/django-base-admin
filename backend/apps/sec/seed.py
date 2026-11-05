@@ -5,6 +5,8 @@ from apps.system.models import SysMenu, SysRole
 
 MENUS = [
     ('system', 'sec', '安全策略', 'sec', 'sec/ip/index', 'sec:ip:list', 'C', 'Security', 6),
+    ('system', 'sec_login_attempt', '登录尝试', 'login_attempt', 'sec/login_attempt/index', 'sec:ip:list', 'C', 'Timer', 7),
+    ('system', 'sec_rate_limit', '接口限流', 'rate_limit', 'sec/rate_limit/index', 'sec:ip:list', 'C', 'Odometer', 8),
 ]
 
 BUTTONS = {

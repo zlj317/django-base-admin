@@ -1,0 +1,138 @@
+/* =========================================================
+   设计令牌（Design Tokens）
+   所有页面通过变量取色/取尺寸，避免在各页面写死颜色与圆角。
+   主题色由 src/theme/index.js 在运行时写入 --brand-* / --chart-*。
+   ========================================================= */
+:root {
+  /* ---------- 品牌色（运行时会被主题切换覆盖，这里仅作默认值） ---------- */
+  --brand-primary: #165dff;
+  --brand-primary-rgb: 22, 93, 255;
+  --brand-primary-hover: #0e42d2;
+  --brand-primary-soft: #e8f0ff;
+  --brand-primary-border: #a3c0ff;
+  --brand-gradient: linear-gradient(135deg, #165dff 0%, #4c82ff 100%);
+  --brand-glow: rgba(22, 93, 255, 0.28);
+
+  /* ---------- 语义色 ---------- */
+  --app-success: #00b42a;
+  --app-warning: #ff7d00;
+  --app-danger: #f53f3f;
+  --app-info: #86909c;
+
+  /* ---------- 文本层级 ---------- */
+  --app-text-1: #1d2129;
+  --app-text-2: #4e5969;
+  --app-text-3: #6b7280; /* 次要文字：白底对比度约 4.8:1，满足 WCAG AA */
+  --app-text-4: #c9cdd4;
+  --app-text-inverse: #ffffff;
+
+  /* ---------- 背景与表面 ---------- */
+  --app-bg: #f2f4f8;
+  --app-bg-deep: #e9edf3;
+  --app-surface: #ffffff;
+  --app-surface-2: #f7f8fa;
+  --app-surface-3: #eef1f6;
+  --app-sidebar-bg: #ffffff;
+  --app-header-bg: rgba(255, 255, 255, 0.86);
+  --app-overlay: rgba(15, 23, 42, 0.42);
+
+  /* ---------- 边框 ---------- */
+  --app-border: #e5e8ef;
+  --app-border-light: #eef1f6;
+  --app-border-strong: #d4d9e3;
+
+  /* ---------- 圆角 ---------- */
+  --app-radius-xs: 4px;
+  --app-radius-sm: 6px;
+  --app-radius-md: 8px;
+  --app-radius-lg: 12px;
+  --app-radius-xl: 16px;
+
+  /* ---------- 间距 ---------- */
+  --app-space-1: 4px;
+  --app-space-2: 8px;
+  --app-space-3: 12px;
+  --app-space-4: 16px;
+  --app-space-5: 20px;
+  --app-space-6: 24px;
+
+  /* ---------- 字号层级 ---------- */
+  --app-font-xs: 12px;
+  --app-font-sm: 13px;
+  --app-font-base: 14px;
+  --app-font-md: 15px;
+  --app-font-lg: 18px;
+  --app-font-xl: 22px;
+
+  /* ---------- 阴影 ---------- */
+  --app-shadow-xs: 0 1px 2px rgba(29, 33, 41, 0.04);
+  --app-shadow-sm: 0 2px 8px rgba(29, 33, 41, 0.06);
+  --app-shadow-md: 0 6px 18px rgba(29, 33, 41, 0.08);
+  --app-shadow-lg: 0 16px 40px rgba(29, 33, 41, 0.12);
+
+  /* ---------- 表格密度 ---------- */
+  --app-table-head-h: 42px;
+  --app-table-row-h: 44px;
+  --app-table-cell-px: 12px;
+  --app-table-head-bg: #f7f8fa;
+  --app-table-stripe: #fbfcfd;
+  --app-table-hover: #f2f6ff;
+
+  /* ---------- 图表色板（默认值，主题切换时覆盖） ---------- */
+  --chart-1: #165dff;
+  --chart-2: #14c9c9;
+  --chart-3: #ff7d00;
+  --chart-4: #722ed1;
+  --chart-5: #00b42a;
+  --chart-6: #f53f3f;
+
+  /* ---------- 兼容 Element Plus 基础变量 ---------- */
+  --el-border-radius-base: var(--app-radius-sm);
+  --el-border-radius-small: var(--app-radius-xs);
+  --el-text-color-primary: var(--app-text-1);
+  --el-text-color-regular: var(--app-text-2);
+  --el-text-color-secondary: var(--app-text-3);
+  --el-border-color: var(--app-border);
+  --el-border-color-light: var(--app-border-light);
+  --el-border-color-lighter: var(--app-border-light);
+  --el-bg-color: var(--app-surface);
+  --el-bg-color-page: var(--app-bg);
+  --el-fill-color-blank: var(--app-surface);
+  --el-fill-color-light: var(--app-surface-2);
+}
+
+/* ---------- 暗色模式：同名字义变量整体替换，组件样式无需重写 ---------- */
+html.dark {
+  --app-success: #23c343;
+  --app-warning: #ff9a2e;
+  --app-danger: #f76560;
+  --app-info: #9aa4b2;
+
+  --app-text-1: #e8eaf0;
+  --app-text-2: #aeb6c3;
+  --app-text-3: #7c8698;
+  --app-text-4: #4b5563;
+  --app-text-inverse: #ffffff;
+
+  --app-bg: #101218;
+  --app-bg-deep: #0b0d12;
+  --app-surface: #171a21;
+  --app-surface-2: #1f232c;
+  --app-surface-3: #272c37;
+  --app-sidebar-bg: #14161d;
+  --app-header-bg: rgba(20, 22, 29, 0.86);
+  --app-overlay: rgba(0, 0, 0, 0.55);
+
+  --app-border: #2b303b;
+  --app-border-light: #232833;
+  --app-border-strong: #3a4150;
+
+  --app-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --app-shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.32);
+  --app-shadow-md: 0 8px 22px rgba(0, 0, 0, 0.4);
+  --app-shadow-lg: 0 18px 46px rgba(0, 0, 0, 0.5);
+
+  --app-table-head-bg: #1c2029;
+  --app-table-stripe: #1b1f27;
+  --app-table-hover: #212633;
+}

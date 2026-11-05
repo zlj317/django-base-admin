@@ -62,7 +62,20 @@ class CrudViewSet(viewsets.ViewSet):
 
     def create(self, request):
         """新增接口：校验入参后补审计字段并回写完整对象。"""
+        # 逻辑删除记录仍占用数据库唯一索引，新增前先给出明确提示，避免直接落库时报 500
+        for field in self.model._meta.fields:
+            if not field.unique or field.primary_key or not hasattr(self.model, 'is_deleted'):
+                continue  # 只校验业务唯一字段
+            value = request.data.get(field.attname)  # 取提交的唯一字段值
+            if value in (None, ''):
+                continue  # 未提交则交给序列化器处理
+            qs = self.model.objects.filter(**{field.attname: value})  # 含已删除记录
+            if qs.filter(is_deleted=0).exists():  # 未删除记录已占用
+                return fail(f'{field.verbose_name}已存在', code=400)  # 明确提示
+            if qs.exists():  # 仅被已删除记录占用（数据库唯一键冲突）
+                return fail(f'{field.verbose_name}已被已删除记录占用，请更换{field.verbose_name}', code=400)  # 明确提示
         serializer = self.get_serializer_class()(data=request.data)  # 绑定请求体做字段校验
+
         serializer.is_valid(raise_exception=True)  # 校验失败交给全局异常处理器转 400
         now = time.strftime('%Y-%m-%d %H:%M:%S')  # 统一时间格式，与手写 SQL 的写入方式保持一致
         user = getattr(request, 'user_info', None)  # 当前登录用户，用于审计字段

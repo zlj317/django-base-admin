@@ -1,5 +1,5 @@
 <template>
-  <div class="simple-chart" :class="{ dark }" :style="{ '--chart-hole': dark ? '#0d1f3f' : '#ffffff' }">
+  <div class="simple-chart" :class="{ dark }" :style="{ '--chart-hole': dark ? '#0d1f3f' : 'var(--app-surface)' }">
     <div v-if="type === 'rank'" class="rank-list">
       <div v-for="(item, index) in rankItems" :key="item.name" class="rank-row">
         <span class="rank-no" :class="{ top: index < 3 }">{{ index + 1 }}</span>
@@ -89,13 +89,15 @@ const props = defineProps({
   height: { type: Number, default: 440 }
 })
 
-const LIGHT_COLORS = ['#4a6cf7', '#12b76a', '#f79009', '#8b5cf6', '#0ea5e9', '#ef4444']
-const DARK_COLORS = ['#4ea8ff', '#2ee6a8', '#ffc53d', '#a78bfa', '#ff7a45', '#4ade80']
+const CHART_COLORS = [
+  'var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)',
+  'var(--chart-4)', 'var(--chart-5)', 'var(--chart-6)'
+]  // 直接引用主题变量，切换主题色/暗色时图表自动跟随
 const WIDTH = 1000
 
-const colors = computed(() => (props.dark ? DARK_COLORS : LIGHT_COLORS))
-const gridColor = computed(() => (props.dark ? 'rgba(120, 170, 255, 0.16)' : '#eef1f6'))
-const trackColor = computed(() => (props.dark ? 'rgba(120, 170, 255, 0.16)' : '#eef1f6'))
+const colors = computed(() => CHART_COLORS)
+const gridColor = computed(() => 'var(--app-border-light)')
+const trackColor = computed(() => 'var(--app-border-light)')
 
 function colorAt(index) {
   return colors.value[index % colors.value.length]
@@ -244,45 +246,31 @@ function tickLabel(index) {
 <style scoped>
 .simple-chart { position: relative; width: 100%; height: 100%; }
 .simple-chart svg { width: 100%; height: 100%; display: block; }
-.axis-tick { font-size: 12px; fill: #98a2b3; }
-.axis-label { font-size: 12px; fill: #667085; }
-.pie-total { font-size: 22px; font-weight: 700; fill: #1f2937; }
-.pie-total-label { font-size: 12px; fill: #98a2b3; }
-.gauge-value { font-size: 30px; font-weight: 700; fill: #1f2937; }
-.gauge-label { font-size: 13px; fill: #98a2b3; }
-.chart-legend { display: flex; gap: 18px; padding: 4px 6px 0 64px; font-size: 12px; color: #667085; }
+.axis-tick { font-size: 12px; fill: var(--app-text-3); }
+.axis-label { font-size: 12px; fill: var(--app-text-2); }
+.pie-total { font-size: 22px; font-weight: 700; fill: var(--app-text-1); }
+.pie-total-label { font-size: 12px; fill: var(--app-text-3); }
+.gauge-value { font-size: 30px; font-weight: 700; fill: var(--app-text-1); }
+.gauge-label { font-size: 13px; fill: var(--app-text-3); }
+.chart-legend { display: flex; gap: 18px; padding: 4px 6px 0 64px; font-size: 12px; color: var(--app-text-2); }
 .legend-item { display: inline-flex; align-items: center; gap: 6px; }
 .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 .pie-wrap { display: flex; align-items: center; height: 100%; }
 .pie-wrap svg { width: 58%; height: 100%; flex: 0 0 58%; }
-.pie-legend { flex: 1; display: flex; flex-direction: column; gap: 10px; padding-right: 8px; font-size: 12px; color: #667085; }
+.pie-legend { flex: 1; display: flex; flex-direction: column; gap: 10px; padding-right: 8px; font-size: 12px; color: var(--app-text-2); }
 .legend-row { display: flex; align-items: center; gap: 8px; }
 .legend-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.legend-value { color: #1f2937; font-weight: 600; }
+.legend-value { color: var(--app-text-1); font-weight: 600; }
 .gauge-wrap { position: relative; width: 100%; height: 100%; }
-.gauge-scale { position: absolute; left: 18%; right: 18%; bottom: 4%; display: flex; justify-content: space-between; font-size: 12px; color: #98a2b3; }
+.gauge-scale { position: absolute; left: 18%; right: 18%; bottom: 4%; display: flex; justify-content: space-between; font-size: 12px; color: var(--app-text-3); }
 .rank-list { display: flex; flex-direction: column; gap: 12px; padding: 6px 4px; height: 100%; overflow: hidden; }
-.rank-row { display: grid; grid-template-columns: 26px 1fr auto; grid-template-areas: 'no name value' 'bar bar bar'; gap: 4px 8px; align-items: center; font-size: 12px; color: #667085; }
-.rank-no { grid-area: no; display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 6px; background: #eef1f6; color: #667085; font-weight: 600; }
-.rank-no.top { background: #fff4e5; color: #f79009; }
+.rank-row { display: grid; grid-template-columns: 26px 1fr auto; grid-template-areas: 'no name value' 'bar bar bar'; gap: 4px 8px; align-items: center; font-size: 12px; color: var(--app-text-2); }
+.rank-no { grid-area: no; display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 6px; background: var(--app-surface-2); color: var(--app-text-2); font-weight: 600; }
+.rank-no.top { background: color-mix(in srgb, var(--app-warning) 14%, transparent); color: var(--app-warning); }
 .rank-name { grid-area: name; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.rank-value { grid-area: value; color: #1f2937; font-weight: 600; }
-.rank-value em { font-style: normal; font-size: 11px; color: #98a2b3; margin-left: 2px; }
-.rank-bar { grid-area: bar; height: 6px; border-radius: 3px; background: #f2f4f7; overflow: hidden; }
+.rank-value { grid-area: value; color: var(--app-text-1); font-weight: 600; }
+.rank-value em { font-style: normal; font-size: 11px; color: var(--app-text-3); margin-left: 2px; }
+.rank-bar { grid-area: bar; height: 6px; border-radius: 3px; background: var(--app-surface-3); overflow: hidden; }
 .rank-bar i { display: block; height: 100%; border-radius: 3px; }
-.empty-tip { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #98a2b3; }
-.simple-chart.dark .axis-tick,
-.simple-chart.dark .axis-label { fill: rgba(206, 226, 255, 0.62); }
-.simple-chart.dark .pie-total,
-.simple-chart.dark .gauge-value,
-.simple-chart.dark .legend-value,
-.simple-chart.dark .rank-value { color: #e8f1ff; fill: #e8f1ff; }
-.simple-chart.dark .pie-total-label,
-.simple-chart.dark .gauge-label,
-.simple-chart.dark .gauge-scale,
-.simple-chart.dark .chart-legend,
-.simple-chart.dark .pie-legend,
-.simple-chart.dark .rank-row { color: rgba(206, 226, 255, 0.62); }
-.simple-chart.dark .rank-no { background: rgba(78, 168, 255, 0.14); color: rgba(206, 226, 255, 0.8); }
-.simple-chart.dark .rank-bar { background: rgba(78, 168, 255, 0.12); }
+.empty-tip { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--app-text-3); }
 </style>

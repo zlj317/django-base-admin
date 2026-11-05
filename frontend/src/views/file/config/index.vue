@@ -29,8 +29,8 @@
       <template #header>
         <div class="card-header">
           <div class="card-actions">
-            <el-button v-perm="'file:config:create'" type="primary" :icon="Plus" @click="openCreate">新增</el-button>
-            <el-button v-perm="'file:config:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchDelete">批量删除</el-button>
+            <el-button v-perm="'file:create'" type="primary" :icon="Plus" @click="openCreate">新增</el-button>
+            <el-button v-perm="'file:delete'" type="danger" plain :icon="Delete" :disabled="!selection.length" @click="handleBatchDelete">批量删除</el-button>
           </div>
         </div>
       </template>
@@ -52,8 +52,8 @@
         <el-table-column label="创建时间" prop="create_time" width="170" />
         <el-table-column label="操作" width="180" fixed="right" class-name="op-col">
           <template #default="{ row }">
-            <el-button v-perm="'file:config:update'" link type="primary" @click="openEdit(row)">编辑</el-button>
-            <el-button v-perm="'file:config:delete'" link type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button v-perm="'file:update'" link type="primary" @click="openEdit(row)">编辑</el-button>
+            <el-button v-perm="'file:delete'" link type="danger" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
