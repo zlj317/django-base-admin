@@ -4,9 +4,9 @@ from django.urls import path  # 路由声明
 from apps.scene3d import views  # 引入本模块视图集
 
 
-def crud(prefix, viewset, extras=None):
+def crud(prefix, viewset, extras=None):  # 路由工厂：按统一约定生成 CRUD 与自定义动作
     """与其它模块保持一致的 CRUD 路由生成器。"""
-    def _join(s):
+    def _join(s):  # 内部辅助：拼资源前缀，保留空前缀（场景主表）
         """拼接路由前缀。"""
         return f'{prefix}/{s}' if prefix else s  # 空前缀时不加斜杠
     list_view = viewset.as_view({'get': 'list', 'post': 'create', 'delete': 'delete'})  # 列表/新增/批量删除

@@ -15,8 +15,8 @@ def get_user_role_ids(user):
     from django.db import connection  # 延迟导入，仅在需要时加载
     with connection.cursor() as cursor:  # 原始 SQL 需显式游标
         cursor.execute(
-            "SELECT r.id, r.role_key FROM sys_user_role ur "
-            "JOIN sys_role r ON r.id = ur.role_id AND r.is_deleted = 0 AND r.status = 0 "
+            "SELECT r.id, r.role_key FROM sys_user_role ur "  # 用户-角色中间表起手
+            "JOIN sys_role r ON r.id = ur.role_id AND r.is_deleted = 0 AND r.status = 0 "  # 仅有效角色
             "WHERE ur.user_id = %s", [user.id])
         return cursor.fetchall()  # [(角色ID, 角色编码), ...]
 
@@ -35,19 +35,19 @@ def get_user_menus(user):
         from django.db import connection  # 延迟导入，避免模块级依赖
         with connection.cursor() as cursor:  # 查询角色-菜单关联表
             cursor.execute(
-                "SELECT DISTINCT rm.menu_id FROM sys_user_role ur "
-                "JOIN sys_role_menu rm ON rm.role_id = ur.role_id WHERE ur.user_id = %s",
+                "SELECT DISTINCT rm.menu_id FROM sys_user_role ur "  # 用户-角色关联
+                "JOIN sys_role_menu rm ON rm.role_id = ur.role_id WHERE ur.user_id = %s",  # 聚合角色菜单
                 [user.id])
             menu_ids = [r[0] for r in cursor.fetchall()]  # 已授权菜单ID
         qs = qs.filter(id__in=menu_ids)  # 仅保留已授权菜单
-    rows = list(qs.values('id', 'parent_id', 'menu_name', 'path', 'component',
+    rows = list(qs.values('id', 'parent_id', 'menu_name', 'path', 'component',  # 只取菜单展示所需字段
                           'menu_type', 'icon', 'order_num', 'visible', 'status'))
     return build_tree(rows)  # 组装为前端可用的树结构
 
 
 def login_log(username, ip, status, msg, browser=''):
     """写入登录日志，字段截断以匹配表长度。"""
-    SysLoginLog.objects.create(
+    SysLoginLog.objects.create(  # 写入登录结果，字段按表长度截断，避免超长报错
         username=username, ip=ip, status=status,
         login_time=time.strftime('%Y-%m-%d %H:%M:%S'), browser=browser[:100], msg=msg[:255],
     )
@@ -83,7 +83,7 @@ class AuthViewSet(viewsets.ViewSet):
             return fail('账号已被禁用，请联系管理员')  # 返回禁用提示
 
         login_log(username, ip, 0, '登录成功', browser)  # 记录成功日志
-        data = {
+        data = {  # 登录成功返回结构：令牌 + 基础用户 + 权限标识 + 菜单树
             'token': create_token(user),  # 签发访问令牌
             'user': {'id': user.id, 'username': user.username,  # 返回基础用户信息
                      'nickname': user.nickname, 'avatar': user.avatar},  # 昵称与头像
@@ -95,7 +95,7 @@ class AuthViewSet(viewsets.ViewSet):
     def userinfo(self, request):
         """返回当前登录用户信息、权限与菜单（令牌续签）。"""
         user = request.user_info  # 中间件解析出的登录用户
-        data = {
+        data = {  # 续签令牌并重新下发用户信息、权限与菜单
             'token': create_token(user),  # 重新签发令牌
             'user': {'id': user.id, 'username': user.username,  # 基础用户信息
                      'nickname': user.nickname, 'avatar': user.avatar},  # 昵称与头像

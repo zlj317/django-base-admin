@@ -426,7 +426,7 @@ class WorkflowEngine:
         except Exception:  # 表达式非法
             return None
 
-    @staticmethod
+    @staticmethod  # 静态方法：去重不依赖引擎运行状态
     def _dedupe(ids):
         """去重并保持顺序，避免同一人重复收到待办。"""
         result = []  # 结果列表

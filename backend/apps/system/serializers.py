@@ -21,7 +21,7 @@ class UniqueExcludingDeleted:
         serializer = serializers.CharField()  # 借用字符字段做类型/空值规范化
         value = serializer.to_internal_value(value)  # 转成内部字符串值
         qs = self.model.objects.filter(**{self.field_name: value}, is_deleted=0)  # 未删除记录
-        if self.model.pk_value:
+        if self.model.pk_value:  # 仅更新场景会预先暂存主键，用于排除自身
             qs = qs.exclude(pk=self.model.pk_value)  # 更新时排除自身
         if qs.exists():
             raise serializers.ValidationError(self.message)  # 已存在则校验失败
@@ -99,7 +99,7 @@ class UserListSerializer(serializers.ModelSerializer):
 
     def get_dept_name(self, obj):
         """按 dept_id 查询部门名称，未归属部门时返回空。"""
-        if obj.dept_id:
+        if obj.dept_id:  # 仅当用户归属部门时才查询，避免空主键查询
             return SysDept.objects.filter(id=obj.dept_id).values_list('dept_name', flat=True).first()
         return None  # 无部门则返回空
 
@@ -107,7 +107,7 @@ class UserListSerializer(serializers.ModelSerializer):
         """联表查询用户已分配的角色（过滤已删除角色）。"""
         from django.db import connection  # 延迟导入，避免模块加载期依赖
         with connection.cursor() as cursor:  # 原始 SQL 需要显式游标
-            cursor.execute(
+            cursor.execute(  # 一条 SQL 联表取角色，过滤已删除角色
                 "SELECT r.id, r.role_name FROM sys_user_role ur "
                 "JOIN sys_role r ON r.id = ur.role_id AND r.is_deleted = 0 "
                 "WHERE ur.user_id = %s", [obj.id])

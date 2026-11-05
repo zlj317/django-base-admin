@@ -47,7 +47,7 @@ class WfFormViewSet(CrudViewSet):
     module_name = '流程表单'  # 操作日志模块名
     filter_map = {'form_name': 'icontains', 'form_key': 'icontains', 'status': 'exact'}  # 筛选字段
 
-    @property
+    @property  # 属性方法：DRF 访问时动态生成当前视图的权限映射
     def permission_classes(self):
         """补充表单详情动作的权限映射。"""
         self.perm_map = {
@@ -75,7 +75,7 @@ class WfGroupViewSet(CrudViewSet):
     module_name = '用户分组'  # 操作日志模块名
     filter_map = {'group_name': 'icontains', 'group_code': 'icontains', 'status': 'exact'}  # 筛选字段
 
-    @property
+    @property  # 属性方法：把成员相关自定义动作也纳入权限校验
     def permission_classes(self):
         """补充成员查询与设置动作的权限映射。"""
         self.perm_map = {
@@ -116,7 +116,7 @@ class WfModelViewSet(CrudViewSet):
     filter_map = {'model_name': 'icontains', 'model_key': 'icontains',
                   'category_id': 'exact', 'status': 'exact'}  # 筛选字段
 
-    @property
+    @property  # 属性方法：把设计器相关自定义动作也纳入权限校验
     def permission_classes(self):
         """补充设计/发布/复制/停用/下拉动作的权限映射。"""
         self.perm_map = {
@@ -243,7 +243,7 @@ class WfInstanceViewSet(viewsets.ViewSet):
     """流程实例：发起、我的流程、全局监控、轨迹、终止与撤回。"""
     permission_classes = [PermissionCheck]  # 统一权限校验
 
-    @property
+    @property  # 属性方法：实例相关动作到权限标识的动态映射
     def perm_map(self):
         """接口动作到权限标识的映射。"""
         return {
@@ -394,7 +394,7 @@ class WfTaskViewSet(viewsets.ViewSet):
     """流程任务：待办/已办/全局任务与审批动作。"""
     permission_classes = [PermissionCheck]  # 统一权限校验
 
-    @property
+    @property  # 属性方法：任务相关动作到权限标识的动态映射
     def perm_map(self):
         """接口动作到权限标识的映射。"""
         return {
@@ -527,7 +527,7 @@ class WfCcViewSet(viewsets.ViewSet):
     """抄送：抄送我的列表与标记已读。"""
     permission_classes = [PermissionCheck]  # 统一权限校验
 
-    @property
+    @property  # 属性方法：抄送相关动作复用同一查询权限
     def perm_map(self):
         """接口动作到权限标识的映射。"""
         return {'mine': 'wf:cc:mine', 'read': 'wf:cc:mine'}

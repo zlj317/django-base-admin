@@ -7,7 +7,7 @@ from common.snowflake import next_id  # 雪花 ID 生成器
 class SnowflakeIDField(models.BigIntegerField):
     """BIGINT 主键，插入时由后端雪花算法生成，不使用数据库自增。"""
 
-    description = '雪花算法主键'
+    description = '雪花算法主键'  # Django 内部用于描述字段类型的说明文本
 
     def __init__(self, *args, **kwargs):
         """统一补齐主键、默认值与只读属性，子模型只需声明字段名。"""

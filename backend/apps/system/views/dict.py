@@ -18,7 +18,7 @@ class DictTypeViewSet(CrudViewSet):
         """删除字典类型时同步删除其字典项。"""
         from rest_framework.decorators import action  # noqa 函数内延迟导入，避免循环依赖
         ids = request.data.get('ids') or []  # 待删除类型ID
-        if not ids:
+        if not ids:  # 未勾选任何类型时直接提示，避免空集合批量更新
             return ok(None, '请选择要删除的数据')  # 未选择数据
         self.get_queryset().filter(id__in=ids).update(is_deleted=1)  # 逻辑删除类型
         SysDictData.objects.filter(dict_type_id__in=ids).update(is_deleted=1)  # 级联删除字典项
@@ -37,7 +37,7 @@ class DictDataViewSet(CrudViewSet):
         """支持按 dict_type 编码（而非ID）过滤字典项。"""
         qs = super().get_queryset()  # 基类已过滤逻辑删除
         dict_type = self.request.query_params.get('dict_type')  # 类型编码参数
-        if dict_type:
+        if dict_type:  # 仅在传入类型编码时换算主键，否则保持全量查询
             type_id = SysDictType.objects.filter(dict_type=dict_type, is_deleted=0) \
                 .values_list('id', flat=True).first()  # 编码换算为主键
             qs = qs.filter(dict_type_id=type_id) if type_id else qs.none()  # 无匹配则空集
@@ -46,10 +46,10 @@ class DictDataViewSet(CrudViewSet):
     def all(self, request):
         """全部启用字典（前端缓存做翻译与下拉）。"""
         types = SysDictType.objects.filter(is_deleted=0, status=0)  # 启用的字典类型
-        data = []
-        for t in types:
+        data = []  # 汇总各字典类型的结果，保持前端按类型分组的缓存结构
+        for t in types:  # 逐类型查询启用字典项
             items = SysDictData.objects.filter(dict_type_id=t.id, is_deleted=0, status=0)  # 启用项
             data.append({'dict_type': t.dict_type,  # 类型编码作为键
-                         'list': [{'dict_label': i.dict_label, 'dict_value': i.dict_value}
+                         'list': [{'dict_label': i.dict_label, 'dict_value': i.dict_value}  # 每项只输出标签与键值
                                   for i in items]})  # 标签与键值列表
         return ok(data)  # 返回全部字典

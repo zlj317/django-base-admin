@@ -53,7 +53,7 @@ class UserViewSet(CrudViewSet):
     def retrieve(self, request, pk=None):
         """查询单个用户详情：列表字段 + 角色ID，供编辑弹窗回填。"""
         user = self.get_queryset().filter(pk=pk).first()  # 查未删除用户
-        if not user:
+        if not user:  # 详情查询未命中说明已被删除或主键不存在
             return fail('用户不存在', code=404)  # 用户不存在
         data = dict(UserListSerializer(user).data)  # 复用列表序列化字段
         with connection.cursor() as cursor:  # 角色关联存于中间表
@@ -61,11 +61,11 @@ class UserViewSet(CrudViewSet):
             data['role_ids'] = [row[0] for row in cursor.fetchall()]  # 供前端多选回填
         return ok(data)  # 返回用户详情
 
-    @action(detail=True, methods=['put'], url_path='reset_pwd')
+    @action(detail=True, methods=['put'], url_path='reset_pwd')  # 注册单条动作：PUT /user/reset_pwd/<pk>
     def reset_pwd(self, request, pk=None):
         """重置指定用户密码（仅更新密码与审计字段）。"""
         user = self.get_queryset().filter(pk=pk).first()  # 查未删除用户
-        if not user:
+        if not user:  # 重置密码前先确认用户仍存在
             return fail('用户不存在', code=404)  # 用户不存在
         password = request.data.get('password')  # 新密码
         if not password:
@@ -76,11 +76,11 @@ class UserViewSet(CrudViewSet):
         user.save(update_fields=['password', 'update_by', 'update_time'])  # 只更新这三列
         return ok(None, '密码重置成功')  # 返回成功
 
-    @action(detail=True, methods=['put'])
+    @action(detail=True, methods=['put'])  # 注册单条动作：PUT /user/status/<pk>
     def status(self, request, pk=None):
         """启用/停用用户，禁止修改自己的状态。"""
         user = self.get_queryset().filter(pk=pk).first()  # 查未删除用户
-        if not user:
+        if not user:  # 切换状态前先确认用户仍存在
             return fail('用户不存在', code=404)  # 用户不存在
         if int(user.id) == int(request.user_info.id):  # 防止把自己锁在系统外
             return fail('不能修改自己的状态', code=400)  # 拒绝操作
@@ -90,7 +90,7 @@ class UserViewSet(CrudViewSet):
         user.save(update_fields=['status', 'update_by', 'update_time'])  # 只更新这三列
         return ok(None, '修改成功')  # 返回成功
 
-    @action(detail=True, methods=['put'], url_path='assign_roles')
+    @action(detail=True, methods=['put'], url_path='assign_roles')  # 注册单条动作：PUT /user/assign_roles/<pk>
     def assign_roles(self, request, pk=None):
         """为指定用户重新分配角色（覆盖式）。"""
         if not self.get_queryset().filter(pk=pk).exists():  # 先校验用户存在

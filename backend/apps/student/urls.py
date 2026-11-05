@@ -6,7 +6,7 @@ from apps.student import views  # 引入本模块视图，便于按 action 映�
 list_view = views.BizStudentViewSet.as_view({
     'get': 'list', 'post': 'create', 'delete': 'delete'})  # 列表入口复用：GET 查询、POST 新增、DELETE 批量删除
 
-urlpatterns = [
+urlpatterns = [  # 学生信息模块路由表，统一挂在项目 API 前缀下
     path('student/list', list_view),  # 分页查询学生列表
     path('student/create', list_view),  # 新增学生（与 list 共用入口，按 POST 区分）
     path('student/delete', list_view),  # 批量逻辑删除

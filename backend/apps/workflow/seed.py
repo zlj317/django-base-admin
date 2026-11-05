@@ -10,6 +10,7 @@ from apps.workflow.models import (
 MENUS = [
     (None, 'workflow', '工作流程', 'workflow', '', '', 'M', 'Share', 3),  # 一级目录
     ('workflow', 'wf_manage', '流程管理', 'manage', '', '', 'M', 'SetUp', 1),  # 二级目录
+    # 流程管理二级目录：配置类页面（分类、模型、表单、分组、监听器、表达式、实例、任务）
     ('wf_manage', 'wf_category', '流程分类', 'category', 'workflow/category/index', 'wf:category:list', 'C', 'CollectionTag', 1),
     ('wf_manage', 'wf_model', '流程模型', 'model', 'workflow/model/index', 'wf:model:list', 'C', 'Share', 2),
     ('wf_manage', 'wf_form', '流程表单', 'form', 'workflow/form/index', 'wf:form:list', 'C', 'Document', 3),
@@ -19,12 +20,14 @@ MENUS = [
     ('wf_manage', 'wf_instance', '流程实例', 'instance', 'workflow/instance/index', 'wf:instance:list', 'C', 'List', 7),
     ('wf_manage', 'wf_task_admin', '流程任务', 'task', 'workflow/task/index', 'wf:task:list', 'C', 'Tickets', 8),
     ('workflow', 'wf_center', '审批中心', 'center', '', '', 'M', 'Promotion', 2),  # 二级目录
+    # 审批中心二级目录：业务用户自助页面（发起、我的流程、待办、已办、抄送）
     ('wf_center', 'wf_start', '发起流程', 'start', 'workflow/start/index', 'wf:start:create', 'C', 'Promotion', 1),
     ('wf_center', 'wf_my', '我的流程', 'my', 'workflow/my/index', 'wf:instance:my', 'C', 'Files', 2),
     ('wf_center', 'wf_todo', '待办任务', 'todo', 'workflow/todo/index', 'wf:task:todo', 'C', 'AlarmClock', 3),
     ('wf_center', 'wf_done', '已办任务', 'done', 'workflow/done/index', 'wf:task:done', 'C', 'Finished', 4),
     ('wf_center', 'wf_cc', '抄送我的', 'cc', 'workflow/cc/index', 'wf:cc:mine', 'C', 'ChatDotRound', 5),
     ('workflow', 'wf_oa', 'OA示例', 'oa', '', '', 'M', 'DocumentAdd', 3),  # 二级目录
+    # OA 示例二级目录：请假单据查询页（复用实例列表数据做演示）
     ('wf_oa', 'wf_leave', '请假查询', 'leave', 'workflow/leave/index', 'wf:instance:list', 'C', 'Clock', 1),
 ]
 
@@ -42,15 +45,15 @@ BUTTONS = {
                     ('编辑', 'wf:listener:update'), ('删除', 'wf:listener:delete')],
     'wf_expression': [('查询', 'wf:expression:list'), ('新增', 'wf:expression:create'),
                       ('编辑', 'wf:expression:update'), ('删除', 'wf:expression:delete')],
-    'wf_instance': [('查询', 'wf:instance:list'), ('终止', 'wf:instance:terminate')],
-    'wf_task_admin': [('查询', 'wf:task:list'), ('转派', 'wf:task:transfer')],
-    'wf_start': [('发起', 'wf:start:create')],
-    'wf_my': [('查询', 'wf:instance:my'), ('撤回', 'wf:instance:withdraw')],
+    'wf_instance': [('查询', 'wf:instance:list'), ('终止', 'wf:instance:terminate')],  # 实例监控：查询与强制终止
+    'wf_task_admin': [('查询', 'wf:task:list'), ('转派', 'wf:task:transfer')],  # 管理员任务：查询与转派
+    'wf_start': [('发起', 'wf:start:create')],  # 发起流程按钮
+    'wf_my': [('查询', 'wf:instance:my'), ('撤回', 'wf:instance:withdraw')],  # 我的流程：查询与撤回
     'wf_todo': [('查询', 'wf:task:todo'), ('同意', 'wf:task:approve'), ('驳回', 'wf:task:reject'),
                 ('转审', 'wf:task:transfer'), ('加签', 'wf:task:addsign'), ('退回', 'wf:task:back')],
-    'wf_done': [('查询', 'wf:task:done')],
-    'wf_cc': [('查询', 'wf:cc:mine')],
-    'wf_leave': [('查询', 'wf:instance:list')],
+    'wf_done': [('查询', 'wf:task:done')],  # 已办任务查询
+    'wf_cc': [('查询', 'wf:cc:mine')],  # 抄送我的查询
+    'wf_leave': [('查询', 'wf:instance:list')],  # 请假单据查询
 }
 
 
@@ -209,22 +212,33 @@ def _expense_xml():
 </bpmn:definitions>'''
 
 
-LEAVE_FIELDS = [
+LEAVE_FIELDS = [  # 请假演示表单字段：key 需与流程表达式、form_data 取值保持一致
+    # 请假类型：下拉单选，限定四种假别
     {'key': 'leaveType', 'label': '请假类型', 'type': 'select', 'required': True,
      'options': ['事假', '病假', '年假', '调休'], 'placeholder': '请选择请假类型'},
+    # 开始日期：日期选择，用于单据展示
     {'key': 'startDate', 'label': '开始日期', 'type': 'date', 'required': True, 'placeholder': '请选择开始日期'},
+    # 结束日期：日期选择，用于单据展示
     {'key': 'endDate', 'label': '结束日期', 'type': 'date', 'required': True, 'placeholder': '请选择结束日期'},
+    # 请假天数：数字输入，排他网关条件 ${form.leaveDays > 3} 依赖该字段
     {'key': 'leaveDays', 'label': '请假天数', 'type': 'number', 'required': True, 'placeholder': '请输入请假天数'},
+    # 请假事由：多行文本，审批人判断依据
     {'key': 'reason', 'label': '请假事由', 'type': 'textarea', 'required': True, 'placeholder': '请输入请假事由'},
+    # 附件地址：文件字段，非必填
     {'key': 'attachment', 'label': '附件地址', 'type': 'file', 'required': False, 'placeholder': '请输入附件地址'},
 ]
 
-EXPENSE_FIELDS = [
+EXPENSE_FIELDS = [  # 报销演示表单字段：结构与请假表单一致，提交时按 key 校验必填
+    # 报销类型：下拉单选，限定费用科目
     {'key': 'expenseType', 'label': '报销类型', 'type': 'select', 'required': True,
      'options': ['差旅费', '办公用品', '招待费', '其他'], 'placeholder': '请选择报销类型'},
+    # 报销金额：数字输入，供财务核对
     {'key': 'amount', 'label': '报销金额（元）', 'type': 'number', 'required': True, 'placeholder': '请输入报销金额'},
+    # 发生日期：日期选择，用于财务归档
     {'key': 'expenseDate', 'label': '发生日期', 'type': 'date', 'required': True, 'placeholder': '请选择发生日期'},
+    # 报销说明：多行文本，说明费用用途
     {'key': 'reason', 'label': '报销说明', 'type': 'textarea', 'required': True, 'placeholder': '请输入报销说明'},
+    # 发票地址：文件字段，非必填
     {'key': 'attachment', 'label': '发票地址', 'type': 'file', 'required': False, 'placeholder': '请输入发票地址'},
 ]
 

@@ -14,7 +14,7 @@ class DeptViewSet(CrudViewSet):
     perm_prefix = 'system:dept'  # 权限标识前缀
     module_name = '部门管理'  # 操作日志模块名
 
-    @property
+    @property  # 以属性形式按 action 动态返回权限类，供 DRF 在每次请求前装配
     def permission_classes(self):
         """树接口仅需登录，其余动作沿用基类的权限校验。"""
         if self.action in ('tree',):  # 部门树供用户表单选择，登录即可
@@ -29,7 +29,7 @@ class DeptViewSet(CrudViewSet):
     def delete(self, request, pk=None):
         """单删：存在下级部门或在职用户时禁止删除。"""
         dept = self.get_queryset().filter(pk=pk).first()  # 查未删除部门
-        if not dept:
+        if not dept:  # 未命中说明部门已被逻辑删除或主键不存在
             return fail('部门不存在', code=404)  # 部门不存在
         if self.get_queryset().filter(parent_id=pk).exists():  # 是否有下级部门
             return fail('存在下级部门，不允许删除')  # 拒绝删除

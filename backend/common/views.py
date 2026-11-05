@@ -87,7 +87,7 @@ class CrudViewSet(viewsets.ViewSet):
                 update_by=user.username if user else '',  # 初始更新人与创建人一致
                 update_time=now,  # 初始更新时间
             )
-        instance = serializer.save(**audit)
+        instance = serializer.save(**audit)  # 落库并返回带雪花主键的实例，供下一步回写完整数据
         self.after_create(request, instance)  # 子类可在此做关联数据写入
         return ok(self.get_serializer_class()(instance).data, '新增成功')  # 返回落库后的完整数据
 

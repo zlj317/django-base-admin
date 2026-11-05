@@ -16,14 +16,14 @@ class MenuViewSet(CrudViewSet):
     perm_prefix = 'system:menu'  # 权限标识前缀
     module_name = '菜单管理'  # 操作日志模块名
 
-    @property
+    @property  # 以属性形式按 action 动态返回权限类，供 DRF 在每次请求前装配
     def permission_classes(self):
         """树接口仅需登录，其余动作沿用基类的权限校验。"""
         if self.action in ('tree',):  # 菜单树用于角色授权页，登录即可
             return [LoginRequired]  # 登录校验
         return super().permission_classes  # 基类按 perm_prefix 校验
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'])  # 注册集合级自定义动作：GET /menu/tree
     def tree(self, request):
         """菜单树（含按钮），供菜单管理与角色授权使用。"""
         queryset = self.get_queryset()  # 未删除菜单
@@ -39,7 +39,7 @@ class MenuViewSet(CrudViewSet):
     def delete(self, request, pk=None):
         """单删：存在子菜单时禁止删除。"""
         menu = self.get_queryset().filter(pk=pk).first()  # 查未删除菜单
-        if not menu:
+        if not menu:  # 未命中说明菜单已被逻辑删除或主键不存在
             return fail('菜单不存在', code=404)  # 菜单不存在
         if self.get_queryset().filter(parent_id=pk).exists():  # 是否有子菜单
             return fail('存在子菜单，不允许删除')  # 拒绝删除

@@ -42,7 +42,7 @@ class RoleViewSet(CrudViewSet):
     def menu_ids(self, request, pk=None):
         """查询角色已授权的菜单ID列表。"""
         with connection.cursor() as cursor:  # 原始 SQL 需显式游标
-            cursor.execute("SELECT menu_id FROM sys_role_menu WHERE role_id = %s", [pk])
+            cursor.execute("SELECT menu_id FROM sys_role_menu WHERE role_id = %s", [pk])  # 查角色-菜单中间表
             return ok({'menu_ids': [r[0] for r in cursor.fetchall()]})  # 返回ID数组
 
     def assign_menus(self, request, pk=None):

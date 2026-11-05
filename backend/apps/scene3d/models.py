@@ -5,7 +5,7 @@ from common.fields import SnowflakeIDField  # 雪花算法主键字段
 from common.utils import BaseModel  # 公共字段基类：创建/更新人、逻辑删除
 
 
-class Scene3dCategory(BaseModel):
+class Scene3dCategory(BaseModel):  # 继承 BaseModel，复用审计字段与逻辑删除
     """场景分类表：机房、档案库房、园区等业务归类。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     category_name = models.CharField('分类名称', max_length=100)  # 分类显示名称
@@ -14,13 +14,13 @@ class Scene3dCategory(BaseModel):
     status = models.SmallIntegerField('状态', default=1)  # 1 启用 / 0 停用
     remark = models.CharField('备注', max_length=500, blank=True, null=True)  # 备注说明
 
-    class Meta:
+    class Meta:  # 表级元数据：物理表名、托管方式与默认排序
         db_table = 'scene3d_category'  # 对应数据库物理表名
         managed = False  # 不参与 migrate 的建表/改表
         ordering = ['sort', 'id']  # 默认按排序号、主键升序
 
 
-class Scene3dTemplate(BaseModel):
+class Scene3dTemplate(BaseModel):  # 场景模板，提供新建场景的默认配置
     """场景模板表：新建场景时选择模板快速起步。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     template_name = models.CharField('模板名称', max_length=100)  # 模板显示名称
@@ -32,13 +32,13 @@ class Scene3dTemplate(BaseModel):
     status = models.SmallIntegerField('状态', default=1)  # 1 启用 / 0 停用
     remark = models.CharField('备注', max_length=500, blank=True, null=True)  # 备注说明
 
-    class Meta:
+    class Meta:  # 表级元数据：物理表名、托管方式与默认排序
         db_table = 'scene3d_template'  # 对应数据库物理表名
         managed = False  # 不参与 migrate 的建表/改表
         ordering = ['sort', 'id']  # 默认按排序号、主键升序
 
 
-class Scene3dScene(BaseModel):
+class Scene3dScene(BaseModel):  # 场景主表，scene_config 同时保存分享令牌
     """3D 场景主表：保存场景名称、分类、状态与全局配置。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     scene_name = models.CharField('场景名称', max_length=100)  # 场景显示名称
@@ -50,13 +50,13 @@ class Scene3dScene(BaseModel):
     scene_config = models.JSONField('场景全局配置', blank=True, null=True)  # 相机、光照、背景、分享令牌等
     remark = models.CharField('场景描述', max_length=1000, blank=True, null=True)  # 场景备注
 
-    class Meta:
+    class Meta:  # 表级元数据：物理表名、托管方式与默认排序
         db_table = 'scene3d_scene'  # 对应数据库物理表名
         managed = False  # 不参与 migrate 的建表/改表
         ordering = ['-id']  # 默认按主键倒序，最新创建在前
 
 
-class Scene3dModelResource(BaseModel):
+class Scene3dModelResource(BaseModel):  # 模型资源，file_id 指向 wf_file 的附件记录
     """模型资源表：登记 glb/gltf 等模型文件的元信息。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     model_name = models.CharField('模型名称', max_length=100)  # 模型显示名称
@@ -70,13 +70,13 @@ class Scene3dModelResource(BaseModel):
     status = models.SmallIntegerField('状态', default=1)  # 1 启用 / 0 停用
     remark = models.CharField('备注', max_length=500, blank=True, null=True)  # 备注说明
 
-    class Meta:
+    class Meta:  # 表级元数据：物理表名、托管方式与默认排序
         db_table = 'scene3d_model_resource'  # 对应数据库物理表名
         managed = False  # 不参与 migrate 的建表/改表
         ordering = ['sort', 'id']  # 默认按排序号、主键升序
 
 
-class Scene3dSceneObject(BaseModel):
+class Scene3dSceneObject(BaseModel):  # 场景对象，用 object_code 在场景内做幂等标识
     """场景对象表：场景内模型实例的位置、旋转、缩放与标签。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     scene_id = models.BigIntegerField('所属场景ID')  # 关联 scene3d_scene.id
@@ -92,13 +92,13 @@ class Scene3dSceneObject(BaseModel):
     sort = models.IntegerField('层级排序', default=0)  # 对象树排序
     remark = models.CharField('备注', max_length=500, blank=True, null=True)  # 备注说明
 
-    class Meta:
+    class Meta:  # 表级元数据：物理表名、托管方式与默认排序
         db_table = 'scene3d_scene_object'  # 对应数据库物理表名
         managed = False  # 不参与 migrate 的建表/改表
         ordering = ['sort', 'id']  # 默认按排序号、主键升序
 
 
-class Scene3dDataBind(BaseModel):
+class Scene3dDataBind(BaseModel):  # 数据绑定，source_config 仅允许引用白名单表
     """数据绑定表：场景对象与业务数据/接口/实时通道的绑定配置。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     scene_id = models.BigIntegerField('场景ID')  # 关联 scene3d_scene.id
@@ -111,13 +111,13 @@ class Scene3dDataBind(BaseModel):
     status = models.SmallIntegerField('状态', default=1)  # 1 启用 / 0 停用
     remark = models.CharField('备注', max_length=500, blank=True, null=True)  # 备注说明
 
-    class Meta:
+    class Meta:  # 表级元数据：物理表名、托管方式与默认排序
         db_table = 'scene3d_data_bind'  # 对应数据库物理表名
         managed = False  # 不参与 migrate 的建表/改表
         ordering = ['-id']  # 默认最新绑定在前
 
 
-class Scene3dAlarmRule(BaseModel):
+class Scene3dAlarmRule(BaseModel):  # 告警规则，挂在 binding 上做阈值判定
     """告警规则表：基于数据绑定的阈值规则与视觉表现配置。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     bind_id = models.BigIntegerField('绑定配置ID')  # 关联 scene3d_data_bind.id
@@ -132,13 +132,13 @@ class Scene3dAlarmRule(BaseModel):
     status = models.SmallIntegerField('状态', default=1)  # 1 启用 / 0 停用
     remark = models.CharField('备注', max_length=500, blank=True, null=True)  # 备注说明
 
-    class Meta:
+    class Meta:  # 表级元数据：物理表名、托管方式与默认排序
         db_table = 'scene3d_alarm_rule'  # 对应数据库物理表名
         managed = False  # 不参与 migrate 的建表/改表
         ordering = ['-id']  # 默认最新规则在前
 
 
-class Scene3dAlarmRecord(models.Model):
+class Scene3dAlarmRecord(models.Model):  # 仅继承 models.Model，表的审计字段由手工 SQL 固定
     """告警记录表（不继承 BaseModel）：本表仅有 create_time/update_time/is_deleted。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     scene_id = models.BigIntegerField('场景ID')  # 关联 scene3d_scene.id
@@ -157,13 +157,13 @@ class Scene3dAlarmRecord(models.Model):
     update_time = models.DateTimeField('更新时间', blank=True, null=True)  # 最近修改时间
     is_deleted = models.BooleanField('逻辑删除', default=False)  # 逻辑删除标记
 
-    class Meta:
+    class Meta:  # 表级元数据：物理表名、托管方式与默认排序
         db_table = 'scene3d_alarm_record'  # 对应数据库物理表名
         managed = False  # 不参与 migrate 的建表/改表
         ordering = ['-create_time', '-id']  # 最新告警在前
 
 
-class Scene3dPatrolRoute(BaseModel):
+class Scene3dPatrolRoute(BaseModel):  # 巡检路线，way_points 存相机路径点位数组
     """巡检路线表：路径点位与漫游速度配置。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     scene_id = models.BigIntegerField('场景ID')  # 关联 scene3d_scene.id
@@ -175,13 +175,13 @@ class Scene3dPatrolRoute(BaseModel):
     status = models.SmallIntegerField('状态', default=1)  # 1 启用 / 0 停用
     remark = models.CharField('备注', max_length=500, blank=True, null=True)  # 备注说明
 
-    class Meta:
+    class Meta:  # 表级元数据：物理表名、托管方式与默认排序
         db_table = 'scene3d_patrol_route'  # 对应数据库物理表名
         managed = False  # 不参与 migrate 的建表/改表
         ordering = ['-id']  # 默认最新路线在前
 
 
-class Scene3dPatrolRecord(models.Model):
+class Scene3dPatrolRecord(models.Model):  # 巡检执行记录，无 create_by/update_by 审计字段
     """巡检执行记录表（不继承 BaseModel）：仅本表实际存在的字段。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     scene_id = models.BigIntegerField('场景ID')  # 关联 scene3d_scene.id
@@ -198,13 +198,13 @@ class Scene3dPatrolRecord(models.Model):
     update_time = models.DateTimeField('更新时间', blank=True, null=True)  # 最近修改时间
     is_deleted = models.BooleanField('逻辑删除', default=False)  # 逻辑删除标记
 
-    class Meta:
+    class Meta:  # 表级元数据：物理表名、托管方式与默认排序
         db_table = 'scene3d_patrol_record'  # 对应数据库物理表名
         managed = False  # 不参与 migrate 的建表/改表
         ordering = ['-start_time', '-id']  # 最新巡检在前
 
 
-class Scene3dSceneVersion(models.Model):
+class Scene3dSceneVersion(models.Model):  # 版本快照，snapshot_config 存配置与对象数组
     """场景版本表（不继承 BaseModel）：每次保存生成一条快照。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     scene_id = models.BigIntegerField('场景ID')  # 关联 scene3d_scene.id
@@ -217,13 +217,13 @@ class Scene3dSceneVersion(models.Model):
     create_time = models.DateTimeField('版本生成时间', blank=True, null=True)  # 生成时刻
     is_deleted = models.BooleanField('逻辑删除', default=False)  # 逻辑删除标记
 
-    class Meta:
+    class Meta:  # 表级元数据：物理表名、托管方式与默认排序
         db_table = 'scene3d_scene_version'  # 对应数据库物理表名
         managed = False  # 不参与 migrate 的建表/改表
         ordering = ['-create_time', '-id']  # 最新版本在前
 
 
-class Scene3dScenePermission(BaseModel):
+class Scene3dScenePermission(BaseModel):  # 访问授权，target_type 决定目标表的含义
     """场景访问权限表：按角色/用户/部门授权只读、可交互、可编辑。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     scene_id = models.BigIntegerField('场景ID')  # 关联 scene3d_scene.id
@@ -232,13 +232,13 @@ class Scene3dScenePermission(BaseModel):
     permission_type = models.SmallIntegerField('权限类型', default=1)  # 1 只读 / 2 可交互 / 3 可编辑
     expire_time = models.DateTimeField('授权过期时间', blank=True, null=True)  # 为空永久有效
 
-    class Meta:
+    class Meta:  # 表级元数据：物理表名、托管方式与默认排序
         db_table = 'scene3d_scene_permission'  # 对应数据库物理表名
         managed = False  # 不参与 migrate 的建表/改表
         ordering = ['-id']  # 默认最新授权在前
 
 
-class Scene3dAccessLog(models.Model):
+class Scene3dAccessLog(models.Model):  # 访问日志，分享访问时 user_id 为空
     """场景访问日志表（不继承 BaseModel）。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
     scene_id = models.BigIntegerField('访问场景ID')  # 关联 scene3d_scene.id
@@ -250,7 +250,7 @@ class Scene3dAccessLog(models.Model):
     access_time = models.DateTimeField('访问时间', blank=True, null=True)  # 访问时刻
     is_deleted = models.BooleanField('逻辑删除', default=False)  # 逻辑删除标记
 
-    class Meta:
+    class Meta:  # 表级元数据：物理表名、托管方式与默认排序
         db_table = 'scene3d_access_log'  # 对应数据库物理表名
         managed = False  # 不参与 migrate 的建表/改表
         ordering = ['-access_time', '-id']  # 最新访问在前
