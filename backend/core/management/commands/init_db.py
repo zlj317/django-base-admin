@@ -17,6 +17,7 @@ from django.db import connection  # 复用 Django 连接执行建表与初始化
 SQL_FILE = r'd:\other\django-base-admin\docs\后台管理系统-初始化建表SQL.sql'  # 初始化建表脚本路径（原始字符串避免转义）
 SQL_WORKFLOW_FILE = r'd:\other\django-base-admin\docs\后台管理系统-工作流建表SQL.sql'  # 工作流 11 张表建表脚本
 SQL_NEW_FEATURES = r'd:\other\django-base-admin\docs\new_features_init.sql'  # 需求4+5+6 新增功能建表脚本
+SQL_SCENE3D = r'd:\other\django-base-admin\docs\scene3d_init.sql'  # 需求7 3D 可视化 13 张表（IF NOT EXISTS 幂等）
 
 MENUS = [  # 菜单定义：(父 key, key, 名称, 路由, 组件, 权限, 类型, 图标, 排序)
     (None, 'dashboard', '首页', 'dashboard', 'dashboard/index', '', 'C', 'Odometer', 0),  # 首页看板，无需权限
@@ -81,6 +82,7 @@ class Command(BaseCommand):
         self.exec_sql_file(SQL_FILE)  # 全量创建系统基础表，脚本内均为 CREATE TABLE
         self.exec_sql_file(SQL_WORKFLOW_FILE)  # 创建工作流 11 张 wf_ 表（IF NOT EXISTS 幂等）
         self.exec_sql_file(SQL_NEW_FEATURES)  # 创建需求4+5+6 新增功能表（IF NOT EXISTS 幂等）
+        self.exec_sql_file(SQL_SCENE3D)  # 创建需求7 3D 可视化 13 张表 + 样例数据（IF NOT EXISTS / INSERT IGNORE 幂等）
         self.stdout.write(self.style.SUCCESS('系统基础表、工作流表与新增功能表创建完成'))  # 提示建表完成
 
         # 3. admin 密码重置为 123456（bcrypt）
@@ -138,6 +140,8 @@ class Command(BaseCommand):
         seed_cal()
         from apps.kb.seed import seed_kb  # 知识库
         seed_kb()
+        from apps.scene3d.seed import seed_scene3d  # 3D 可视化
+        seed_scene3d()
         self.stdout.write(self.style.SUCCESS('初始化完成！默认账号 admin / 123456'))  # 收尾提示
 
     def exec_sql_file(self, path):
@@ -163,16 +167,17 @@ class Command(BaseCommand):
                 return  # 已有数据直接结束
 
         def insert(parent_id, menu_name, path, component, perms, menu_type, icon, order):
-            """插入单条菜单/按钮并返回自增主键，供子级挂载使用。"""
+            """插入单条菜单/按钮并返回雪花主键，供子级挂载使用。"""
+            from common.snowflake import next_id  # 局部导入雪花算法，与全站主键策略保持一致
+            menu_id = next_id()  # 雪花 ID 需应用侧生成，表结构不含 AUTO_INCREMENT
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO sys_menu (parent_id, menu_name, path, component, perms, "
+                    "INSERT INTO sys_menu (id, parent_id, menu_name, path, component, perms, "
                     "menu_type, icon, order_num, visible, status, create_by, create_time, is_deleted) "
-                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '0', '0', 'admin', %s, 0)",
-                    [parent_id, menu_name, path, component, perms, menu_type, icon,
+                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, '0', '0', 'admin', %s, 0)",
+                    [menu_id, parent_id, menu_name, path, component, perms, menu_type, icon,
                      order, datetime.now().strftime('%Y-%m-%d %H:%M:%S')])  # 参数化写入，时间取本地当前值
-                cursor.execute("SELECT LAST_INSERT_ID()")  # 会话级自增 ID，紧接着取才准确
-                return cursor.fetchone()[0]  # 返回新菜单主键
+            return menu_id  # 直接返回已生成的主键，无需再查 LAST_INSERT_ID
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 预留批次时间（当前未使用）
         menu_ids = {}  # key -> 菜单 id，用于解析父子关系

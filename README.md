@@ -52,7 +52,7 @@ flowchart TB
             WF["workflow<br/>自研 BPMN 2.0 引擎<br/>bpmn-js Designer + Viewer"]
             File["file<br/>本地/MinIO 双存储<br/>MD5 秒传 / 分片上传<br/>kkFileView + OnlyOffice"]
             Task["task_sched<br/>Celery + CRON / 间隔<br/>4 系统模板"]
-            Home["home<br/>首页聚合<br/>overview / monitor"]
+            Home["home<br/>首页聚合<br/>overview / rich / monitor"]
         end
 
         subgraph BizOld["📊 附加模块（6 App）"]
@@ -163,7 +163,7 @@ flowchart LR
 
     subgraph 首页聚合
         direction TB
-        Home["🏠 Dashboard<br/>overview + monitor"]
+        Home["🏠 Dashboard<br/>overview + rich + monitor"]
     end
 
     %% ========== 核心依赖 ==========
@@ -292,9 +292,9 @@ flowchart LR
 |---|---|
 | <img src="docs/images/ui/04-theme-panel.png" alt="主题设置面板" width="100%"> | <img src="docs/images/ui/05-role-dark.png" alt="角色管理深色" width="100%"> |
 
-| 仪表盘（浅色） | 仪表盘（深色 + 紫色主题） |
+| 仪表盘（1440 浅色 · 深海蓝） | 仪表盘（1440 深色 · 玫瑰红） |
 |---|---|
-| <img src="docs/images/ui/02-dashboard-light.png" alt="仪表盘浅色" width="100%"> | <img src="docs/images/ui/07-dashboard-dark-purple.png" alt="仪表盘深色紫色主题" width="100%"> |
+| <img src="docs/images/dashboard/dashboard-1440-light-blue.png" alt="仪表盘 1440 浅色深海蓝" width="100%"> | <img src="docs/images/dashboard/dashboard-1440-dark-rose.png" alt="仪表盘 1440 深色玫瑰红" width="100%"> |
 
 **附加模块页面预览**
 
@@ -335,6 +335,7 @@ flowchart LR
 - **报表管理**：低代码报表模板拖拽设计（lowcode-report）、MySQL 本地 + API 外部双数据源、模板版本与角色权限、手动/定时生成 Excel/PDF、自动存入附件管理、生成记录与在线预览下载、WebSocket 实时查询。
 - **报表大屏**：大屏拖拽设计（datart）、折线/柱状/饼图/数字指标/表格/地图组件、MySQL/API 数据集、发布后生成分享链接+访问密码、自动刷新秒、快照归档至附件管理、访问日志。
 - **外部对接**：外部 API 配置（GET/POST/PUT/DELETE、Header/Query/Token/Basic 鉴权）、连通性一键测试、完整请求日志（入参/返回/耗时/状态码/异常）、手动/定时同步任务拉取外部数据写入本地库，报表与大屏模块直接选用已配置接口作为数据源。
+- **3D 可视化**：`3D可视化` 菜单（场景分类 / 3D 场景管理 / 场景编辑器 / 模型资源 / 数据绑定 / 告警联动 / 巡检路线 / 场景发布）。13 张 `scene3d_` 表；three.js 按需加载（独立 chunk）渲染可交互三维场景，支持对象增删、属性编辑、视角漫游、点击拾取与按名称生成机柜/服务器/空调/UPS/密集架等占位几何；数据绑定支持表字段 / API 双数据源与阈值配色，告警联动含规则、记录与确认流程，巡检路线按点位自动漫游并生成记录，场景发布生成免登录分享链接与访问日志，内置大屏聚合页；明暗主题与 5 套配色全部走 CSS 令牌。
 
 ### 2026-11 标配功能（6 App）
 
@@ -354,7 +355,12 @@ flowchart LR
 
 ### 首页 Dashboard
 
-- 重写首页：渐变 Hero + 4 统计卡（用户数/待办/告警/今日访问）、待办事项列表（联动工作流 + 工单 + 日程）、系统动态时间线（最近操作日志 + 告警）、九宫格常用功能快捷入口（可自定义）。
+- **聚合接口**：新增 `GET /api/home/rich/`（`apps/home/views.py`），一次返回趋势、待办、公告/消息、工作流、文件、任务、告警、用户组织、报表/BI、知识库、日程等 14 个数据块；保留既有 `overview` / `monitor` 结构不变。
+- **布局**：修复 `.panel` 作为 flex 子项按内容收缩导致的横向空洞（栅格列 `display:flex`、面板 `width:100%; min-width:0`），同行卡片等高；1440 / 1280 实测无横向溢出与明显空洞。
+- **内容**：渐变 Hero（问候 + 数据更新时间 + 4 快捷入口）→ 4 指标卡（待办 / 未读消息 / 运行中流程 / 今日新增用户，含真实 7 日迷你趋势与环比）→ 业务趋势（工单/流程、消息/文件）与待办 → 公告/站内消息/工作流 → 系统监控/文件存储/定时任务 → 告警/报表与 BI/知识库 → 今日日程（含未来 7 天）/用户与组织/运维速览 → 按「系统管理 / 业务协作 / 数据可视化 / 平台运维」分组的 24 格常用功能。
+- **数据**：全部来自真实业务表；无数据的模块渲染「引导卡」（用途说明 + 跳转入口），不使用占位图或 mock。
+- **图表**：新增纯 SVG 组件 `TrendChart` / `DistributionBar`，颜色统一取 `--chart-1..6`，随明暗模式与 5 套主题色联动，不新增第三方图表依赖。
+- 详见 `docs/需求6 django-base-admin系统首页需求文档.md` 的「实现状态（V2）」与 `docs/dashboard-redesign/spec.md`。
 
 ### UI 主题与设计规范
 
@@ -405,7 +411,7 @@ django-base-admin/
 │  ├─ apps/
 │  │  ├─ system/            # 用户/角色/菜单/部门/字典/配置/日志/认证
 │  │  ├─ gen/               # 代码生成器（引擎 + 模板）
-│  │  ├─ home/              # 首页聚合接口：overview + monitor（无表）
+│  │  ├─ home/              # 首页聚合接口：overview + rich + monitor（无表）
 │  │  ├─ student/           # 生成模块示例（学生信息表）
 │  │  ├─ workflow/          # 工作流：模型/实例/任务/引擎/监听器/菜单种子数据
 │  │  ├─ file/              # 附件管理：上传/预览/配置/回收站
@@ -415,6 +421,7 @@ django-base-admin/
 │  │  ├─ report/            # 报表管理：分类/数据源/模板/生成记录
 │  │  ├─ bi/                # 报表大屏：大屏/数据集/访问日志
 │  │  ├─ outer/             # 外部对接：接口配置/请求日志/同步任务
+│  │  ├─ scene3d/           # 【需求7】3D 可视化：13 张表的模型/接口/菜单种子数据
 │  │  │
 │  │  ├─ sys_no/            # 【标配】编码规则：规则 + 流水号日志
 │  │  ├─ imprint/           # 【标配】导入/打印模板：模板 + 列 + 打印
@@ -437,7 +444,7 @@ django-base-admin/
 │     ├─ layout/            # 侧边栏（三级菜单缩进）、导航栏、布局
 │     ├─ components/workflow/  # 表单渲染、流程查看器、流程详情抽屉
 │     └─ views/
-│        ├─ dashboard/      # 【重写】首页 Dashboard：Hero + 统计卡 + 待办 + 时间线 + 九宫格
+│        ├─ dashboard/      # 【重写】首页 Dashboard：Hero + 4 指标卡 + 趋势/待办/公告/监控/报表/日程 + 分组常用功能
 │        ├─ system/         # 用户/角色/菜单/部门/字典/配置/日志
 │        ├─ gen/            # 代码生成器
 │        ├─ workflow/       # 工作流：流程管理/审批中心/OA 示例
@@ -449,6 +456,7 @@ django-base-admin/
 │        ├─ rp/             # 报表管理
 │        ├─ bi/             # 报表大屏
 │        ├─ outer/          # 外部对接
+│        ├─ scene3d/        # 【需求7】3D 可视化：分类/场景/编辑器/模型/绑定/告警/巡检/发布大屏
 │        │
 │        ├─ sys_no/rule/                    # 【标配】编码规则
 │        ├─ imprint/{template,column,print}/ # 【标配】导入/打印模板
@@ -534,6 +542,9 @@ python manage.py init_db
 | — | [附加模块需求说明书](docs/django-base-admin附加模块需求说明书.md) | 附件/消息/公告/定时任务/报表/大屏/外部对接 7 模块完整需求 |
 | — | [附加模块建表 SQL](docs/additional_module_init.sql) | 附加模块 22 张扩展表建表语句 |
 | — | [附加模块清单](docs/03-附加模块清单.md) | 22 张表字段、菜单树、前端页面、API 端点速查 |
+| — | [3D 可视化模块需求文档](docs/需求7%20django-base-admin_3D可视化模块需求文档.md) | 13 张 `scene3d_` 表、菜单结构、接口清单与实现状态 |
+| — | [3D 可视化建表 SQL](docs/scene3d_init.sql) | `scene3d_` 表建表语句与演示数据（由 `init_db` 自动执行） |
+| — | [3D 可视化设计说明](docs/scene3d/spec.md) | 数据模型、接口契约、前端页面与主题令牌选型 |
 
 ## 工作流审批使用流程
 
@@ -612,9 +623,9 @@ An admin system built with **Django 4.2 + DRF + MySQL 8 + Vue 3 + Element Plus**
 |---|---|
 | <img src="docs/images/ui/04-theme-panel.png" alt="Theme panel" width="100%"> | <img src="docs/images/ui/05-role-dark.png" alt="Role list dark" width="100%"> |
 
-| Dashboard (light) | Dashboard (dark + purple) |
+| Dashboard (1440 light · blue) | Dashboard (1280 dark · purple) |
 |---|---|
-| <img src="docs/images/ui/02-dashboard-light.png" alt="Dashboard light" width="100%"> | <img src="docs/images/ui/07-dashboard-dark-purple.png" alt="Dashboard dark purple" width="100%"> |
+| <img src="docs/images/dashboard/dashboard-1440-light-blue.png" alt="Dashboard 1440 light blue" width="100%"> | <img src="docs/images/dashboard/dashboard-1280-dark-purple.png" alt="Dashboard 1280 dark purple" width="100%"> |
 
 **Additional Module Previews**
 

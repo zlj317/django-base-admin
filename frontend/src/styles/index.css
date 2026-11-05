@@ -244,8 +244,9 @@ html.dark {
 }
 
 /* 实心主按钮：用渐变背景 + 主色光晕提升层次。
-   排除 is-link / is-text 两个修饰类，否则文字按钮也会被套上渐变底色 */
-.el-button--primary:not(.is-link):not(.is-text) {
+   排除 is-link / is-text / is-plain 修饰类，否则文字按钮、浅色按钮也会被套上渐变底色
+   （is-plain 若被渐变覆盖，文字仍是主色，会出现"蓝底蓝字"看不清的问题） */
+.el-button--primary:not(.is-link):not(.is-text):not(.is-plain) {
   background: var(--brand-gradient);
   border-color: transparent;
   box-shadow: 0 2px 8px var(--brand-glow);
@@ -253,7 +254,7 @@ html.dark {
 
 /* 主按钮 hover：用 filter 提亮而不是换色，渐变两端会同步变亮；
    阴影加深并上移 1px，模拟轻微"抬起"的按压前反馈 */
-.el-button--primary:not(.is-link):not(.is-text):hover {
+.el-button--primary:not(.is-link):not(.is-text):not(.is-plain):hover {
   filter: brightness(1.04);
   box-shadow: 0 4px 14px var(--brand-glow);
   transform: translateY(-1px);

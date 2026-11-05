@@ -30,4 +30,6 @@ urlpatterns = [  # 路由表：按 URL 前缀把各模块的子路由挂载到�
     path('api/kb/', include('apps.kb.urls')),  # 知识库
     # ↓↓↓ 需求6：系统首页 ↓↓↓
     path('api/home/', include('apps.home.urls')),  # 首页聚合接口
+    # ↓↓↓ 需求7：3D 可视化 ↓↓↓
+    path('api/scene3d/', include('apps.scene3d.urls')),  # 3D 场景/模型/绑定/告警/巡检/分享接口
 ]

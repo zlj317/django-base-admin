@@ -91,6 +91,33 @@ export const constantRoutes = [
     meta: { title: '大屏分享' }
   },
   {
+    // 3D 场景编辑器（隐藏页面，由场景列表「编辑」进入；菜单 visible=1 不会下发到前端菜单树）
+    path: '/scene3d/editor/:id',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        name: 'Scene3dEditor',
+        component: () => import('@/views/scene3d/editor/index.vue'),
+        meta: { title: '场景编辑器' }
+      }
+    ]
+  },
+  {
+    // 3D 场景只读查看页（不挂后台布局，铺满窗口；由场景列表/大屏进入）
+    path: '/scene3d/view/:id',
+    name: 'Scene3dView',
+    component: () => import('@/views/scene3d/scene/view.vue'),
+    meta: { title: '3D场景查看' }
+  },
+  {
+    // 3D 场景分享页（免登录，凭 token 读取已发布场景；与查看页共用组件）
+    path: '/scene3d/share/:token',
+    name: 'Scene3dShare',
+    component: () => import('@/views/scene3d/scene/view.vue'),
+    meta: { title: '3D场景分享' }
+  },
+  {
     // 通配兜底：任何未匹配的地址都进入 404，避免出现原生空白页
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
@@ -199,6 +226,9 @@ router.beforeEach(async to => {
   if (to.path === '/login') {
     return auth.token ? { path: '/dashboard' } : true
   }
+  // 3D 场景分享页：免登录访问（后端 share/<token> 接口为 AllowAny）
+  // 必须放在 token 校验之前，否则未登录用户会被重定向到登录页
+  if (to.path.startsWith('/scene3d/share/')) return true
   // 未登录 → 跳登录页
   // 同时把原本要访问的完整地址放进 redirect，登录成功后可以回到原页面
   if (!auth.token) {

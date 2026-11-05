@@ -39,6 +39,7 @@ INSTALLED_APPS = [  # 已启用应用：contrib 基础能力 + DRF + 跨域 + �
     'apps.wo',  # 工单
     'apps.cal',  # 日历日程
     'apps.kb',  # 知识库
+    'apps.scene3d',  # 3D 可视化（数字孪生）
 ]
 
 MIDDLEWARE = [  # 中间件按顺序包装请求/响应，越靠前越外层

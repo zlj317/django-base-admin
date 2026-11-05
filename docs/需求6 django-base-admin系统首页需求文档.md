@@ -252,3 +252,64 @@
 ### 视觉
 - 主色调 #4a6cf7，卡片圆角 10-14px，渐变 Hero，SVG sparkline 迷你趋势图
 - 零外部图表库依赖（无 echarts），纯 Element Plus + CSS + SVG
+
+---
+
+## 实现状态（V2 首页充实改造，2026-11-05）
+
+**状态：已完成 ✅**（方案见 `docs/dashboard-redesign/spec.md`、`docs/dashboard-redesign/tasks.md`）
+
+### 1. 空白区域根因（浏览器实测 DOM，非猜测）
+
+1. **布局根因（主因）**：`.content-row > .el-col` 与 `.bottom-row > .el-col` 被设为 `display:flex`，其子元素 `.panel`（el-card）本身也是 flex 容器，默认 `flex: 0 1 auto`，宽度按内容收缩到内容宽度，列内右侧因此出现横向空洞；旧样式只给 `.stat-card` 补了 `width:100%`，其余面板都漏了。
+2. **等高放大留白（次因）**：面板统一 `height:100%` 后会被同行最高的卡片拉伸，旧内容单卡只有 3~5 行，被拉出来的高度全部变成空白。
+3. **数据根因**：旧接口 `/api/home/overview/` 只返回少量聚合值，没有趋势、公告、工作流、任务、告警、报表等数据，即使布局修好也无法填满。
+4. 排除项：ECharts 未加载（本项目从未使用 ECharts）、暗色不可见（暗色令牌正常）、网格没排满（栅格本身是 24 栅格铺满）。
+
+### 2. 修复方式（优先修布局，不用固定高度硬凑）
+
+- 栅格列统一 `display:flex`；面板统一 `width:100%; min-width:0; display:flex; flex-direction:column; height:100%`，从根上消除 flex 子项收缩。
+- 卡片主体 `flex:1` 纵向排列，内部用 `flex:1` / `margin-top:auto` / 列表 `overflow:auto` 撑满剩余高度。
+- 趋势图高度自适应：业务趋势卡与待办卡同行等高，待办 8 条时卡片可达 755px，固定 172px 的图会留下约 227px 空洞；改用 `ResizeObserver` 量出图表堆叠区高度并平摊给两张图（140~300px 区间），实测堆叠区 613px = 302 + 10 + 302，无底部留白。
+- 实测各面板占列宽比 0.954~0.987（差值即 16px gutter），1440 / 1280 均无横向滚动条、无横向空洞。
+
+### 3. 新增卡片与数据来源（全部真实接口，无 mock）
+
+| 区块 | 内容 | 数据来源表 |
+| --- | --- | --- |
+| 4 指标卡 | 待办 / 未读消息 / 运行中流程 / 今日新增用户，含真实 7 日迷你趋势与环比 | `wf_task`、`work_order`、`msg_record`、`wf_instance`、`sys_user` |
+| 业务趋势 | 工单/流程、消息/文件 两组 7 日折线 | `work_order`、`wf_instance`、`msg_record`、`wf_file` |
+| 待办事项 | 流程待办 + 未完成工单 + 今日日程，按时间倒序合并 | `wf_task`+`wf_instance`、`work_order`、`cal_schedule` |
+| 公告 / 站内消息 | 各 4 条 | `notice_info`、`msg_record` |
+| 工作流实例 | 最近 5 条实例与状态 | `wf_instance` + `wf_model` |
+| 系统监控 | 数据库版本/连接、磁盘、内存、运行时长 | `/api/home/monitor/`（既有接口） |
+| 文件与存储 | 总数、总占用、按扩展名分布 | `wf_file` |
+| 定时任务 | 总数/启用数、最近 4 条执行日志 | `task_info`、`task_log` |
+| 监控告警 | 未处理数、按级别分布、最近 4 条 | `monitor_alarm_record` |
+| 今日日程 | 今日日程 + 未来 7 天安排 | `cal_schedule` |
+| 用户与组织 | 用户总数/今日新增/角色数/租户数 + 按部门分布 | `sys_user`、`sys_dept`、`sys_role`、`sys_tenant` |
+| 报表与 BI | 模板数/生成记录、生成状态；大屏总数/已发布/列表 | `rp_template`、`rp_generate_record`、`bi_screen` |
+| 知识库 | 文档数/分类数、热门文档 | `kb_document`、`kb_category` |
+| 常用功能 | 24 个入口，按「系统管理 / 业务协作 / 数据可视化 / 平台运维」分组 | 静态配置（跳转既有页面） |
+
+无数据模块统一渲染「引导卡」：说明用途 + 提供跳转按钮，不留白、不用占位图。
+
+### 4. 接口
+
+- 新增 `GET /api/home/rich/`（`apps/home/urls.py` 注册，`HomeViewSet.rich` 实现）：**必要性**是把 14 个数据块收敛为 1 次请求，避免首页串行发起 10+ 个列表接口；**只读**，不写任何业务表。
+- **权限**：沿用首页 ViewSet 既有的 `permission_classes = []`（与 `overview` / `monitor` 一致，匿名只读），只返回聚合计数与公告/消息摘要，不含敏感明细；前端未登录时仍会回退到 `/api/home/overview/`，保证不白屏。
+- 既有 `overview` / `monitor` 返回结构未改动。
+
+### 5. 涉及文件
+
+- 后端：`backend/apps/home/views.py`（新增 `rich`，旧方法未改）、`backend/apps/home/urls.py`
+- 前端：`frontend/src/views/dashboard/index.vue`（重写）、`frontend/src/components/dashboard/TrendChart.vue`（新增）、`frontend/src/components/dashboard/DistributionBar.vue`（新增）
+- 文档/截图：`docs/dashboard-redesign/spec.md`、`tasks.md`、`docs/images/dashboard/*.png`
+
+### 6. 验证
+
+- 接口：`/api/home/rich/` 返回 200，含 `stats/trends/todos/notices/messages/workflows/files/tasks/alarms/users/reports/bi/kb/cal`。
+- 布局/主题：1440 与 1280 各覆盖浅色/深色 + 蓝/紫/玫瑰等配色，共 6 组截图；主题标记正确、无横向溢出、无控制台报错。
+- 交互：快捷入口跳转 `/system/user`、待办跳转 `/cal/schedule` 正常。
+- 构建：`npm run build` 通过，未新增第三方依赖。
+- 限制：演示库数据量少（用户 1 个、部分模块无记录），卡片内容偏稀疏属数据现状；暗色 Banner 上的反白文字为品牌渐变配套，不参与换肤。

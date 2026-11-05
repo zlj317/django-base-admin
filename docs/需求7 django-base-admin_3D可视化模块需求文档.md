@@ -789,3 +789,46 @@
 ## 附录：配套建表 SQL
 
 > 本模块 13 张表建表 SQL 见独立文件 `scene3d_init.sql`（字段与本文档一致，含索引与公共字段）。
+
+---
+
+## 11. 实现状态（2026-11-05）
+
+### 11.1 已落地内容
+
+| 层 | 实际实现 |
+| --- | --- |
+| 数据表 | 13 张，物理表名统一加 `scene3d_` 前缀（本文档小节写作 `scene_3d_*`，为同一批表的命名演进）：`scene3d_category`、`scene3d_template`、`scene3d_scene`、`scene3d_model_resource`、`scene3d_scene_object`、`scene3d_data_bind`、`scene3d_alarm_rule`、`scene3d_alarm_record`、`scene3d_patrol_route`、`scene3d_patrol_record`、`scene3d_scene_version`、`scene3d_scene_permission`、`scene3d_access_log` |
+| 建表 | [scene3d_init.sql](scene3d_init.sql) 采用 `CREATE TABLE IF NOT EXISTS` + `INSERT IGNORE`，由 `init_db` 自动执行，可重复运行不破坏已有数据 |
+| 后端 | `backend/apps/scene3d`：模型（全部 `managed=False`）、序列化器、视图集、路由、菜单与按钮权限种子；已在 `INSTALLED_APPS`、`config/urls.py`、`init_db.py` 注册 |
+| 前端 | `frontend/src/views/scene3d`：分类、场景管理、编辑器、模型资源、数据绑定、告警联动、巡检路线、场景发布（大屏）8 个菜单页 + 只读查看页 + 免登录分享页；`components/scene3d/SceneViewer.vue` 封装 three.js |
+| 渲染 | three.js 0.170.0 通过 `import('three')` 动态加载，产出独立 chunk；当前无真实 glb 资源，按对象名称生成机柜/服务器/空调/UPS/密集架/传感器占位几何与文字标签 |
+| 权限 | 8 个菜单（编辑器菜单 `visible=1` 隐藏）+ 41 个按钮权限；分享读取接口 `AllowAny` + 关闭认证类，其余接口统一 `PermissionCheck` |
+| 主题 | 全站 CSS 令牌（`--app-*` / `--brand-*` / `--chart-*`），明暗 × 5 套配色自动适配，三维场景背景与标签颜色随主题重建 |
+
+### 11.2 实际接口清单
+
+统一前缀 `/api/scene3d/`，返回结构沿用本项目约定 `{code, msg, data}`（**code=200 表示成功**，与本文档 10.7 的 code=0 约定不同，以前端全局拦截器为准）。
+
+- 基础：`category`、`template`、`model`、`object`、`binding`、`alarm/rule`、`alarm/records`、`route`、`route/record`、`permission`、`visit-log` 的 `list/create/update/<pk>/delete/<pk>/status`
+- 场景：`<pk>/detail`、`<pk>/save`、`<pk>/publish`、`<pk>/offline`、`<pk>/copy`、`<pk>/versions`、`<pk>/rollback`、`<pk>/share`、`<pk>/visit-log`、`<pk>/export`
+- 联动：`binding/<pk>/preview`、`alarm/stats`、`alarm/<pk>/confirm`、`route/<pk>/play`、`model/<pk>/preview`、`model/upload`
+- 发布：`screen/data`（大屏聚合）、`share/<token>`（免登录，`AllowAny`）
+
+### 11.3 验证记录
+
+| 项目 | 结果 |
+| --- | --- |
+| 接口自测 | 46 项真实 HTTP 用例全部符合预期：列表/详情/保存/发布/下线/复制/版本/回滚/分享（含免登录）/授权/日志/导出/模型预览/绑定预览/告警统计与确认/巡检开始/大屏；异常参数（非法对象数组、非法数据源表、非法 JSON、空名称、重复编码、非法 target_type）返回 400；未登录 401、无权限 403、非法分享令牌 404 |
+| 数据清理 | 自测产生的副本场景、分类、绑定、授权、巡检记录与临时用户已清理，种子数据（告警状态、场景状态、场景配置）已复原 |
+| 前端构建 | `npm run build` 通过（2843 modules，`three.module` 独立 chunk 688.38 kB，仅体积提示不阻塞） |
+| 页面截图 | 50+ 张，覆盖 8 个菜单页 + 编辑器 + 只读页 + 分享页 × 1440/1280 × 明暗，以及 5 套配色 × 明暗；存放于 [screenshots](screenshots/) |
+| 控制台 | 浏览器控制台 0 报错（截图巡检脚本同时收集 `console.error` 与 `pageerror`） |
+
+### 11.4 已知限制
+
+- 暂无真实 `.glb` 模型文件：模型资源上传后仅登记与预览，场景渲染使用程序化占位几何；接入真实模型时在 `SceneViewer.shapeOf` 处替换为 GLTFLoader。
+- 数据绑定预览为按映射规则模拟读数，尚未接入真实设备/API 轮询；告警记录暂由种子数据与模拟触发产生。
+- 巡检为前端按点位漫游 + 后端生成巡检记录，未接入真实定位与视频巡检。
+- 大屏为已发布场景与告警数据的聚合页，非独立大屏设计器。
+
