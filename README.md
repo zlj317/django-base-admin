@@ -15,11 +15,13 @@
 
 ## 系统架构图
 
-> 💡 以下为架构图图片，PNG 原图位于 [`docs/images/`](docs/images/)；每张图下方可展开查看对应的 Mermaid 源码。
+> 💡 以下为架构图图片，PNG 原图位于 [`docs/设计稿或截图/界面截图/`](docs/设计稿或截图/界面截图/)；每张图下方可展开查看对应的 Mermaid 源码。
+>
+> 📐 **独立 SVG 架构图（9 张，可直接在浏览器打开）**：[系统架构图](docs/架构图/01-系统架构图.svg) · [全功能结构图](docs/架构图/02-全功能结构图.svg) · [运行效果示意图](docs/架构图/03-运行效果示意图.svg) · [数据库关系图](docs/架构图/04-数据库关系图.svg) · [部署拓扑图](docs/架构图/05-部署拓扑图.svg) · [数据链路流程图](docs/架构图/06-数据链路流程图.svg) · [告警生命周期图](docs/架构图/07-告警生命周期图.svg) · [仿真时序图](docs/架构图/08-仿真时序图.svg) · [版本路线图](docs/架构图/09-版本路线图.svg)
 
 ### 总体分层架构（四层）
 
-![系统总体架构图](docs/images/16-architecture.png)
+![系统总体架构图](docs/设计稿或截图/界面截图/16-architecture.png)
 
 <details>
 <summary>Mermaid 源码（点击展开）</summary>
@@ -111,7 +113,7 @@ flowchart TB
 
 ### 模块业务关联图（数据流 + 依赖关系）
 
-![模块业务关联图](docs/images/17-module-relations.png)
+![模块业务关联图](docs/设计稿或截图/界面截图/17-module-relations.png)
 
 <details>
 <summary>Mermaid 源码（点击展开）</summary>
@@ -256,67 +258,94 @@ flowchart LR
 
 | 登录页 | 首页仪表盘 |
 |---|---|
-| <img src="docs/images/01-login.png" alt="登录页" width="100%"> | <img src="docs/images/02-dashboard.png" alt="首页仪表盘" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/01-login.png" alt="登录页" width="100%"> | <img src="docs/设计稿或截图/界面截图/02-dashboard.png" alt="首页仪表盘" width="100%"> |
 
 | 用户管理 | 角色管理 |
 |---|---|
-| <img src="docs/images/03-user.png" alt="用户管理" width="100%"> | <img src="docs/images/04-role.png" alt="角色管理" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/03-user.png" alt="用户管理" width="100%"> | <img src="docs/设计稿或截图/界面截图/04-role.png" alt="角色管理" width="100%"> |
 
 | 菜单管理 | 部门管理 |
 |---|---|
-| <img src="docs/images/05-menu.png" alt="菜单管理" width="100%"> | <img src="docs/images/06-dept.png" alt="部门管理" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/05-menu.png" alt="菜单管理" width="100%"> | <img src="docs/设计稿或截图/界面截图/06-dept.png" alt="部门管理" width="100%"> |
 
 | 字典管理 | 参数配置 |
 |---|---|
-| <img src="docs/images/07-dict.png" alt="字典管理" width="100%"> | <img src="docs/images/08-config.png" alt="参数配置" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/07-dict.png" alt="字典管理" width="100%"> | <img src="docs/设计稿或截图/界面截图/08-config.png" alt="参数配置" width="100%"> |
 
 | 操作日志 | 登录日志 |
 |---|---|
-| <img src="docs/images/09-operlog.png" alt="操作日志" width="100%"> | <img src="docs/images/10-loginlog.png" alt="登录日志" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/09-operlog.png" alt="操作日志" width="100%"> | <img src="docs/设计稿或截图/界面截图/10-loginlog.png" alt="登录日志" width="100%"> |
 
 | 代码生成 - 表列表 | 代码生成 - 字段配置 |
 |---|---|
-| <img src="docs/images/11-gen-list.png" alt="代码生成列表" width="100%"> | <img src="docs/images/12-gen-edit.png" alt="字段配置" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/11-gen-list.png" alt="代码生成列表" width="100%"> | <img src="docs/设计稿或截图/界面截图/12-gen-edit.png" alt="字段配置" width="100%"> |
 
 | 代码生成 - 建表 SQL | 字典数据维护 |
 |---|---|
-| <img src="docs/images/14-gen-ddl.png" alt="建表 SQL" width="100%"> | <img src="docs/images/15-dict-data.png" alt="字典数据" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/14-gen-ddl.png" alt="建表 SQL" width="100%"> | <img src="docs/设计稿或截图/界面截图/15-dict-data.png" alt="字典数据" width="100%"> |
 
 | 生成模块示例（学生信息表） |
 |---|
-| <img src="docs/images/13-student.png" alt="生成模块示例" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/13-student.png" alt="生成模块示例" width="100%"> |
 
 **UI 主题与暗色模式**
 
 | 主题设置面板（明暗 + 5 套主题色） | 角色管理（深色） |
 |---|---|
-| <img src="docs/images/ui/04-theme-panel.png" alt="主题设置面板" width="100%"> | <img src="docs/images/ui/05-role-dark.png" alt="角色管理深色" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/ui/04-theme-panel.png" alt="主题设置面板" width="100%"> | <img src="docs/设计稿或截图/界面截图/ui/05-role-dark.png" alt="角色管理深色" width="100%"> |
 
 | 仪表盘（1440 浅色 · 深海蓝） | 仪表盘（1440 深色 · 玫瑰红） |
 |---|---|
-| <img src="docs/images/dashboard/dashboard-1440-light-blue.png" alt="仪表盘 1440 浅色深海蓝" width="100%"> | <img src="docs/images/dashboard/dashboard-1440-dark-rose.png" alt="仪表盘 1440 深色玫瑰红" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/dashboard/dashboard-1440-light-blue.png" alt="仪表盘 1440 浅色深海蓝" width="100%"> | <img src="docs/设计稿或截图/界面截图/dashboard/dashboard-1440-dark-rose.png" alt="仪表盘 1440 深色玫瑰红" width="100%"> |
 
-**附加模块页面预览**
+**3D 可视化模块（8 个业务菜单 + 只读查看 + 免登录分享）**
 
-| 附件管理 - 附件列表 | 附件管理 - 预览与编辑 |
+| 场景分类 | 3D 场景管理 |
 |---|---|
-| （附件列表网格，支持拖拽上传、MD5 秒传、业务类型筛选） | （kkFileView 只读预览 / OnlyOffice 协同编辑，水印可见） |
+| <img src="docs/设计稿或截图/3D场景截图/category-light-1440.png" alt="3D场景分类" width="100%"> | <img src="docs/设计稿或截图/3D场景截图/scene-light-1440.png" alt="3D场景管理" width="100%"> |
 
-| 消息中心 - 站内消息 | 公告通知 - 公告列表 |
+| 场景编辑器 | 模型资源 |
 |---|---|
-| （消息列表，未读红点、全部已读、跳转链接） | （公告列表，置顶标记、分类筛选、有效期倒计时） |
+| <img src="docs/设计稿或截图/3D场景截图/editor-light-1440.png" alt="场景编辑器" width="100%"> | <img src="docs/设计稿或截图/3D场景截图/model-light-1440.png" alt="模型资源" width="100%"> |
 
-| 定时任务 - 任务列表 | 定时任务 - 运行日志 |
+| 数据绑定 | 告警联动 |
 |---|---|
-| （CRON /间隔调度、启停开关、立即执行按钮） | （任务日志时间轴，运行中/成功/失败三色标记） |
+| <img src="docs/设计稿或截图/3D场景截图/binding-light-1440.png" alt="数据绑定" width="100%"> | <img src="docs/设计稿或截图/3D场景截图/alarm-light-1440.png" alt="告警联动" width="100%"> |
 
-| 报表管理 - 报表设计 | 报表大屏 - 大屏设计 |
+| 巡检路线 | 场景发布 / 大屏 |
 |---|---|
-| （lowcode-report 拖拽画布，单元格合并、表达式、分组小计） | （datart 大屏画布，折线/柱状/饼图/地图组件，分享链接生成） |
+| <img src="docs/设计稿或截图/3D场景截图/route-light-1440.png" alt="巡检路线" width="100%"> | <img src="docs/设计稿或截图/3D场景截图/screen-light-1440.png" alt="场景发布大屏" width="100%"> |
 
-| 外部对接 - 接口配置 | 外部对接 - 请求日志 |
+| 只读查看 | 免登录分享 |
 |---|---|
-| （接口配置表单，GET/POST/PUT/DELETE + Token/Basic 鉴权 + 连通性测试） | （请求日志列表，入参/返回/耗时/状态码/异常完整展示） |
+| <img src="docs/设计稿或截图/3D场景截图/view-light-1440.png" alt="只读查看" width="100%"> | <img src="docs/设计稿或截图/3D场景截图/share-light-1440.png" alt="免登录分享" width="100%"> |
+
+<details>
+<summary><b>展开查看 3D 模块完整截图（50 张：8 菜单 + 只读/分享 + 明暗 × 1440/1280 × 5 套主题色）</b></summary>
+
+- 目录：[docs/设计稿或截图/3D场景截图/](docs/设计稿或截图/3D场景截图/)
+- 覆盖：`category / scene / editor / model / binding / alarm / route / screen / view / share` × `light / dark` × `1440 / 1280`
+- 主题色专项：`palette-{blue,teal,purple,orange,rose}-{light,dark}-1440.png`
+- 文件说明：`screenshot-report.json`
+
+</details>
+
+**其它模块功能速览**
+
+> 以下模块的页面与接口已在当前版本实现，但本轮交付未单独补拍截图；运行环境登录后可按对应菜单直接查看。完整功能与接口见 [项目功能详细说明](docs/项目文档/01-项目功能详细说明.md) 与 [接口文档](docs/项目文档/04-接口文档.md)。
+
+| 模块 | 已实现能力 | 截图 |
+|---|---|---|
+| 工作流审批 | BPMN 设计、发起、待办、同意/驳回/转审/加签/退回、轨迹、抄送、请假示例 | 暂无独立截图 |
+| 附件管理 | 多文件上传、MD5 去重、下载、回收站恢复/彻底删除、上传配置 | 暂无独立截图 |
+| 消息中心 | 模板、站内消息、已读/全部已读、推送日志、渠道配置 | 暂无独立截图 |
+| 公告通知 | 分类、发布/下线、角色范围、置顶、有效期、已读追踪 | 暂无独立截图 |
+| 定时任务 | CRON/间隔配置、启停、手动触发、运行日志 | 暂无独立截图 |
+| 报表管理 | 数据源、模板、预览、手动生成、生成记录 | 暂无独立截图 |
+| BI 大屏 | 画布配置、发布、分享链接、访问日志 | 暂无独立截图 |
+| 外部对接 | 接口配置、连通性测试、调用日志、同步配置 | 暂无独立截图 |
+| 通用标配（7） | 编码规则、导入/打印模板、数据备份、数据权限、字段脱敏、监控告警、安全策略 | 暂无独立截图 |
+| 高级可选（4） | 多租户、工单、日历日程、知识库 | 暂无独立截图 |
 
 ---
 
@@ -360,7 +389,7 @@ flowchart LR
 - **内容**：渐变 Hero（问候 + 数据更新时间 + 4 快捷入口）→ 4 指标卡（待办 / 未读消息 / 运行中流程 / 今日新增用户，含真实 7 日迷你趋势与环比）→ 业务趋势（工单/流程、消息/文件）与待办 → 公告/站内消息/工作流 → 系统监控/文件存储/定时任务 → 告警/报表与 BI/知识库 → 今日日程（含未来 7 天）/用户与组织/运维速览 → 按「系统管理 / 业务协作 / 数据可视化 / 平台运维」分组的 24 格常用功能。
 - **数据**：全部来自真实业务表；无数据的模块渲染「引导卡」（用途说明 + 跳转入口），不使用占位图或 mock。
 - **图表**：新增纯 SVG 组件 `TrendChart` / `DistributionBar`，颜色统一取 `--chart-1..6`，随明暗模式与 5 套主题色联动，不新增第三方图表依赖。
-- 详见 `docs/需求6 django-base-admin系统首页需求文档.md` 的「实现状态（V2）」与 `docs/dashboard-redesign/spec.md`。
+- 详见 `docs/需求6 django-base-admin系统首页需求文档.md` 的「实现状态（V2）」与 `docs/设计稿或截图/首页改版设计/spec.md`。
 
 ### UI 主题与设计规范
 
@@ -470,12 +499,19 @@ django-base-admin/
 │        ├─ wo/{type,order}/                 # 【高级】工单流转
 │        ├─ cal/schedule/                    # 【高级】日历日程（月/周/日）
 │        └─ kb/{category,document}/          # 【高级】知识库（树 + 文档）
-└─ docs/                    # 需求、建表 SQL 与 01~05 总结文档、截图
+└─ docs/
+   ├─ 00-文档导航.md          # 总入口：分类索引与推荐阅读路径
+   ├─ 需求文档/               # 需求 1~7
+   ├─ 项目文档/               # 功能/启动/中间件/接口/数据库/测试/运维/FAQ/术语/路线图 + 历史版与 3D 规格
+   ├─ 架构图/                 # 01~09 SVG（系统架构、功能结构、ER、部署、链路、告警、时序、路线）
+   ├─ 设计稿或截图/           # 界面截图（17+6+7）、3D 场景截图（50）、首页改版设计
+   ├─ 报告/                   # UI 验收、主题优化、前端注释报告
+   └─ *.sql                   # 5 个建表脚本（92 张表）
 ```
 
 ## 快速开始
 
-> 详细步骤见 [docs/03-运行启动指南.md](docs/03-运行启动指南.md)。
+> 详细步骤见 [docs/项目文档/03-运行启动指南.md](docs/项目文档/03-运行启动指南.md)。
 
 **1. 准备数据库**
 
@@ -515,36 +551,98 @@ npm run dev                     # http://localhost:5173，/api 自动代理到 8
 附加模块的 22 张扩展表与默认数据需要单独执行一次：
 
 ```bash
-# 方式 A：直接导入 SQL
+# 第一步：必须先导入附加模块表（init_db 只执行 4 个 SQL，不包含这 22 张表）
 mysql -u root -p gen_admin < docs/additional_module_init.sql
 
-# 方式 B：init_db 已集成自动执行（推荐）
+# 第二步：执行初始化（建表 + 菜单/权限 + 各模块种子数据）
 cd backend
 python manage.py init_db
 ```
 
 执行后登录，侧边栏将自动出现 **附件管理、消息中心、公告通知、定时任务、报表管理、报表大屏、外部对接** 7 个顶级菜单。
 
-> 附加模块详情见 [docs/03-附加模块清单.md](docs/03-附加模块清单.md) 与 [docs/django-base-admin附加模块需求说明书.md](docs/django-base-admin附加模块需求说明书.md)。
+> 附加模块详情见 [docs/项目文档/03-附加模块清单.md](docs/项目文档/03-附加模块清单.md) 与 [docs/需求文档/需求3 django-base-admin附加模块需求说明书.md](docs/需求文档/需求3 django-base-admin附加模块需求说明书.md)。
 
 ## 文档索引
 
+> 全部文档已按类别归档，以下链接均为仓库相对路径，可直接点开。总入口见 [docs/00-文档导航.md](docs/00-文档导航.md)。
+
+### 架构图（[docs/架构图/](docs/架构图/)）
+
+| 文件 | 内容 |
+|---|---|
+| [01-系统架构图.svg](docs/架构图/01-系统架构图.svg) | 客户端 / 接入 / 业务 / 数据四层架构与模块分组 |
+| [02-全功能结构图.svg](docs/架构图/02-全功能结构图.svg) | 24 个应用、6 大功能簇与核心页面 |
+| [03-运行效果示意图.svg](docs/架构图/03-运行效果示意图.svg) | 首页布局示意（标注「示意图」，非真实截图） |
+| [04-数据库关系图.svg](docs/架构图/04-数据库关系图.svg) | 平台 / 工作流 / 3D / 业务核心表关系 |
+| [05-部署拓扑图.svg](docs/架构图/05-部署拓扑图.svg) | 浏览器 / Nginx / Django / MySQL 与可选中间件 |
+| [06-数据链路流程图.svg](docs/架构图/06-数据链路流程图.svg) | 请求 → 中间件 → 权限 → 视图 → ORM → 响应全链路 |
+| [07-告警生命周期图.svg](docs/架构图/07-告警生命周期图.svg) | 规则 → 触发 → 记录 → 确认 → 闭环 |
+| [08-仿真时序图.svg](docs/架构图/08-仿真时序图.svg) | 3D 场景编辑、发布、分享与访客访问时序 |
+| [09-版本路线图.svg](docs/架构图/09-版本路线图.svg) | M1~M10 里程碑与后续规划 |
+
+### 项目文档（[docs/项目文档/](docs/项目文档/)）
+
 | 编号 | 文档 | 内容 |
 |---|---|---|
-| 00 | [文档导航](docs/00-文档导航.md) | 全部文档索引与推荐阅读路径 |
-| 01 | [项目结构与调用关系](docs/01-项目结构与调用关系.md) | 架构图、时序图、**文件级调用矩阵**、数据库关系 |
-| 02 | [功能说明文档](docs/02-功能说明文档.md) | 全部功能、接口清单、权限与业务规则 |
-| 03 | [运行启动指南](docs/03-运行启动指南.md) | 环境、建库、初始化、启动、验证、FAQ |
-| 04 | [多平台部署指南](docs/04-多平台部署指南.md) | Linux / Windows / Docker / 云平台部署 |
-| 05 | [Java 开发者零基础学习路线](docs/05-Java开发者零基础学习路线.md) | Python/Django 与 Java/Spring 对照、分阶段读码与练习 |
-| — | [工作流审批模块需求文档](docs/django-base-admin工作流审批模块需求文档.md) | BPMN 流程、11 张 `wf_` 表、审批中心与 OA 请假示例需求 |
-| — | [工作流建表 SQL](docs/后台管理系统-工作流建表SQL.sql) | `wf_` 表建表语句（由 `init_db` 自动执行） |
-| — | [附加模块需求说明书](docs/django-base-admin附加模块需求说明书.md) | 附件/消息/公告/定时任务/报表/大屏/外部对接 7 模块完整需求 |
-| — | [附加模块建表 SQL](docs/additional_module_init.sql) | 附加模块 22 张扩展表建表语句 |
-| — | [附加模块清单](docs/03-附加模块清单.md) | 22 张表字段、菜单树、前端页面、API 端点速查 |
-| — | [3D 可视化模块需求文档](docs/需求7%20django-base-admin_3D可视化模块需求文档.md) | 13 张 `scene3d_` 表、菜单结构、接口清单与实现状态 |
-| — | [3D 可视化建表 SQL](docs/scene3d_init.sql) | `scene3d_` 表建表语句与演示数据（由 `init_db` 自动执行） |
-| — | [3D 可视化设计说明](docs/scene3d/spec.md) | 数据模型、接口契约、前端页面与主题令牌选型 |
+| 01 | [项目功能详细说明](docs/项目文档/01-项目功能详细说明.md) | 模块 / 页面 / 接口 / 数据表 / 实现状态全览 |
+| 02 | [项目启动运行指南](docs/项目文档/02-项目启动运行指南.md) | 环境、建库、初始化、启动、验证与自检清单 |
+| 03 | [中间件配置与安装](docs/项目文档/03-中间件配置与安装.md) | Django 中间件、MySQL、预览/存储、Nginx、预留服务 |
+| 04 | [接口文档](docs/项目文档/04-接口文档.md) | 24 个路由前缀、公共约定、各模块接口与示例 |
+| 05 | [数据库设计与数据字典](docs/项目文档/05-数据库设计与数据字典.md) | 92 张表的字段、类型、默认值、注释与关系 |
+| 06 | [测试与验收清单](docs/项目文档/06-测试与验收清单.md) | 250 项接口回归、46 项 3D 用例、构建与巡检结果 |
+| 07 | [运维手册](docs/项目文档/07-运维手册.md) | 巡检、日志、备份恢复、发布回滚、故障速查 |
+| 08 | [常见问题解答](docs/项目文档/08-常见问题解答.md) | 启动、数据库、权限、功能、前端、3D、部署 FAQ |
+| 09 | [术语表](docs/项目文档/09-术语表.md) | 架构、认证、数据、工作流、3D、前端、运维术语 |
+| 10 | [开发路线图](docs/项目文档/10-开发路线图.md) | 已完成里程碑、短板、后续规划与技术债 |
+| 附录 | [项目结构与调用关系](docs/项目文档/01-项目结构与调用关系.md) | 架构图、时序图、文件级调用矩阵、数据库关系 |
+| 附录 | [功能说明文档（历史版）](docs/项目文档/02-功能说明文档.md) | 全部功能、接口清单、权限与业务规则 |
+| 附录 | [运行启动指南（历史版）](docs/项目文档/03-运行启动指南.md) | 环境、建库、初始化、启动、验证、FAQ |
+| 附录 | [附加模块清单](docs/项目文档/03-附加模块清单.md) | 22 张表字段、菜单树、前端页面、API 端点速查 |
+| 附录 | [多平台部署指南](docs/项目文档/04-多平台部署指南.md) | Linux / Windows / Docker / 云平台部署 |
+| 附录 | [Java 开发者零基础学习路线](docs/项目文档/05-Java开发者零基础学习路线.md) | Python/Django 与 Java/Spring 对照、读码计划 |
+| 附录 | [独立部署中间件部署手册](docs/项目文档/django-base-admin独立部署中间件部署手册.md) | 中间件独立部署步骤 |
+| 附录 | [3D 可视化实现规格](docs/项目文档/3D可视化实现规格.md) | 数据模型、接口契约、页面与主题令牌选型 |
+
+### 需求文档（[docs/需求文档/](docs/需求文档/)）
+
+| 编号 | 文档 |
+|---|---|
+| 需求 1 | [后台管理系统需求规格说明书](docs/需求文档/需求1%20后台管理系统需求规格说明书.md) |
+| 需求 2 | [工作流审批模块需求文档](docs/需求文档/需求2%20django-base-admin工作流审批模块需求文档.md) |
+| 需求 3 | [附加模块需求说明书](docs/需求文档/需求3%20django-base-admin附加模块需求说明书.md) |
+| 需求 4 | [通用标配功能需求文档](docs/需求文档/需求4%20django-base-admin通用标配功能需求文档.md) |
+| 需求 5 | [高级可选功能需求文档](docs/需求文档/需求5%20django-base-admin高级可选功能需求文档.md) |
+| 需求 6 | [系统首页需求文档](docs/需求文档/需求6%20django-base-admin系统首页需求文档.md) |
+| 需求 7 | [3D 可视化模块需求文档](docs/需求文档/需求7%20django-base-admin_3D可视化模块需求文档.md) |
+
+### 报告与验收（[docs/报告/](docs/报告/)）
+
+| 文档 | 内容 |
+|---|---|
+| [UI 验收报告](docs/报告/ui-acceptance-report.md) | 页面布局、明暗主题与响应式验收 |
+| [UI 主题优化说明](docs/报告/ui-theme-optimization.md) | 令牌化、明暗模式与 5 套主题色改造 |
+| [前端代码注释报告](docs/报告/frontend-code-comment-report.md) | 前端模块注释覆盖与说明 |
+
+### 截图与设计（[docs/设计稿或截图/](docs/设计稿或截图/)）
+
+| 目录 | 内容 |
+|---|---|
+| [界面截图](docs/设计稿或截图/界面截图/) | 登录、首页、平台模块、代码生成、字典等 17 张 |
+| [界面截图/ui](docs/设计稿或截图/界面截图/ui/) | 主题面板、暗色角色、日历等 7 张高保真图 |
+| [界面截图/dashboard](docs/设计稿或截图/界面截图/dashboard/) | 首页 1440/1280 明暗与配色 6 张 |
+| [3D 场景截图](docs/设计稿或截图/3D场景截图/) | 3D 模块 50 张（8 菜单 + 只读/分享 + 主题矩阵） |
+| [首页改版设计](docs/设计稿或截图/首页改版设计/) | 首页改版 `spec.md` 与 `tasks.md` |
+
+### 数据库脚本（[docs/](docs/)）
+
+| 脚本 | 内容 |
+|---|---|
+| [后台管理系统-初始化建表SQL.sql](docs/后台管理系统-初始化建表SQL.sql) | 基础平台 13 张表 |
+| [后台管理系统-工作流建表SQL.sql](docs/后台管理系统-工作流建表SQL.sql) | 工作流 11 张表 |
+| [additional_module_init.sql](docs/additional_module_init.sql) | 附加模块 22 张表 |
+| [new_features_init.sql](docs/new_features_init.sql) | 增强功能 33 张表 |
+| [scene3d_init.sql](docs/scene3d_init.sql) | 3D 可视化 13 张表与演示数据 |
 
 ## 工作流审批使用流程
 
@@ -567,7 +665,7 @@ python manage.py init_db
 
 ## 部署
 
-支持 Linux（Nginx + Gunicorn + systemd）、Windows Server（Waitress + Nginx/IIS）、Docker / docker-compose，以及阿里云/腾讯云等云平台与对象存储/CDN 前端托管。完整配置与命令见 [docs/04-多平台部署指南.md](docs/04-多平台部署指南.md)。
+支持 Linux（Nginx + Gunicorn + systemd）、Windows Server（Waitress + Nginx/IIS）、Docker / docker-compose，以及阿里云/腾讯云等云平台与对象存储/CDN 前端托管。完整配置与命令见 [docs/项目文档/04-多平台部署指南.md](docs/项目文档/04-多平台部署指南.md)。
 
 ## 许可
 
@@ -587,45 +685,45 @@ An admin system built with **Django 4.2 + DRF + MySQL 8 + Vue 3 + Element Plus**
 
 | Login | Dashboard |
 |---|---|
-| <img src="docs/images/01-login.png" alt="Login" width="100%"> | <img src="docs/images/02-dashboard.png" alt="Dashboard" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/01-login.png" alt="Login" width="100%"> | <img src="docs/设计稿或截图/界面截图/02-dashboard.png" alt="Dashboard" width="100%"> |
 
 | User Management | Role Management |
 |---|---|
-| <img src="docs/images/03-user.png" alt="Users" width="100%"> | <img src="docs/images/04-role.png" alt="Roles" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/03-user.png" alt="Users" width="100%"> | <img src="docs/设计稿或截图/界面截图/04-role.png" alt="Roles" width="100%"> |
 
 | Menu Management | Department Management |
 |---|---|
-| <img src="docs/images/05-menu.png" alt="Menus" width="100%"> | <img src="docs/images/06-dept.png" alt="Departments" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/05-menu.png" alt="Menus" width="100%"> | <img src="docs/设计稿或截图/界面截图/06-dept.png" alt="Departments" width="100%"> |
 
 | Dictionary Management | System Config |
 |---|---|
-| <img src="docs/images/07-dict.png" alt="Dictionaries" width="100%"> | <img src="docs/images/08-config.png" alt="Configs" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/07-dict.png" alt="Dictionaries" width="100%"> | <img src="docs/设计稿或截图/界面截图/08-config.png" alt="Configs" width="100%"> |
 
 | Operation Log | Login Log |
 |---|---|
-| <img src="docs/images/09-operlog.png" alt="Operation log" width="100%"> | <img src="docs/images/10-loginlog.png" alt="Login log" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/09-operlog.png" alt="Operation log" width="100%"> | <img src="docs/设计稿或截图/界面截图/10-loginlog.png" alt="Login log" width="100%"> |
 
 | Code Generator - Tables | Code Generator - Field Config |
 |---|---|
-| <img src="docs/images/11-gen-list.png" alt="Gen tables" width="100%"> | <img src="docs/images/12-gen-edit.png" alt="Field config" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/11-gen-list.png" alt="Gen tables" width="100%"> | <img src="docs/设计稿或截图/界面截图/12-gen-edit.png" alt="Field config" width="100%"> |
 
 | Code Generator - DDL | Dictionary Data |
 |---|---|
-| <img src="docs/images/14-gen-ddl.png" alt="DDL" width="100%"> | <img src="docs/images/15-dict-data.png" alt="Dictionary data" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/14-gen-ddl.png" alt="DDL" width="100%"> | <img src="docs/设计稿或截图/界面截图/15-dict-data.png" alt="Dictionary data" width="100%"> |
 
 | Generated Module (Students) |
 |---|
-| <img src="docs/images/13-student.png" alt="Generated module" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/13-student.png" alt="Generated module" width="100%"> |
 
 **UI Themes & Dark Mode**
 
 | Theme panel (mode + 5 palettes) | Role list (dark) |
 |---|---|
-| <img src="docs/images/ui/04-theme-panel.png" alt="Theme panel" width="100%"> | <img src="docs/images/ui/05-role-dark.png" alt="Role list dark" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/ui/04-theme-panel.png" alt="Theme panel" width="100%"> | <img src="docs/设计稿或截图/界面截图/ui/05-role-dark.png" alt="Role list dark" width="100%"> |
 
 | Dashboard (1440 light · blue) | Dashboard (1280 dark · purple) |
 |---|---|
-| <img src="docs/images/dashboard/dashboard-1440-light-blue.png" alt="Dashboard 1440 light blue" width="100%"> | <img src="docs/images/dashboard/dashboard-1280-dark-purple.png" alt="Dashboard 1280 dark purple" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/dashboard/dashboard-1440-light-blue.png" alt="Dashboard 1440 light blue" width="100%"> | <img src="docs/设计稿或截图/界面截图/dashboard/dashboard-1280-dark-purple.png" alt="Dashboard 1280 dark purple" width="100%"> |
 
 **Additional Module Previews**
 
@@ -688,7 +786,7 @@ An admin system built with **Django 4.2 + DRF + MySQL 8 + Vue 3 + Element Plus**
 
 ## Quick Start
 
-> Full steps: [docs/03-运行启动指南.md](docs/03-运行启动指南.md) (Chinese).
+> Full steps: [docs/项目文档/03-运行启动指南.md](docs/项目文档/03-运行启动指南.md) (Chinese).
 
 **1. Database**
 
@@ -734,23 +832,35 @@ python manage.py init_db
 
 After login, seven top-level menus will appear automatically: **File & Attachments, Message Center, Announcements, Scheduled Tasks, Report Management, BI Dashboards, External Integration**.
 
-> Details: [docs/03-附加模块清单.md](docs/03-附加模块清单.md) and [docs/django-base-admin附加模块需求说明书.md](docs/django-base-admin附加模块需求说明书.md).
+> Details: [docs/项目文档/03-附加模块清单.md](docs/项目文档/03-附加模块清单.md) and [docs/需求文档/需求3 django-base-admin附加模块需求说明书.md](docs/需求文档/需求3 django-base-admin附加模块需求说明书.md).
 
 ## Documentation
 
 | No. | Document | Content |
 |---|---|---|
 | 00 | [Doc index](docs/00-文档导航.md) | Index and recommended reading paths |
-| 01 | [Architecture & call graph](docs/01-项目结构与调用关系.md) | Architecture diagrams, sequences, file-level call matrix, DB relations |
-| 02 | [Feature specification](docs/02-功能说明文档.md) | All features, API list, permissions and rules |
-| 03 | [Run guide](docs/03-运行启动指南.md) | Setup, initialization, startup, verification, FAQ |
-| 04 | [Deployment guide](docs/04-多平台部署指南.md) | Linux / Windows / Docker / cloud deployment |
-| 05 | [Learning path for Java developers](docs/05-Java开发者零基础学习路线.md) | Python/Django vs Java/Spring mapping, staged code-reading plan |
-| — | [Workflow module requirements](docs/django-base-admin工作流审批模块需求文档.md) | BPMN process, 11 `wf_` tables, approval center and leave-request sample |
+| 01 | [Feature overview](docs/项目文档/01-项目功能详细说明.md) | Modules, pages, APIs, tables and implementation status |
+| 02 | [Startup guide](docs/项目文档/02-项目启动运行指南.md) | Environment, database, `init_db`, startup, verification |
+| 03 | [Middleware setup](docs/项目文档/03-中间件配置与安装.md) | Django middleware, MySQL, preview/storage, Nginx, reserved services |
+| 04 | [API reference](docs/项目文档/04-接口文档.md) | Conventions, 24 route prefixes, endpoints and examples |
+| 05 | [Database & data dictionary](docs/项目文档/05-数据库设计与数据字典.md) | 92 tables with columns, types, defaults and comments |
+| 06 | [Test & acceptance checklist](docs/项目文档/06-测试与验收清单.md) | 250 API regressions, 46 3D cases, build and browser checks |
+| 07 | [Operations manual](docs/项目文档/07-运维手册.md) | Health checks, logs, backup/restore, release and troubleshooting |
+| 08 | [FAQ](docs/项目文档/08-常见问题解答.md) | Startup, database, permissions, features, frontend, 3D, deployment |
+| 09 | [Glossary](docs/项目文档/09-术语表.md) | Architecture, auth, data, workflow, 3D, frontend, ops terms |
+| 10 | [Roadmap](docs/项目文档/10-开发路线图.md) | Milestones, gaps, next phases and technical debt |
+| — | [Architecture & call graph](docs/项目文档/01-项目结构与调用关系.md) | Architecture diagrams, sequences, file-level call matrix, DB relations |
+| — | [Feature specification (legacy)](docs/项目文档/02-功能说明文档.md) | All features, API list, permissions and rules |
+| — | [Run guide (legacy)](docs/项目文档/03-运行启动指南.md) | Setup, initialization, startup, verification, FAQ |
+| — | [Deployment guide](docs/项目文档/04-多平台部署指南.md) | Linux / Windows / Docker / cloud deployment |
+| — | [Learning path for Java developers](docs/项目文档/05-Java开发者零基础学习路线.md) | Python/Django vs Java/Spring mapping, staged code-reading plan |
+| — | [Workflow module requirements](docs/需求文档/需求2 django-base-admin工作流审批模块需求文档.md) | BPMN process, 11 `wf_` tables, approval center and leave-request sample |
 | — | [Workflow DDL](docs/后台管理系统-工作流建表SQL.sql) | `wf_` table definitions executed by `init_db` |
-| — | [Additional module requirements](docs/django-base-admin附加模块需求说明书.md) | Full requirements for 7 new modules (file/msg/notice/scheduler/report/BI/integration) |
-| — | [Additional module DDL](docs/additional_module_init.sql) | 22 extended table definitions and default seed data |
-| — | [Additional module checklist](docs/03-附加模块清单.md) | Quick reference: 22 tables, menu tree, frontend pages, API endpoints |
+| — | [Additional module requirements](docs/需求文档/需求3 django-base-admin附加模块需求说明书.md) | Full requirements for 7 new modules (file/msg/notice/scheduler/report/BI/integration) |
+| — | [Additional module readiness](docs/项目文档/03-附加模块清单.md) | 22 tables, menu tree, frontend pages, API endpoints |
+| — | [3D module requirements](docs/需求文档/需求7%20django-base-admin_3D可视化模块需求文档.md) | 13 `scene3d_` tables, menus, APIs and status |
+| — | [Architecture diagrams](docs/架构图/) | 9 standalone SVGs (architecture, features, ER, deployment, data flow, alarms, sequence, roadmap) |
+| — | [Screenshots & design](docs/设计稿或截图/) | UI screenshots, 50 3D screenshots and dashboard redesign docs |
 
 ## Workflow Approval Workflow
 
@@ -773,7 +883,7 @@ After login, seven top-level menus will appear automatically: **File & Attachmen
 
 ## Deployment
 
-Linux (Nginx + Gunicorn + systemd), Windows Server (Waitress + Nginx/IIS), Docker / docker-compose, and cloud platforms with object storage/CDN for the frontend. See [docs/04-多平台部署指南.md](docs/04-多平台部署指南.md) for complete configs and commands.
+Linux (Nginx + Gunicorn + systemd), Windows Server (Waitress + Nginx/IIS), Docker / docker-compose, and cloud platforms with object storage/CDN for the frontend. See [docs/项目文档/04-多平台部署指南.md](docs/项目文档/04-多平台部署指南.md) for complete configs and commands.
 
 ## License
 

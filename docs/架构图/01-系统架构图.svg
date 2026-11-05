@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="860" viewBox="0 0 1280 860" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L9,4 L0,8 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1280" height="860" fill="#ffffff"/>
+
+  <text x="40" y="54" font-size="28" font-weight="bold" fill="#0f172a">系统架构图</text>
+  <text x="40" y="82" font-size="14" fill="#64748b">Django 4.2 + DRF + MySQL 8 · Vue 3 前后端分离 · 四层架构</text>
+  <text x="1240" y="54" font-size="13" fill="#94a3b8" text-anchor="end">仓库：django-base-admin</text>
+
+  <!-- 客户端层 -->
+  <rect x="40" y="110" width="1200" height="100" rx="10" fill="#165dff" fill-opacity="0.06" stroke="#165dff" stroke-opacity="0.25" stroke-width="1.5"/>
+  <rect x="52" y="138" width="100" height="34" rx="8" fill="#165dff" fill-opacity="0.12"/>
+  <text x="102" y="160" font-size="15" font-weight="bold" fill="#165dff" text-anchor="middle">客户端层</text>
+
+  <rect x="180" y="130" width="190" height="62" rx="8" fill="#ffffff" stroke="#165dff" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="275" y="155" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">Vue 3 组件</text>
+  <text x="275" y="176" font-size="13" fill="#64748b" text-anchor="middle">视图 / 组合式 API</text>
+
+  <rect x="385" y="130" width="190" height="62" rx="8" fill="#ffffff" stroke="#165dff" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="480" y="155" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">Vite 5 构建</text>
+  <text x="480" y="176" font-size="13" fill="#64748b" text-anchor="middle">开发服务器 / 打包</text>
+
+  <rect x="590" y="130" width="190" height="62" rx="8" fill="#ffffff" stroke="#165dff" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="685" y="155" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">Element Plus</text>
+  <text x="685" y="176" font-size="13" fill="#64748b" text-anchor="middle">组件库 / 主题变量</text>
+
+  <rect x="795" y="130" width="190" height="62" rx="8" fill="#ffffff" stroke="#165dff" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="890" y="155" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">主题令牌</text>
+  <text x="890" y="176" font-size="13" fill="#64748b" text-anchor="middle">明暗双模式 · 5 套主题</text>
+
+  <rect x="1000" y="130" width="190" height="62" rx="8" fill="#ffffff" stroke="#165dff" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="1095" y="155" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">axios 封装</text>
+  <text x="1095" y="176" font-size="13" fill="#64748b" text-anchor="middle">request.js 拦截器</text>
+
+  <!-- 客户端到接入层 -->
+  <path d="M620,210 L620,241" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="638" y="232" font-size="13" fill="#475569">REST /api/** · JSON（开发环境 5173 → 8000）</text>
+
+  <!-- 接入层 -->
+  <rect x="40" y="245" width="1200" height="90" rx="10" fill="#0fc6c2" fill-opacity="0.08" stroke="#0fc6c2" stroke-opacity="0.3" stroke-width="1.5"/>
+  <rect x="52" y="273" width="100" height="34" rx="8" fill="#0fc6c2" fill-opacity="0.15"/>
+  <text x="102" y="295" font-size="15" font-weight="bold" fill="#0b7a77" text-anchor="middle">接入层</text>
+
+  <rect x="180" y="262" width="360" height="58" rx="8" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="360" y="287" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">Vite Dev Proxy</text>
+  <text x="360" y="307" font-size="13" fill="#64748b" text-anchor="middle">5173 → http://127.0.0.1:8000</text>
+
+  <rect x="555" y="262" width="430" height="58" rx="8" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="770" y="287" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">生产 Nginx</text>
+  <text x="770" y="307" font-size="13" fill="#64748b" text-anchor="middle">前端静态资源 + /api 反向代理</text>
+
+  <rect x="1000" y="262" width="190" height="58" rx="8" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="1095" y="287" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">CORS 跨域</text>
+  <text x="1095" y="307" font-size="13" fill="#64748b" text-anchor="middle">开发期放开来源</text>
+
+  <path d="M620,335 L620,366" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="638" y="357" font-size="13" fill="#475569">REST /api/** · JSON 请求与响应</text>
+
+  <!-- 业务层 -->
+  <rect x="40" y="370" width="1200" height="295" rx="10" fill="#722ed1" fill-opacity="0.06" stroke="#722ed1" stroke-opacity="0.25" stroke-width="1.5"/>
+  <rect x="52" y="403" width="100" height="34" rx="8" fill="#722ed1" fill-opacity="0.12"/>
+  <text x="102" y="425" font-size="15" font-weight="bold" fill="#722ed1" text-anchor="middle">业务层</text>
+
+  <rect x="180" y="390" width="1010" height="52" rx="8" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="196" y="412" font-size="15" font-weight="bold" fill="#0f172a">common/ 公共基座</text>
+  <text x="196" y="432" font-size="13" fill="#64748b">JWT · PermissionCheck · 分页 · 统一响应/异常 · OperLog + TokenRefresh 中间件 · 雪花主键</text>
+
+  <rect x="180" y="452" width="326" height="96" rx="8" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="196" y="474" font-size="15" font-weight="bold" fill="#0f172a">平台核心（3 App）</text>
+  <text x="196" y="494" font-size="13" fill="#64748b">system：用户/角色/菜单/部门/字典/配置</text>
+  <text x="196" y="512" font-size="13" fill="#64748b">认证 / 权限 / 操作日志 / 登录日志</text>
+  <text x="196" y="530" font-size="13" fill="#64748b">gen 代码生成 · workflow 自研 BPMN</text>
+
+  <rect x="522" y="452" width="326" height="96" rx="8" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="538" y="474" font-size="15" font-weight="bold" fill="#0f172a">附加模块（7 App）</text>
+  <text x="538" y="494" font-size="13" fill="#64748b">file 附件 · msg 消息 · notice 公告</text>
+  <text x="538" y="512" font-size="13" fill="#64748b">task_sched 定时 · report 报表 · bi 大屏</text>
+  <text x="538" y="530" font-size="13" fill="#64748b">outer 外部对接（演示/预留）</text>
+
+  <rect x="864" y="452" width="326" height="96" rx="8" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="880" y="474" font-size="15" font-weight="bold" fill="#0f172a">通用标配（7 App）</text>
+  <text x="880" y="494" font-size="13" fill="#64748b">dp 数据权限 · dsm 字段脱敏 · mon 监控</text>
+  <text x="880" y="512" font-size="13" fill="#64748b">sec 安全策略 · sys_no 编码规则</text>
+  <text x="880" y="530" font-size="13" fill="#64748b">imprint 导入打印 · backup 数据备份</text>
+
+  <rect x="180" y="556" width="326" height="96" rx="8" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="196" y="578" font-size="15" font-weight="bold" fill="#0f172a">高级可选（4 App）</text>
+  <text x="196" y="598" font-size="13" fill="#64748b">tenant 多租户 · wo 工单</text>
+  <text x="196" y="616" font-size="13" fill="#64748b">cal 日历日程 · kb 知识库</text>
+  <text x="196" y="634" font-size="13" fill="#64748b">按需启用，演示能力完整</text>
+
+  <rect x="522" y="556" width="326" height="96" rx="8" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="538" y="578" font-size="15" font-weight="bold" fill="#0f172a">首页 Dashboard</text>
+  <text x="538" y="598" font-size="13" fill="#64748b">home 聚合接口</text>
+  <text x="538" y="616" font-size="13" fill="#64748b">/overview · /rich · /monitor</text>
+  <text x="538" y="634" font-size="13" fill="#64748b">指标卡 / 趋势 / 待办 / 监控</text>
+
+  <rect x="864" y="556" width="326" height="96" rx="8" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="880" y="578" font-size="15" font-weight="bold" fill="#0f172a">3D 可视化 + 示例</text>
+  <text x="880" y="598" font-size="13" fill="#64748b">scene3d：13 表 · 8 菜单 · 分享页</text>
+  <text x="880" y="616" font-size="13" fill="#64748b">three.js 独立 chunk</text>
+  <text x="880" y="634" font-size="13" fill="#64748b">student：代码生成模块示例</text>
+
+  <path d="M620,665 L620,686" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="638" y="681" font-size="13" fill="#475569">ORM / SQL · 模型 managed=False</text>
+
+  <!-- 数据层 -->
+  <rect x="40" y="690" width="1200" height="105" rx="10" fill="#ff7d00" fill-opacity="0.08" stroke="#ff7d00" stroke-opacity="0.3" stroke-width="1.5"/>
+  <rect x="52" y="720" width="100" height="34" rx="8" fill="#ff7d00" fill-opacity="0.15"/>
+  <text x="102" y="742" font-size="15" font-weight="bold" fill="#c2410c" text-anchor="middle">数据层</text>
+
+  <rect x="180" y="702" width="245" height="70" rx="8" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="302" y="726" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">MySQL 8</text>
+  <text x="302" y="748" font-size="13" fill="#64748b" text-anchor="middle">库名 gen_admin</text>
+
+  <rect x="442" y="702" width="245" height="70" rx="8" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="564" y="726" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">92 张表</text>
+  <text x="564" y="748" font-size="13" fill="#64748b" text-anchor="middle">5 个 SQL 脚本手工建表</text>
+
+  <rect x="704" y="702" width="245" height="70" rx="8" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="826" y="726" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">ORM / 手写 SQL</text>
+  <text x="826" y="748" font-size="13" fill="#64748b" text-anchor="middle">模型 managed=False</text>
+
+  <rect x="966" y="702" width="245" height="70" rx="8" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="1088" y="726" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">本地 uploads</text>
+  <text x="1088" y="748" font-size="13" fill="#64748b" text-anchor="middle">media/ 文件存储</text>
+
+  <text x="40" y="835" font-size="13" fill="#94a3b8">来源：仓库真实代码与 docs/*.sql（2026-11）</text>
+</svg>

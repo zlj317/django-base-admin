@@ -1,0 +1,249 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="900" viewBox="0 0 1300 900" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3.5 L0,7 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1300" height="900" fill="#ffffff"/>
+
+  <text x="40" y="54" font-size="28" font-weight="bold" fill="#0f172a">数据库关系图</text>
+  <text x="40" y="82" font-size="14" fill="#64748b">MySQL 8 · 库 gen_admin · 92 张表中的核心关系子集（雪花 BIGINT 主键 + is_deleted 逻辑删除）</text>
+  <text x="1260" y="54" font-size="13" fill="#64748b" text-anchor="end">连线：1:N 父→子 · N:1 子表外键→父表</text>
+
+  <!-- 权限与组织 -->
+  <rect x="30" y="110" width="450" height="345" rx="10" fill="#165dff" fill-opacity="0.05" stroke="#165dff" stroke-opacity="0.3" stroke-width="1.5"/>
+  <text x="46" y="136" font-size="17" font-weight="bold" fill="#165dff">权限与组织（sys_*）</text>
+  <text x="464" y="136" font-size="13" fill="#64748b" text-anchor="end">6 张表</text>
+
+  <rect x="48" y="150" width="180" height="76" rx="8" fill="#ffffff" stroke="#165dff" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="58" y="168" font-size="14" font-weight="bold" fill="#0f172a">sys_dept</text>
+  <text x="58" y="186" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="58" y="203" font-size="13" fill="#64748b">parent_id</text>
+  <text x="58" y="220" font-size="13" fill="#64748b">dept_name · status</text>
+
+  <rect x="268" y="150" width="180" height="76" rx="8" fill="#ffffff" stroke="#165dff" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="278" y="168" font-size="14" font-weight="bold" fill="#0f172a">sys_user</text>
+  <text x="278" y="186" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="278" y="203" font-size="13" fill="#64748b">dept_id FK · username</text>
+  <text x="278" y="220" font-size="13" fill="#64748b">password(bcrypt) · status</text>
+
+  <rect x="48" y="252" width="180" height="76" rx="8" fill="#ffffff" stroke="#165dff" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="58" y="270" font-size="14" font-weight="bold" fill="#0f172a">sys_user_role</text>
+  <text x="58" y="288" font-size="13" fill="#64748b">user_id FK</text>
+  <text x="58" y="305" font-size="13" fill="#64748b">role_id FK</text>
+  <text x="58" y="322" font-size="13" fill="#64748b">联合主键 (user_id, role_id)</text>
+
+  <rect x="268" y="252" width="180" height="76" rx="8" fill="#ffffff" stroke="#165dff" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="278" y="270" font-size="14" font-weight="bold" fill="#0f172a">sys_role</text>
+  <text x="278" y="288" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="278" y="305" font-size="13" fill="#64748b">role_key · role_name</text>
+  <text x="278" y="322" font-size="13" fill="#64748b">data_scope · status</text>
+
+  <rect x="48" y="354" width="180" height="76" rx="8" fill="#ffffff" stroke="#165dff" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="58" y="372" font-size="14" font-weight="bold" fill="#0f172a">sys_role_menu</text>
+  <text x="58" y="390" font-size="13" fill="#64748b">role_id FK</text>
+  <text x="58" y="407" font-size="13" fill="#64748b">menu_id FK</text>
+  <text x="58" y="424" font-size="13" fill="#64748b">联合主键 (role_id, menu_id)</text>
+
+  <rect x="268" y="354" width="180" height="76" rx="8" fill="#ffffff" stroke="#165dff" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="278" y="372" font-size="14" font-weight="bold" fill="#0f172a">sys_menu</text>
+  <text x="278" y="390" font-size="13" fill="#64748b">id BIGINT PK · parent_id</text>
+  <text x="278" y="407" font-size="13" fill="#64748b">menu_name · perms</text>
+  <text x="278" y="424" font-size="13" fill="#64748b">menu_type · path</text>
+
+  <path d="M228,188 L264,188" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <text x="246" y="182" font-size="13" fill="#475569" text-anchor="middle">1:N</text>
+
+  <path d="M320,226 L320,240 L228,240 L228,248" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <text x="300" y="238" font-size="13" fill="#475569" text-anchor="middle">1:N</text>
+
+  <path d="M228,290 L264,290" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <text x="246" y="284" font-size="13" fill="#475569" text-anchor="middle">N:1</text>
+
+  <path d="M320,328 L320,342 L228,342 L228,350" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <text x="300" y="340" font-size="13" fill="#475569" text-anchor="middle">1:N</text>
+
+  <path d="M228,392 L264,392" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <text x="246" y="386" font-size="13" fill="#475569" text-anchor="middle">N:1</text>
+
+  <!-- 工作流引擎 -->
+  <rect x="30" y="470" width="450" height="345" rx="10" fill="#722ed1" fill-opacity="0.05" stroke="#722ed1" stroke-opacity="0.3" stroke-width="1.5"/>
+  <text x="46" y="496" font-size="17" font-weight="bold" fill="#722ed1">工作流引擎（wf_*）</text>
+  <text x="464" y="496" font-size="13" fill="#64748b" text-anchor="end">6 张表</text>
+
+  <rect x="48" y="510" width="180" height="76" rx="8" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="58" y="528" font-size="14" font-weight="bold" fill="#0f172a">wf_category</text>
+  <text x="58" y="546" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="58" y="563" font-size="13" fill="#64748b">name · code</text>
+  <text x="58" y="580" font-size="13" fill="#64748b">sort · status</text>
+
+  <rect x="268" y="510" width="180" height="76" rx="8" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="278" y="528" font-size="14" font-weight="bold" fill="#0f172a">wf_model</text>
+  <text x="278" y="546" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="278" y="563" font-size="13" fill="#64748b">category_id FK</text>
+  <text x="278" y="580" font-size="13" fill="#64748b">model_key · version</text>
+
+  <rect x="48" y="612" width="180" height="76" rx="8" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="58" y="630" font-size="14" font-weight="bold" fill="#0f172a">wf_instance</text>
+  <text x="58" y="648" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="58" y="665" font-size="13" fill="#64748b">model_id FK · biz_key</text>
+  <text x="58" y="682" font-size="13" fill="#64748b">status · current_node</text>
+
+  <rect x="268" y="612" width="180" height="76" rx="8" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="278" y="630" font-size="14" font-weight="bold" fill="#0f172a">wf_task</text>
+  <text x="278" y="648" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="278" y="665" font-size="13" fill="#64748b">instance_id FK</text>
+  <text x="278" y="682" font-size="13" fill="#64748b">assignee · status</text>
+
+  <rect x="48" y="714" width="180" height="76" rx="8" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="58" y="732" font-size="14" font-weight="bold" fill="#0f172a">wf_audit</text>
+  <text x="58" y="750" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="58" y="767" font-size="13" fill="#64748b">instance_id FK</text>
+  <text x="58" y="784" font-size="13" fill="#64748b">node_name · action</text>
+
+  <rect x="268" y="714" width="180" height="76" rx="8" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="278" y="732" font-size="14" font-weight="bold" fill="#0f172a">wf_cc</text>
+  <text x="278" y="750" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="278" y="767" font-size="13" fill="#64748b">instance_id FK</text>
+  <text x="278" y="784" font-size="13" fill="#64748b">user_id · status</text>
+
+  <path d="M228,548 L264,548" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <text x="246" y="542" font-size="13" fill="#475569" text-anchor="middle">1:N</text>
+
+  <path d="M320,586 L320,600 L228,600 L228,608" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <text x="300" y="598" font-size="13" fill="#475569" text-anchor="middle">1:N</text>
+
+  <path d="M228,650 L264,650" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <text x="246" y="644" font-size="13" fill="#475569" text-anchor="middle">1:N</text>
+
+  <path d="M138,688 L138,710" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <text x="150" y="704" font-size="13" fill="#475569">1:N</text>
+
+  <path d="M228,674 L248,674 L248,730 L264,730" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <text x="238" y="700" font-size="13" fill="#475569" text-anchor="middle">1:N</text>
+
+  <!-- 3D 可视化 -->
+  <rect x="495" y="110" width="450" height="370" rx="10" fill="#0fc6c2" fill-opacity="0.05" stroke="#0fc6c2" stroke-opacity="0.3" stroke-width="1.5"/>
+  <text x="511" y="136" font-size="17" font-weight="bold" fill="#0b7a77">3D 可视化（scene3d_*）</text>
+  <text x="929" y="136" font-size="13" fill="#64748b" text-anchor="end">7 张表 · 箭头 1:N</text>
+
+  <rect x="511" y="146" width="180" height="72" rx="8" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="521" y="163" font-size="14" font-weight="bold" fill="#0f172a">scene3d_category</text>
+  <text x="521" y="180" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="521" y="197" font-size="13" fill="#64748b">category_name</text>
+  <text x="521" y="214" font-size="13" fill="#64748b">parent_id · status</text>
+
+  <rect x="711" y="146" width="180" height="72" rx="8" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="721" y="163" font-size="14" font-weight="bold" fill="#0f172a">scene3d_template</text>
+  <text x="721" y="180" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="721" y="197" font-size="13" fill="#64748b">template_code</text>
+  <text x="721" y="214" font-size="13" fill="#64748b">category_id FK · status</text>
+
+  <rect x="511" y="230" width="180" height="72" rx="8" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="521" y="247" font-size="14" font-weight="bold" fill="#0f172a">scene3d_scene</text>
+  <text x="521" y="264" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="521" y="281" font-size="13" fill="#64748b">scene_code · category_id</text>
+  <text x="521" y="298" font-size="13" fill="#64748b">template_id · scene_status</text>
+
+  <rect x="711" y="230" width="180" height="72" rx="8" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="721" y="247" font-size="14" font-weight="bold" fill="#0f172a">scene3d_scene_object</text>
+  <text x="721" y="264" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="721" y="281" font-size="13" fill="#64748b">scene_id · object_code</text>
+  <text x="721" y="298" font-size="13" fill="#64748b">resource_id · position</text>
+
+  <rect x="511" y="314" width="180" height="72" rx="8" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="521" y="331" font-size="14" font-weight="bold" fill="#0f172a">scene3d_data_bind</text>
+  <text x="521" y="348" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="521" y="365" font-size="13" fill="#64748b">scene_id · object_id</text>
+  <text x="521" y="382" font-size="13" fill="#64748b">data_source_type</text>
+
+  <rect x="711" y="314" width="180" height="72" rx="8" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="721" y="331" font-size="14" font-weight="bold" fill="#0f172a">scene3d_alarm_rule</text>
+  <text x="721" y="348" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="721" y="365" font-size="13" fill="#64748b">threshold_value</text>
+  <text x="721" y="382" font-size="13" fill="#64748b">alarm_level · alarm_effect</text>
+
+  <rect x="511" y="398" width="180" height="72" rx="8" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="521" y="415" font-size="14" font-weight="bold" fill="#0f172a">scene3d_alarm_record</text>
+  <text x="521" y="432" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="521" y="449" font-size="13" fill="#64748b">rule_id FK · alarm_status</text>
+  <text x="521" y="466" font-size="13" fill="#64748b">confirm_user_id</text>
+
+  <rect x="711" y="398" width="180" height="72" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="721" y="415" font-size="13" font-weight="bold" fill="#334155">统一字段约定</text>
+  <text x="721" y="432" font-size="13" fill="#64748b">id：雪花 BIGINT</text>
+  <text x="721" y="449" font-size="13" fill="#64748b">is_deleted：逻辑删除</text>
+  <text x="721" y="466" font-size="13" fill="#64748b">create/update 审计字段</text>
+
+  <path d="M571,218 L571,226" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+  <path d="M730,218 L730,224 L700,224 L700,236 L695,236" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+  <path d="M691,266 L707,266" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+  <path d="M571,302 L571,310" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+  <path d="M691,350 L707,350" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+  <path d="M760,386 L760,392 L650,392 L650,394" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+  <!-- 附加模块 -->
+  <rect x="495" y="495" width="450" height="345" rx="10" fill="#f5319d" fill-opacity="0.05" stroke="#f5319d" stroke-opacity="0.3" stroke-width="1.5"/>
+  <text x="511" y="520" font-size="17" font-weight="bold" fill="#be185d">附加模块（msg_ / notice_ / bi_）</text>
+  <text x="929" y="520" font-size="13" fill="#64748b" text-anchor="end">7 张表</text>
+
+  <rect x="511" y="530" width="180" height="66" rx="8" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="521" y="546" font-size="14" font-weight="bold" fill="#0f172a">wf_file</text>
+  <text x="521" y="561" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="521" y="576" font-size="13" fill="#64748b">file_name · storage_type</text>
+  <text x="521" y="591" font-size="13" fill="#64748b">biz_type · biz_id</text>
+
+  <rect x="711" y="530" width="180" height="66" rx="8" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="721" y="546" font-size="14" font-weight="bold" fill="#0f172a">msg_template</text>
+  <text x="721" y="561" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="721" y="576" font-size="13" fill="#64748b">template_code · msg_type</text>
+  <text x="721" y="591" font-size="13" fill="#64748b">status · create_time</text>
+
+  <rect x="511" y="604" width="180" height="66" rx="8" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="521" y="620" font-size="14" font-weight="bold" fill="#0f172a">msg_record</text>
+  <text x="521" y="635" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="521" y="650" font-size="13" fill="#64748b">receiver_id · is_read</text>
+  <text x="521" y="665" font-size="13" fill="#64748b">create_time</text>
+
+  <rect x="711" y="604" width="180" height="66" rx="8" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="721" y="620" font-size="14" font-weight="bold" fill="#0f172a">notice_info</text>
+  <text x="721" y="635" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="721" y="650" font-size="13" fill="#64748b">title · status</text>
+  <text x="721" y="665" font-size="13" fill="#64748b">role_scope</text>
+
+  <rect x="511" y="678" width="180" height="66" rx="8" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="521" y="694" font-size="14" font-weight="bold" fill="#0f172a">notice_read</text>
+  <text x="521" y="709" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="521" y="724" font-size="13" fill="#64748b">notice_id FK</text>
+  <text x="521" y="739" font-size="13" fill="#64748b">user_id · read_time</text>
+
+  <rect x="711" y="678" width="180" height="66" rx="8" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="721" y="694" font-size="14" font-weight="bold" fill="#0f172a">bi_screen</text>
+  <text x="721" y="709" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="721" y="724" font-size="13" fill="#64748b">screen_name · status</text>
+  <text x="721" y="739" font-size="13" fill="#64748b">refresh_sec</text>
+
+  <rect x="511" y="752" width="180" height="66" rx="8" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="521" y="768" font-size="14" font-weight="bold" fill="#0f172a">bi_visit_log</text>
+  <text x="521" y="783" font-size="13" fill="#64748b">id BIGINT PK</text>
+  <text x="521" y="798" font-size="13" fill="#64748b">screen_id FK</text>
+  <text x="521" y="813" font-size="13" fill="#64748b">visitor_user_id</text>
+
+  <rect x="711" y="752" width="180" height="66" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="721" y="768" font-size="13" font-weight="bold" fill="#334155">关联说明</text>
+  <text x="721" y="783" font-size="13" fill="#64748b">wf_file：附件被各业务引用</text>
+  <text x="721" y="798" font-size="13" fill="#64748b">消息/公告/大屏均留访问日志</text>
+  <text x="721" y="813" font-size="13" fill="#64748b">全表 is_deleted 逻辑删除</text>
+
+  <path d="M760,592 L760,597 L650,597 L650,600" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <path d="M760,666 L760,671 L650,671 L650,674" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <path d="M760,740 L760,745 L650,745 L650,748" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+  <text x="40" y="878" font-size="13" fill="#94a3b8">来源：仓库真实代码与 docs/*.sql（2026-11）</text>
+</svg>

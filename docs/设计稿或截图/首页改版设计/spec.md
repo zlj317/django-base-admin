@@ -8,7 +8,7 @@
 
 ## 1. 空白区域根因（实测定位，非猜测）
 
-截图 `docs/images/ui/02-dashboard-light.png` 对照代码 `frontend/src/views/dashboard/index.vue`：
+截图 `docs/设计稿或截图/界面截图/ui/02-dashboard-light.png` 对照代码 `frontend/src/views/dashboard/index.vue`：
 
 | 现象 | 根因 |
 | --- | --- |
@@ -126,7 +126,7 @@ Row E：常用功能（md=24，按 4 组模块分区，每组 4-6 个入口）
 
 1. **接口**：PowerShell 登录后调 `GET /api/home/rich/`，确认 `code=200` 且各块字段存在；异常场景（无 token）返回 401。
 2. **页面**：浏览器实际打开 `/dashboard`：
-   - 1440 与 1280 两个宽度截图（保存 `docs/images/dashboard/`），核对无横向空洞、同行等高、文字不溢出；
+   - 1440 与 1280 两个宽度截图（保存 `docs/设计稿或截图/界面截图/dashboard/`），核对无横向空洞、同行等高、文字不溢出；
    - 主题：亮色 blue、暗色 blue、亮色 purple、暗色 rose，共 4 组截图；
    - 点击关键卡片：待办 → `/workflow/todo` 或 `/wo/mine`；公告 → `/notice/info`；消息 → `/msg/record`；文件 → `/file`；任务 → `/task`；报表 → `/rp/template`；BI → `/bi`；知识库 → `/kb/document`；日程 → `/cal/schedule`；常用功能各入口；
    - 控制台无报错（重点看 `undefined`/`Cannot read`）。

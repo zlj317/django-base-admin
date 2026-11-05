@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="640" viewBox="0 0 1320 640" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3.5 L0,7 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1320" height="640" fill="#ffffff"/>
+
+  <text x="40" y="52" font-size="28" font-weight="bold" fill="#0f172a">版本路线图</text>
+  <text x="40" y="78" font-size="14" fill="#64748b">2026 上半年 → 2026-11：基础能力、工具链、扩展模块、首页与 3D 可视化、文档体系</text>
+
+  <circle cx="1096" cy="50" r="6" fill="#165dff"/>
+  <text x="1110" y="55" font-size="13" fill="#64748b">已完成</text>
+  <circle cx="1176" cy="50" r="6" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="1190" y="55" font-size="13" fill="#64748b">规划</text>
+
+  <!-- 时间轴 -->
+  <text x="60" y="334" font-size="13" fill="#64748b">2026 上半年</text>
+  <text x="620" y="334" font-size="13" fill="#64748b" text-anchor="middle">2026 下半年</text>
+  <text x="1204" y="334" font-size="13" fill="#64748b" text-anchor="middle">2026-11</text>
+  <line x1="60" y1="300" x2="1270" y2="300" stroke="#cbd5e1" stroke-width="2"/>
+  <path d="M1260,300 L1272,300" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- 上方节点 1/3/5/7/9 -->
+  <rect x="20" y="160" width="160" height="80" rx="8" fill="#165dff" fill-opacity="0.08" stroke="#165dff" stroke-width="1.5"/>
+  <text x="34" y="186" font-size="15" font-weight="bold" fill="#0f172a">① 基础平台</text>
+  <text x="34" y="210" font-size="13" fill="#64748b">13 表 · JWT 认证</text>
+  <text x="34" y="230" font-size="13" fill="#94a3b8">用户/角色/菜单</text>
+  <line x1="100" y1="240" x2="100" y2="292" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <circle cx="100" cy="300" r="9" fill="#165dff"/>
+
+  <rect x="296" y="160" width="160" height="80" rx="8" fill="#722ed1" fill-opacity="0.08" stroke="#722ed1" stroke-width="1.5"/>
+  <text x="310" y="186" font-size="15" font-weight="bold" fill="#0f172a">③ 工作流审批</text>
+  <text x="310" y="210" font-size="13" fill="#64748b">自研 BPMN · 11 表</text>
+  <text x="310" y="230" font-size="13" fill="#94a3b8">模型/实例/任务</text>
+  <line x1="376" y1="240" x2="376" y2="292" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <circle cx="376" cy="300" r="9" fill="#722ed1"/>
+
+  <rect x="572" y="160" width="160" height="80" rx="8" fill="#ff7d00" fill-opacity="0.08" stroke="#ff7d00" stroke-width="1.5"/>
+  <text x="586" y="186" font-size="15" font-weight="bold" fill="#0f172a">⑤ 通用标配</text>
+  <text x="586" y="210" font-size="13" fill="#64748b">7 项通用能力</text>
+  <text x="586" y="230" font-size="13" fill="#94a3b8">编码/模板/权限</text>
+  <line x1="652" y1="240" x2="652" y2="292" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <circle cx="652" cy="300" r="9" fill="#ff7d00"/>
+
+  <rect x="848" y="160" width="160" height="80" rx="8" fill="#165dff" fill-opacity="0.08" stroke="#165dff" stroke-width="1.5"/>
+  <text x="862" y="186" font-size="15" font-weight="bold" fill="#0f172a">⑦ 首页 Dashboard</text>
+  <text x="862" y="210" font-size="13" fill="#64748b">3 个聚合接口</text>
+  <text x="862" y="230" font-size="13" fill="#94a3b8">overview · monitor</text>
+  <line x1="928" y1="240" x2="928" y2="292" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <circle cx="928" cy="300" r="9" fill="#165dff"/>
+
+  <rect x="1124" y="160" width="160" height="80" rx="8" fill="#475569" fill-opacity="0.08" stroke="#475569" stroke-width="1.5"/>
+  <text x="1138" y="186" font-size="15" font-weight="bold" fill="#0f172a">⑨ 文档与架构图</text>
+  <text x="1138" y="210" font-size="13" fill="#64748b">文档 + 9 张架构图</text>
+  <text x="1138" y="230" font-size="13" fill="#94a3b8">代码 / SQL / 部署</text>
+  <line x1="1204" y1="240" x2="1204" y2="292" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <circle cx="1204" cy="300" r="9" fill="#475569"/>
+
+  <!-- 下方节点 2/4/6/8 -->
+  <rect x="158" y="360" width="160" height="80" rx="8" fill="#0fc6c2" fill-opacity="0.08" stroke="#0fc6c2" stroke-width="1.5"/>
+  <text x="172" y="386" font-size="15" font-weight="bold" fill="#0f172a">② 代码生成器</text>
+  <text x="172" y="410" font-size="13" fill="#64748b">DDL → CRUD 生成</text>
+  <text x="172" y="430" font-size="13" fill="#94a3b8">gen · 表 / 字段模板</text>
+  <line x1="238" y1="308" x2="238" y2="356" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <circle cx="238" cy="300" r="9" fill="#0fc6c2"/>
+
+  <rect x="434" y="360" width="160" height="80" rx="8" fill="#0fc6c2" fill-opacity="0.08" stroke="#0fc6c2" stroke-width="1.5"/>
+  <text x="448" y="386" font-size="15" font-weight="bold" fill="#0f172a">④ 附加模块</text>
+  <text x="448" y="410" font-size="13" fill="#64748b">7 模块 · 22 表</text>
+  <text x="448" y="430" font-size="13" fill="#94a3b8">消息/公告/报表</text>
+  <line x1="514" y1="308" x2="514" y2="356" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <circle cx="514" cy="300" r="9" fill="#0fc6c2"/>
+
+  <rect x="710" y="360" width="160" height="80" rx="8" fill="#f5319d" fill-opacity="0.08" stroke="#f5319d" stroke-width="1.5"/>
+  <text x="724" y="386" font-size="15" font-weight="bold" fill="#0f172a">⑥ 高级可选</text>
+  <text x="724" y="410" font-size="13" fill="#64748b">4 个扩展模块</text>
+  <text x="724" y="430" font-size="13" fill="#94a3b8">租户/工单/日历</text>
+  <line x1="790" y1="308" x2="790" y2="356" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <circle cx="790" cy="300" r="9" fill="#f5319d"/>
+
+  <rect x="986" y="360" width="160" height="80" rx="8" fill="#722ed1" fill-opacity="0.08" stroke="#722ed1" stroke-width="1.5"/>
+  <text x="1000" y="386" font-size="15" font-weight="bold" fill="#0f172a">⑧ 3D 可视化</text>
+  <text x="1000" y="410" font-size="13" fill="#64748b">8 菜单 · 13 表</text>
+  <text x="1000" y="430" font-size="13" fill="#94a3b8">场景/绑定/告警</text>
+  <line x1="1066" y1="308" x2="1066" y2="356" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <circle cx="1066" cy="300" r="9" fill="#722ed1"/>
+
+  <!-- 汇总 -->
+  <rect x="40" y="480" width="800" height="120" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="60" y="506" font-size="15" font-weight="bold" fill="#334155">里程碑汇总</text>
+  <text x="60" y="530" font-size="13" fill="#64748b">9 个里程碑均已完成；数据规模：5 个 SQL 脚本 · 92 张表 · 24 个业务 App。</text>
+  <text x="60" y="552" font-size="13" fill="#64748b">技术栈：Django 4.2 + DRF · MySQL 8（managed=False） · Vue 3 + Vite 5 + Element Plus。</text>
+  <text x="60" y="574" font-size="13" fill="#64748b">关键能力：JWT 静默续期 · 权限校验 · 代码生成 · 自研 BPMN · 3D 场景与分享。</text>
+  <text x="60" y="594" font-size="13" fill="#64748b">当前未部署：Celery / Redis、MinIO、kkFileView、OnlyOffice（标注预留 / 演示）。</text>
+
+  <!-- 后续规划 -->
+  <rect x="900" y="480" width="380" height="120" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="7 5"/>
+  <text x="920" y="506" font-size="15" font-weight="bold" fill="#475569">后续规划（未实现）</text>
+  <circle cx="928" cy="528" r="5" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="944" y="533" font-size="13" fill="#64748b">真实定时调度（Redis + Celery）</text>
+  <circle cx="928" cy="553" r="5" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="944" y="558" font-size="13" fill="#64748b">对象存储 / 预览（MinIO / kkFileView）</text>
+  <circle cx="928" cy="578" r="5" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="944" y="583" font-size="13" fill="#64748b">在线协同编辑（OnlyOffice）</text>
+
+  <text x="40" y="620" font-size="13" fill="#94a3b8">来源：仓库真实代码与 docs/*.sql（2026-11）</text>
+</svg>

@@ -799,7 +799,7 @@
 | 层 | 实际实现 |
 | --- | --- |
 | 数据表 | 13 张，物理表名统一加 `scene3d_` 前缀（本文档小节写作 `scene_3d_*`，为同一批表的命名演进）：`scene3d_category`、`scene3d_template`、`scene3d_scene`、`scene3d_model_resource`、`scene3d_scene_object`、`scene3d_data_bind`、`scene3d_alarm_rule`、`scene3d_alarm_record`、`scene3d_patrol_route`、`scene3d_patrol_record`、`scene3d_scene_version`、`scene3d_scene_permission`、`scene3d_access_log` |
-| 建表 | [scene3d_init.sql](scene3d_init.sql) 采用 `CREATE TABLE IF NOT EXISTS` + `INSERT IGNORE`，由 `init_db` 自动执行，可重复运行不破坏已有数据 |
+| 建表 | [scene3d_init.sql](../scene3d_init.sql) 采用 `CREATE TABLE IF NOT EXISTS` + `INSERT IGNORE`，由 `init_db` 自动执行，可重复运行不破坏已有数据 |
 | 后端 | `backend/apps/scene3d`：模型（全部 `managed=False`）、序列化器、视图集、路由、菜单与按钮权限种子；已在 `INSTALLED_APPS`、`config/urls.py`、`init_db.py` 注册 |
 | 前端 | `frontend/src/views/scene3d`：分类、场景管理、编辑器、模型资源、数据绑定、告警联动、巡检路线、场景发布（大屏）8 个菜单页 + 只读查看页 + 免登录分享页；`components/scene3d/SceneViewer.vue` 封装 three.js |
 | 渲染 | three.js 0.170.0 通过 `import('three')` 动态加载，产出独立 chunk；当前无真实 glb 资源，按对象名称生成机柜/服务器/空调/UPS/密集架/传感器占位几何与文字标签 |
@@ -822,7 +822,7 @@
 | 接口自测 | 46 项真实 HTTP 用例全部符合预期：列表/详情/保存/发布/下线/复制/版本/回滚/分享（含免登录）/授权/日志/导出/模型预览/绑定预览/告警统计与确认/巡检开始/大屏；异常参数（非法对象数组、非法数据源表、非法 JSON、空名称、重复编码、非法 target_type）返回 400；未登录 401、无权限 403、非法分享令牌 404 |
 | 数据清理 | 自测产生的副本场景、分类、绑定、授权、巡检记录与临时用户已清理，种子数据（告警状态、场景状态、场景配置）已复原 |
 | 前端构建 | `npm run build` 通过（2843 modules，`three.module` 独立 chunk 688.38 kB，仅体积提示不阻塞） |
-| 页面截图 | 50+ 张，覆盖 8 个菜单页 + 编辑器 + 只读页 + 分享页 × 1440/1280 × 明暗，以及 5 套配色 × 明暗；存放于 [screenshots](screenshots/) |
+| 页面截图 | 50+ 张，覆盖 8 个菜单页 + 编辑器 + 只读页 + 分享页 × 1440/1280 × 明暗，以及 5 套配色 × 明暗；存放于 [3D 场景截图](../设计稿或截图/3D场景截图/) |
 | 控制台 | 浏览器控制台 0 报错（截图巡检脚本同时收集 `console.error` 与 `pageerror`） |
 
 ### 11.4 已知限制

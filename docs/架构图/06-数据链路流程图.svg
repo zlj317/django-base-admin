@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="760" viewBox="0 0 1360 760" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3.5 L0,7 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowDashed" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3.5 L0,7 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1360" height="760" fill="#ffffff"/>
+
+  <text x="40" y="54" font-size="28" font-weight="bold" fill="#0f172a">数据链路流程图</text>
+  <text x="40" y="80" font-size="14" fill="#64748b">一次前端请求的完整往返：视图 → 中间件 → 认证 → 权限 → ORM → MySQL → 序列化 → 统一响应</text>
+  <text x="1320" y="54" font-size="13" fill="#64748b" text-anchor="end">第一行：请求方向 →　第二行：响应方向 ←</text>
+
+  <!-- 第一行：请求 -->
+  <rect x="50" y="150" width="130" height="84" rx="8" fill="#165dff" fill-opacity="0.10" stroke="#165dff" stroke-width="1.5"/>
+  <text x="115" y="174" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">用户操作</text>
+  <text x="115" y="196" font-size="13" fill="#64748b" text-anchor="middle">点击 / 查询</text>
+  <text x="115" y="215" font-size="13" fill="#64748b" text-anchor="middle">提交表单</text>
+
+  <rect x="194" y="150" width="130" height="84" rx="8" fill="#165dff" fill-opacity="0.10" stroke="#165dff" stroke-width="1.5"/>
+  <text x="259" y="174" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">Vue 组件</text>
+  <text x="259" y="196" font-size="13" fill="#64748b" text-anchor="middle">页面 / 表单</text>
+  <text x="259" y="215" font-size="13" fill="#64748b" text-anchor="middle">组合式 API</text>
+
+  <rect x="338" y="150" width="150" height="84" rx="8" fill="#0fc6c2" fill-opacity="0.10" stroke="#0fc6c2" stroke-width="1.5"/>
+  <text x="413" y="174" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">axios 封装</text>
+  <text x="413" y="196" font-size="13" fill="#64748b" text-anchor="middle">request.js</text>
+  <text x="413" y="215" font-size="13" fill="#64748b" text-anchor="middle">请求/响应拦截器</text>
+
+  <rect x="502" y="150" width="170" height="84" rx="8" fill="#0fc6c2" fill-opacity="0.10" stroke="#0fc6c2" stroke-width="1.5"/>
+  <text x="587" y="174" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">Vite / Nginx</text>
+  <text x="587" y="196" font-size="13" fill="#64748b" text-anchor="middle">开发 5173</text>
+  <text x="587" y="215" font-size="13" fill="#64748b" text-anchor="middle">生产 /api 反向代理</text>
+
+  <rect x="686" y="150" width="340" height="84" rx="8" fill="#722ed1" fill-opacity="0.10" stroke="#722ed1" stroke-width="1.5"/>
+  <text x="856" y="174" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">Django 中间件链</text>
+  <text x="856" y="196" font-size="13" fill="#64748b" text-anchor="middle">CORS → Common → OperLog</text>
+  <text x="856" y="215" font-size="13" fill="#64748b" text-anchor="middle">→ TokenRefresh（settings.MIDDLEWARE）</text>
+
+  <rect x="1040" y="150" width="130" height="84" rx="8" fill="#722ed1" fill-opacity="0.10" stroke="#722ed1" stroke-width="1.5"/>
+  <text x="1105" y="174" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">JWT 认证</text>
+  <text x="1105" y="196" font-size="13" fill="#64748b" text-anchor="middle">HS256 · 2 小时</text>
+  <text x="1105" y="215" font-size="13" fill="#64748b" text-anchor="middle">bcrypt 密码校验</text>
+
+  <rect x="1184" y="150" width="130" height="84" rx="8" fill="#f5319d" fill-opacity="0.10" stroke="#f5319d" stroke-width="1.5"/>
+  <text x="1249" y="174" font-size="14" font-weight="bold" fill="#0f172a" text-anchor="middle">PermissionCheck</text>
+  <text x="1249" y="196" font-size="13" fill="#64748b" text-anchor="middle">菜单 / 按钮权限</text>
+  <text x="1249" y="215" font-size="13" fill="#64748b" text-anchor="middle">数据范围校验</text>
+
+  <path d="M180,192 L190,192" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M324,192 L334,192" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M488,192 L498,192" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M672,192 L682,192" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M1026,192 L1036,192" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M1170,192 L1180,192" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- 第二行：响应（自右向左） -->
+  <rect x="1120" y="380" width="194" height="84" rx="8" fill="#f5319d" fill-opacity="0.10" stroke="#f5319d" stroke-width="1.5"/>
+  <text x="1217" y="404" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">ViewSet / Serializer</text>
+  <text x="1217" y="426" font-size="13" fill="#64748b" text-anchor="middle">业务查询 / 校验</text>
+  <text x="1217" y="445" font-size="13" fill="#64748b" text-anchor="middle">序列化输出</text>
+
+  <rect x="900" y="380" width="200" height="84" rx="8" fill="#722ed1" fill-opacity="0.10" stroke="#722ed1" stroke-width="1.5"/>
+  <text x="1000" y="404" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">ORM / 手写 SQL</text>
+  <text x="1000" y="426" font-size="13" fill="#64748b" text-anchor="middle">模型 managed=False</text>
+  <text x="1000" y="445" font-size="13" fill="#64748b" text-anchor="middle">分页 / 过滤 / 排序</text>
+
+  <rect x="680" y="380" width="200" height="84" rx="8" fill="#ff7d00" fill-opacity="0.10" stroke="#ff7d00" stroke-width="1.5"/>
+  <text x="780" y="404" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">MySQL 8</text>
+  <text x="780" y="426" font-size="13" fill="#64748b" text-anchor="middle">库 gen_admin</text>
+  <text x="780" y="445" font-size="13" fill="#64748b" text-anchor="middle">92 张表 · is_deleted</text>
+
+  <rect x="470" y="380" width="190" height="84" rx="8" fill="#165dff" fill-opacity="0.10" stroke="#165dff" stroke-width="1.5"/>
+  <text x="565" y="404" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">BigIntJSONRenderer</text>
+  <text x="565" y="426" font-size="13" fill="#64748b" text-anchor="middle">雪花 ID → 字符串</text>
+  <text x="565" y="445" font-size="13" fill="#64748b" text-anchor="middle">避免前端精度丢失</text>
+
+  <rect x="260" y="380" width="190" height="84" rx="8" fill="#165dff" fill-opacity="0.10" stroke="#165dff" stroke-width="1.5"/>
+  <text x="355" y="404" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">{code, msg, data}</text>
+  <text x="355" y="426" font-size="13" fill="#64748b" text-anchor="middle">统一响应结构</text>
+  <text x="355" y="445" font-size="13" fill="#64748b" text-anchor="middle">异常时 HTTP 恒为 200</text>
+
+  <rect x="50" y="380" width="190" height="84" rx="8" fill="#0fc6c2" fill-opacity="0.10" stroke="#0fc6c2" stroke-width="1.5"/>
+  <text x="145" y="404" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">前端拦截器</text>
+  <text x="145" y="426" font-size="13" fill="#64748b" text-anchor="middle">解包 data / 错误提示</text>
+  <text x="145" y="445" font-size="13" fill="#64748b" text-anchor="middle">替换 X-Refresh-Token</text>
+
+  <path d="M1120,422 L1104,422" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M900,422 L884,422" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M680,422 L664,422" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M470,422 L454,422" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M260,422 L244,422" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <path d="M1249,234 L1249,376" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="1239" y="310" font-size="13" fill="#475569" text-anchor="end">已认证请求 → 进入视图</text>
+
+  <path d="M145,380 L145,320 L259,320 L259,238" fill="none" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrowDashed)"/>
+  <text x="200" y="312" font-size="13" fill="#64748b">更新界面 / 替换 Token</text>
+
+  <!-- 补充说明 -->
+  <rect x="40" y="530" width="620" height="150" rx="10" fill="#ff7d00" fill-opacity="0.05" stroke="#ff7d00" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="60" y="558" font-size="16" font-weight="bold" fill="#c2410c">写操作日志</text>
+  <text x="60" y="584" font-size="13" fill="#334155">POST / PUT / DELETE → OperLogMiddleware</text>
+  <text x="60" y="606" font-size="13" fill="#334155">落库 sys_oper_log：模块/类型/URL/参数（截断 2000 字符）/耗时</text>
+  <text x="60" y="628" font-size="13" fill="#334155">/api/auth/login 与 /api/auth/logout 跳过记录，避免噪音</text>
+
+  <rect x="700" y="530" width="620" height="150" rx="10" fill="#722ed1" fill-opacity="0.05" stroke="#722ed1" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="720" y="558" font-size="16" font-weight="bold" fill="#722ed1">Token 静默续期</text>
+  <text x="720" y="584" font-size="13" fill="#334155">JWT 有效期 2 小时；剩余不足 30 分钟时触发</text>
+  <text x="720" y="606" font-size="13" fill="#334155">TokenRefreshMiddleware 在响应头写入 X-Refresh-Token</text>
+  <text x="720" y="628" font-size="13" fill="#334155">前端拦截器读取并替换本地 token，用户无感</text>
+
+  <text x="40" y="708" font-size="13" fill="#64748b">统一响应 {code, msg, data}；异常处理器令 HTTP 状态恒为 200；BigIntJSONRenderer 将雪花 BIGINT 主键转字符串。</text>
+
+  <text x="40" y="735" font-size="13" fill="#94a3b8">来源：仓库真实代码与 docs/*.sql（2026-11）</text>
+</svg>

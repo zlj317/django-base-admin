@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="860" viewBox="0 0 1360 860" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3.5 L0,7 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowDashed" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3.5 L0,7 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1360" height="860" fill="#ffffff"/>
+
+  <text x="40" y="52" font-size="28" font-weight="bold" fill="#0f172a">仿真时序图</text>
+  <text x="40" y="78" font-size="14" fill="#64748b">（A）管理员编辑、保存、发布、分享　·　（B）访客免登录访问分享页　·　实线：请求　虚线：响应</text>
+
+  <!-- 泳道头 -->
+  <rect x="40" y="95" width="160" height="36" rx="8" fill="#165dff" fill-opacity="0.12" stroke="#165dff" stroke-width="1.5"/>
+  <text x="120" y="118" font-size="14" font-weight="bold" fill="#165dff" text-anchor="middle">管理员</text>
+
+  <rect x="280" y="95" width="220" height="36" rx="8" fill="#0fc6c2" fill-opacity="0.12" stroke="#0fc6c2" stroke-width="1.5"/>
+  <text x="390" y="118" font-size="14" font-weight="bold" fill="#0b7a77" text-anchor="middle">前端（Vue 3）</text>
+
+  <rect x="590" y="95" width="260" height="36" rx="8" fill="#722ed1" fill-opacity="0.12" stroke="#722ed1" stroke-width="1.5"/>
+  <text x="720" y="118" font-size="14" font-weight="bold" fill="#722ed1" text-anchor="middle">后端 API（DRF）</text>
+
+  <rect x="910" y="95" width="200" height="36" rx="8" fill="#ff7d00" fill-opacity="0.12" stroke="#ff7d00" stroke-width="1.5"/>
+  <text x="1010" y="118" font-size="14" font-weight="bold" fill="#c2410c" text-anchor="middle">MySQL 8</text>
+
+  <rect x="1140" y="95" width="180" height="36" rx="8" fill="#f5319d" fill-opacity="0.12" stroke="#f5319d" stroke-width="1.5"/>
+  <text x="1230" y="118" font-size="14" font-weight="bold" fill="#be185d" text-anchor="middle">访客（免登录）</text>
+
+  <line x1="120" y1="131" x2="120" y2="820" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="5 5"/>
+  <line x1="390" y1="131" x2="390" y2="820" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="5 5"/>
+  <line x1="720" y1="131" x2="720" y2="820" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="5 5"/>
+  <line x1="1010" y1="131" x2="1010" y2="820" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="5 5"/>
+  <line x1="1230" y1="131" x2="1230" y2="820" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="5 5"/>
+
+  <!-- A 区 -->
+  <rect x="30" y="145" width="1300" height="410" rx="10" fill="#165dff" fill-opacity="0.04" stroke="#165dff" stroke-opacity="0.25" stroke-width="1.5"/>
+  <text x="44" y="170" font-size="16" font-weight="bold" fill="#165dff">（A）管理员：场景编辑 → 保存草稿 → 发布 → 分享</text>
+
+  <path d="M124,195 L386,195" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="255" y="189" font-size="13" fill="#475569" text-anchor="middle">① 打开场景列表 → 进入编辑器</text>
+
+  <path d="M394,221 L716,221" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="555" y="215" font-size="13" fill="#475569" text-anchor="middle">GET /api/scene3d/{id}/detail</text>
+
+  <path d="M724,247 L1006,247" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="865" y="241" font-size="13" fill="#475569" text-anchor="middle">读取场景 / 对象 / 绑定 / 版本</text>
+
+  <path d="M1006,273 L724,273" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#arrowDashed)"/>
+  <text x="865" y="267" font-size="13" fill="#64748b" text-anchor="middle">场景配置 JSON + 对象记录</text>
+
+  <path d="M716,299 L394,299" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#arrowDashed)"/>
+  <text x="555" y="293" font-size="13" fill="#64748b" text-anchor="middle">返回详情（含对象与数据绑定）</text>
+
+  <path d="M394,325 L716,325" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="555" y="319" font-size="13" fill="#475569" text-anchor="middle">POST /api/scene3d/{id}/save</text>
+
+  <path d="M724,351 L1006,351" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="865" y="345" font-size="13" fill="#475569" text-anchor="middle">更新 scene_config + 替换对象 + 快照</text>
+
+  <path d="M124,377 L386,377" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="255" y="371" font-size="13" fill="#475569" text-anchor="middle">② 点击「发布」</text>
+
+  <path d="M394,403 L716,403" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="555" y="397" font-size="13" fill="#475569" text-anchor="middle">POST /api/scene3d/{id}/publish</text>
+
+  <path d="M724,429 L1006,429" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="865" y="423" font-size="13" fill="#475569" text-anchor="middle">校验通过 → scene_status=1 + 写版本</text>
+
+  <path d="M124,455 L386,455" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="255" y="449" font-size="13" fill="#475569" text-anchor="middle">③ 生成分享链接</text>
+
+  <path d="M394,481 L716,481" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="555" y="475" font-size="13" fill="#475569" text-anchor="middle">POST /api/scene3d/{id}/share</text>
+
+  <rect x="540" y="490" width="360" height="24" rx="6" fill="#722ed1" fill-opacity="0.10" stroke="#722ed1" stroke-opacity="0.5" stroke-width="1.2"/>
+  <text x="720" y="507" font-size="13" fill="#722ed1" text-anchor="middle">uuid token + 有效期 1~30 天 → scene_config.share</text>
+
+  <path d="M716,533 L394,533" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#arrowDashed)"/>
+  <text x="555" y="527" font-size="13" fill="#64748b" text-anchor="middle">/scene3d/share/{token}（分享链接）</text>
+
+  <!-- B 区 -->
+  <rect x="30" y="570" width="1300" height="260" rx="10" fill="#f5319d" fill-opacity="0.04" stroke="#f5319d" stroke-opacity="0.25" stroke-width="1.5"/>
+  <text x="44" y="594" font-size="16" font-weight="bold" fill="#be185d">（B）访客：免登录分享页 → 校验 → three.js 渲染</text>
+
+  <path d="M1226,618 L394,618" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="820" y="612" font-size="13" fill="#475569" text-anchor="middle">打开 /scene3d/share/{token}</text>
+
+  <path d="M394,644 L716,644" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="555" y="638" font-size="13" fill="#475569" text-anchor="middle">GET /api/scene3d/share/{token}</text>
+
+  <rect x="550" y="652" width="340" height="24" rx="6" fill="#722ed1" fill-opacity="0.10" stroke="#722ed1" stroke-opacity="0.5" stroke-width="1.2"/>
+  <text x="720" y="669" font-size="13" fill="#722ed1" text-anchor="middle">AllowAny + 免认证（authentication_classes=[]）</text>
+
+  <path d="M724,696 L1006,696" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="865" y="690" font-size="13" fill="#475569" text-anchor="middle">查已发布场景 + 匹配 token / 有效期</text>
+
+  <path d="M724,722 L1006,722" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="865" y="716" font-size="13" fill="#475569" text-anchor="middle">写 scene3d_access_log（访问日志）</text>
+
+  <path d="M716,748 L394,748" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#arrowDashed)"/>
+  <text x="555" y="742" font-size="13" fill="#64748b" text-anchor="middle">返回场景配置 + 对象/绑定/规则</text>
+
+  <rect x="300" y="763" width="180" height="24" rx="6" fill="#0fc6c2" fill-opacity="0.12" stroke="#0fc6c2" stroke-opacity="0.5" stroke-width="1.2"/>
+  <text x="390" y="780" font-size="13" fill="#0b7a77" text-anchor="middle">three.js 渲染场景</text>
+
+  <text x="40" y="840" font-size="13" fill="#94a3b8">来源：仓库真实代码与 docs/*.sql（2026-11）</text>
+</svg>

@@ -257,7 +257,7 @@
 
 ## 实现状态（V2 首页充实改造，2026-11-05）
 
-**状态：已完成 ✅**（方案见 `docs/dashboard-redesign/spec.md`、`docs/dashboard-redesign/tasks.md`）
+**状态：已完成 ✅**（方案见 `docs/设计稿或截图/首页改版设计/spec.md`、`tasks.md`）
 
 ### 1. 空白区域根因（浏览器实测 DOM，非猜测）
 
@@ -304,7 +304,7 @@
 
 - 后端：`backend/apps/home/views.py`（新增 `rich`，旧方法未改）、`backend/apps/home/urls.py`
 - 前端：`frontend/src/views/dashboard/index.vue`（重写）、`frontend/src/components/dashboard/TrendChart.vue`（新增）、`frontend/src/components/dashboard/DistributionBar.vue`（新增）
-- 文档/截图：`docs/dashboard-redesign/spec.md`、`tasks.md`、`docs/images/dashboard/*.png`
+- 文档/截图：`docs/设计稿或截图/首页改版设计/spec.md`、`tasks.md`、`docs/设计稿或截图/界面截图/dashboard/*.png`
 
 ### 6. 验证
 

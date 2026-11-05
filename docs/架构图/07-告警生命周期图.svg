@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3.5 L0,7 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3.5 L0,7 z" fill="#ff7d00"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1280" height="720" fill="#ffffff"/>
+
+  <text x="40" y="54" font-size="28" font-weight="bold" fill="#0f172a">告警生命周期图</text>
+  <text x="40" y="80" font-size="14" fill="#64748b">从规则配置、阈值判定、生成记录、确认处置到闭环归档 · 3D 场景告警与系统监控告警共用</text>
+
+  <!-- 两条来源 -->
+  <rect x="40" y="105" width="590" height="75" rx="10" fill="#ff7d00" fill-opacity="0.08" stroke="#ff7d00" stroke-width="1.5"/>
+  <text x="60" y="130" font-size="15" font-weight="bold" fill="#0f172a">来源 A · 3D 场景告警</text>
+  <text x="60" y="152" font-size="13" fill="#64748b">scene3d_alarm_rule（阈值/级别/效果） + scene3d_data_bind（绑定读数）</text>
+  <text x="60" y="170" font-size="13" fill="#64748b">记录表 scene3d_alarm_record · alarm_status 0 未确认</text>
+
+  <rect x="650" y="105" width="590" height="75" rx="10" fill="#165dff" fill-opacity="0.08" stroke="#165dff" stroke-width="1.5"/>
+  <text x="670" y="130" font-size="15" font-weight="bold" fill="#0f172a">来源 B · 系统监控告警</text>
+  <text x="670" y="152" font-size="13" fill="#64748b">monitor_alarm_rule（service/db/redis/disk/task/api）</text>
+  <text x="670" y="170" font-size="13" fill="#64748b">记录表 monitor_alarm_record · handle_status 0 未处理（演示）</text>
+
+  <text x="40" y="214" font-size="13" fill="#64748b">两条来源共用同一生命周期模型：规则 → 判定 → 记录 → 通知 → 确认 → 归档；字段命名略有差异。</text>
+
+  <!-- 状态 1 -->
+  <rect x="40" y="240" width="210" height="150" rx="10" fill="#165dff" fill-opacity="0.08" stroke="#165dff" stroke-width="1.5"/>
+  <circle cx="64" cy="264" r="13" fill="#165dff"/>
+  <text x="64" y="269" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">1</text>
+  <text x="86" y="269" font-size="15" font-weight="bold" fill="#0f172a">规则配置</text>
+  <text x="58" y="296" font-size="13" fill="#334155">比较符 + 阈值 + 级别</text>
+  <text x="58" y="316" font-size="13" fill="#334155">告警效果 / 是否通知</text>
+  <text x="58" y="336" font-size="13" fill="#64748b">scene3d_alarm_rule</text>
+  <text x="58" y="356" font-size="13" fill="#64748b">monitor_alarm_rule</text>
+  <text x="58" y="376" font-size="13" fill="#64748b">status=1 表示启用</text>
+
+  <!-- 状态 2 -->
+  <rect x="280" y="240" width="210" height="150" rx="10" fill="#0fc6c2" fill-opacity="0.10" stroke="#0fc6c2" stroke-width="1.5"/>
+  <circle cx="304" cy="264" r="13" fill="#0fc6c2"/>
+  <text x="304" y="269" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">2</text>
+  <text x="326" y="269" font-size="15" font-weight="bold" fill="#0f172a">阈值判定</text>
+  <text x="298" y="296" font-size="13" fill="#334155">数据绑定读数 + 映射规则</text>
+  <text x="298" y="316" font-size="13" fill="#334155">refresh_interval 轮询</text>
+  <text x="298" y="336" font-size="13" fill="#64748b">scene3d_data_bind</text>
+  <text x="298" y="356" font-size="13" fill="#64748b">mapping_rule 区间/颜色</text>
+  <text x="298" y="376" font-size="13" fill="#c2410c">判定为演示数据</text>
+
+  <!-- 状态 3 -->
+  <rect x="520" y="240" width="210" height="150" rx="10" fill="#ff7d00" fill-opacity="0.10" stroke="#ff7d00" stroke-width="1.5"/>
+  <circle cx="544" cy="264" r="13" fill="#ff7d00"/>
+  <text x="544" y="269" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">3</text>
+  <text x="566" y="269" font-size="15" font-weight="bold" fill="#0f172a">生成告警记录</text>
+  <text x="538" y="296" font-size="13" fill="#334155">alarm_status=0 待确认</text>
+  <text x="538" y="316" font-size="13" fill="#334155">记录触发值 / 级别</text>
+  <text x="538" y="336" font-size="13" fill="#64748b">scene3d_alarm_record</text>
+  <text x="538" y="356" font-size="13" fill="#64748b">monitor_alarm_record</text>
+  <text x="538" y="376" font-size="13" fill="#64748b">含 rule_id / object_id</text>
+
+  <!-- 状态 4 -->
+  <rect x="760" y="240" width="210" height="150" rx="10" fill="#722ed1" fill-opacity="0.08" stroke="#722ed1" stroke-width="1.5"/>
+  <circle cx="784" cy="264" r="13" fill="#722ed1"/>
+  <text x="784" y="269" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">4</text>
+  <text x="806" y="269" font-size="15" font-weight="bold" fill="#0f172a">确认处置</text>
+  <text x="778" y="296" font-size="13" fill="#334155">confirm 接口确认告警</text>
+  <text x="778" y="316" font-size="13" fill="#334155">confirm_user_id</text>
+  <text x="778" y="336" font-size="13" fill="#64748b">confirm_time</text>
+  <text x="778" y="356" font-size="13" fill="#64748b">remark 处置备注</text>
+  <text x="778" y="376" font-size="13" fill="#64748b">可关联工单 / 审批流程</text>
+
+  <!-- 状态 5 -->
+  <rect x="1000" y="240" width="240" height="150" rx="10" fill="#475569" fill-opacity="0.08" stroke="#475569" stroke-width="1.5"/>
+  <circle cx="1024" cy="264" r="13" fill="#475569"/>
+  <text x="1024" y="269" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">5</text>
+  <text x="1046" y="269" font-size="15" font-weight="bold" fill="#0f172a">闭环归档</text>
+  <text x="1018" y="296" font-size="13" fill="#334155">alarm_status=2 已关闭</text>
+  <text x="1018" y="316" font-size="13" fill="#334155">close_time 归档时间</text>
+  <text x="1018" y="336" font-size="13" fill="#64748b">保留历史与统计口径</text>
+  <text x="1018" y="356" font-size="13" fill="#64748b">status=3 为忽略 / 误报</text>
+  <text x="1018" y="376" font-size="13" fill="#64748b">大屏与报表可追溯</text>
+
+  <!-- 状态间箭头 -->
+  <path d="M250,315 L276,315" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="263" y="308" font-size="13" fill="#475569" text-anchor="middle">判定</text>
+
+  <path d="M490,315 L516,315" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="503" y="308" font-size="13" fill="#475569" text-anchor="middle">生成</text>
+
+  <path d="M730,315 L756,315" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="743" y="308" font-size="13" fill="#475569" text-anchor="middle">确认</text>
+
+  <path d="M970,315 L996,315" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="983" y="308" font-size="13" fill="#475569" text-anchor="middle">归档</text>
+
+  <!-- 通知 / 展示分支 -->
+  <path d="M625,390 L625,426" stroke="#ff7d00" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrowOrange)"/>
+  <text x="637" y="412" font-size="13" fill="#c2410c">通知 / 展示</text>
+
+  <rect x="450" y="430" width="350" height="90" rx="10" fill="#ff7d00" fill-opacity="0.06" stroke="#ff7d00" stroke-opacity="0.6" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="470" y="456" font-size="15" font-weight="bold" fill="#c2410c">通知 / 展示（分支）</text>
+  <text x="470" y="478" font-size="13" fill="#334155">站内消息 msg_record · 大屏联动</text>
+  <text x="470" y="500" font-size="13" fill="#334155">闪烁 / 高亮 / 定位（alarm_effect）</text>
+
+  <!-- 说明 -->
+  <rect x="40" y="560" width="600" height="110" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="60" y="586" font-size="15" font-weight="bold" fill="#334155">共用生命周期</text>
+  <text x="60" y="608" font-size="13" fill="#64748b">3D：scene3d_alarm_record（alarm_status 0/1/2/3）</text>
+  <text x="60" y="628" font-size="13" fill="#64748b">监控：monitor_alarm_record（handle_status 0/1）</text>
+  <text x="60" y="648" font-size="13" fill="#64748b">确认动作统一：记录确认人 / 时间 / 备注 → 归档</text>
+
+  <rect x="660" y="560" width="580" height="110" rx="10" fill="#fff7ed" stroke="#ff7d00" stroke-opacity="0.5" stroke-width="1.5"/>
+  <text x="680" y="586" font-size="15" font-weight="bold" fill="#c2410c">演示 / 预留说明</text>
+  <text x="680" y="608" font-size="13" fill="#64748b">规则判定为演示数据，无后台巡检进程</text>
+  <text x="680" y="628" font-size="13" fill="#64748b">通知推送 / 定时调度未部署（Redis + Celery 预留）</text>
+  <text x="680" y="648" font-size="13" fill="#64748b">告警联动工单 / 流程为配置能力，需手动触发</text>
+
+  <text x="40" y="695" font-size="13" fill="#94a3b8">来源：仓库真实代码与 docs/*.sql（2026-11）</text>
+</svg>

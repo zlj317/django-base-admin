@@ -2,7 +2,7 @@
 
 > 验收日期：2026-11-05
 > 验收范围：`frontend/` 全部页面（列表 / 表单 / 弹窗 / 详情 / 全局框架 / 登录 / 首页）
-> 基线版本：改造前 `docs/images/01-login.png` 等 15 张旧截图
+> 基线版本：改造前 `docs/设计稿或截图/界面截图/01-login.png` 等 15 张旧截图
 > 结论：**通过**（构建成功，10 组主题组合全部生效，关键交互可用，控制台零报错）
 
 ---
@@ -141,7 +141,7 @@ vite v5.4.21 building for production...
 
 ## 七、视觉验收（实拍截图）
 
-截图目录：`docs/images/ui/`，2× 像素密度、1440×900。
+截图目录：`docs/设计稿或截图/界面截图/ui/`，2× 像素密度、1440×900。
 
 | 序号 | 文件 | 验收内容 |
 | --- | --- | --- |
@@ -221,5 +221,5 @@ vite v5.4.21 building for production...
 **附件**
 
 - 汇总改造说明：[ui-theme-optimization.md](ui-theme-optimization.md)
-- 实拍截图：`docs/images/ui/`（7 张）
+- 实拍截图：`docs/设计稿或截图/界面截图/ui/`（7 张）
 - README 已同步：`UI 主题与设计规范`、技术栈、功能截图、English Features/Tech Stack
