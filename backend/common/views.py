@@ -105,7 +105,7 @@ class CrudViewSet(viewsets.ViewSet):
                 update_by=user.username if user else '',  # 更新人账号
                 update_time=time.strftime('%Y-%m-%d %H:%M:%S'),  # 更新时刻
             )
-        serializer.save(**audit)
+        serializer.save(**audit)  # 只提交本次变更字段，审计字段由后端强制覆盖
         self.after_update(request, instance)  # 子类钩子，如同步更新关联表
         return ok(self.serializer_class(instance).data, '修改成功')  # 返回最新对象
 
@@ -129,7 +129,7 @@ class CrudViewSet(viewsets.ViewSet):
         instance = self.get_queryset().filter(pk=pk).first()  # 只在未删除数据中查找
         if not instance:
             return self._not_found()  # 不存在时返回业务码 404
-        data = request.data or {}
+        data = request.data or {}  # 兼容空请求体，避免下面的 in 判断报错
         fields = [f for f in ('status', 'enabled') if f in data]  # 兼容两种状态字段名
         if not fields:
             return fail('未提供状态字段', code=400)  # 参数缺失给出明确提示

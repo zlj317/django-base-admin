@@ -11,7 +11,7 @@ def crud(prefix, viewset, extras=None):  # 路由工厂：按统一约定生成 
         return f'{prefix}/{s}' if prefix else s  # 空前缀时不加斜杠
     list_view = viewset.as_view({'get': 'list', 'post': 'create', 'delete': 'delete'})  # 列表/新增/批量删除
     item_view = viewset.as_view({'put': 'update'})  # 编辑
-    patterns = [
+    patterns = [  # 固定的四条基础路由
         path(_join('list'), list_view),  # 分页列表
         path(_join('create'), list_view),  # 新增
         path(_join('delete'), list_view),  # 批量删除
@@ -19,10 +19,10 @@ def crud(prefix, viewset, extras=None):  # 路由工厂：按统一约定生成 
     ]
     for suffix, methods in (extras or {}).items():  # 追加自定义动作
         patterns.append(path(_join(suffix), viewset.as_view(methods)))  # 按动作映射 HTTP 方法
-    return patterns
+    return patterns  # 返回该资源全部路由，供上层拼接
 
 
-urlpatterns = (
+urlpatterns = (  # 汇总各资源路由，前缀决定最终 URL
     crud('category', views.Scene3dCategoryViewSet, {  # 场景分类
         'update/<int:pk>/status': {'put': 'status'},  # 启用/停用
     })
