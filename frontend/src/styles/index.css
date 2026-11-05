@@ -2,9 +2,24 @@
    全局样式：设计令牌驱动的统一视觉规范
    说明：颜色/圆角/阴影/字号全部取自 tokens.css，暗色模式自动跟随。
    Element Plus 的组件在这里统一"换肤"，业务页面无需逐个改样式。
+   模块职责：重置浏览器默认样式 + 对 Element Plus 做全局皮肤覆盖 + 提供少量页面级通用类
+   （.app-container / .page-header / .toolbar / .card-header / .code-block 等）。
+   依赖关系：唯一依赖 styles/tokens.css；所有色值与尺寸都通过 var(--app-* / --brand-* / --el-*) 引用，
+   本文件不含运行时逻辑，也不会被 JS 动态改写。
+   被谁使用：src/main.js 直接 import './styles/index.css'，其内部再 @import tokens.css，
+   因此全站（登录页、布局、业务页面）都会加载；页面样式只需复用这里的类名与变量。
+   书写约定：
+   1) 覆盖第三方组件统一用"组件根类名 + 元素类名"（如 .el-table td.el-table__cell），
+      不写深层 DOM 路径，降低 Element Plus 升级后失效的风险；
+   2) 能用变量表达的都用变量，只有固定布局尺寸（如按钮 32px 高）才写死；
+   3) 暗色适配交给 tokens.css 的 html.dark 变量，本文件只在 Element Plus 变量层面补一次映射，
+      不重复写第二套暗色选择器。
    ========================================================= */
+/* 必须先导入令牌：下方所有规则都引用 --app-* 变量；且 @import 必须位于文件所有规则之前才生效 */
 @import './tokens.css';
 
+/* 让根节点占满视口：布局组件用 flex + 100% 高度实现"侧边栏 + 内容区"自适应，
+   html/body/#app 三者缺一都会出现滚动条或底部留白 */
 html,
 body,
 #app {
@@ -13,52 +28,80 @@ body,
   padding: 0;
 }
 
+/* 全局排版基线：字体栈（西文 Inter 优先，中文回退苹方/微软雅黑）、正文 14px、一级文字色、页面底色。
+   写在 body 上，业务页面就不必重复声明，也能保证留白区域与组件底色一致 */
 body {
+  /* 字体栈按"英文 → 中文"顺序回退：Inter 未安装时用系统无衬线字体，中文再回退到苹方/微软雅黑 */
   font-family: 'Inter', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
     'Microsoft YaHei', Arial, sans-serif;
+  /* 正文字号取令牌（14px），与按钮/表格的 13px 形成层级差 */
   font-size: var(--app-font-base);
+  /* 默认文字色为一级文字，更弱的层级由具体组件再覆盖 */
   color: var(--app-text-1);
+  /* 页面底色，暗色模式下由 html.dark 的同名变量自动变深 */
   background: var(--app-bg);
+  /* 两项字体平滑：避免 macOS/高分屏下细字重发虚，也让 Windows 渲染更接近设计稿 */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* 统一 border-box：Element Plus 与自研栅格都按"width 含 padding/border"计算，
+   缺了它，100% 宽度的容器加上内边距后会溢出换行 */
 * {
   box-sizing: border-box;
 }
 
+/* 全局去掉下划线：后台里链接常与文字按钮混排，默认下划线会破坏行高与对齐节奏 */
 a {
   text-decoration: none;
 }
 
 /* ---------- 暗色下重写 Element Plus 自身变量，避免与全局令牌色差 ---------- */
+/* 为什么需要这一段：tokens.css 虽已把 --el-* 映射到 --app-*，但 Element Plus 在 html.dark 下会切到
+   自带的暗色默认值；而弹窗、遮罩、阴影等部分组件读取的是本段下列"组件级"变量。
+   统一指向 --app-* 后，"第三方暗色"与"自研暗色"共用同一份色板，不会出现卡片比背景更白、
+   遮罩偏蓝或阴影过重等错位。
+   触发条件：仅当 <html> 带 dark 类（由 src/theme/index.js 的 applyTheme 控制）。 */
 html.dark {
+  /* 背景族：组件底色与页面底色都取暗色令牌 */
   --el-bg-color: var(--app-surface);
   --el-bg-color-page: var(--app-bg);
+  /* 弹层底色：下拉/气泡等 popper 用 overlay 变量，若指向亮色会把暗色下的浮层照成白块 */
   --el-bg-color-overlay: var(--app-surface);
+  /* 填充族：blank 是输入框内部，light/lighter 分别对应 hover 与嵌套层 */
   --el-fill-color-blank: var(--app-surface);
   --el-fill-color-light: var(--app-surface-2);
   --el-fill-color: var(--app-surface-2);
   --el-fill-color-lighter: var(--app-surface-3);
+  /* 文本族：placeholder 与 secondary 同色，避免占位符比正文更显眼 */
   --el-text-color-primary: var(--app-text-1);
   --el-text-color-regular: var(--app-text-2);
   --el-text-color-secondary: var(--app-text-3);
   --el-text-color-placeholder: var(--app-text-3);
+  /* 边框族：extra-light 也指向浅边框，保证表格/卡片在暗色下线条粗细与明度一致 */
   --el-border-color: var(--app-border);
   --el-border-color-light: var(--app-border-light);
   --el-border-color-lighter: var(--app-border-light);
   --el-border-color-extra-light: var(--app-border-light);
+  /* 遮罩：Element Plus 的 mask 变量对应自研遮罩色 */
   --el-mask-color: var(--app-overlay);
+  /* 阴影：轻阴影用于下拉/小浮层，默认阴影用于弹窗；复用令牌避免暗色下出现灰色阴影 */
   --el-box-shadow-light: var(--app-shadow-sm);
   --el-box-shadow: var(--app-shadow-md);
 }
 
 /* ---------------- 页面容器 ---------------- */
+/* 业务页面根节点统一使用 .app-container：提供 20px 内边距与进场动画。
+   页面里不要再单独写 padding，否则各页面留白会不一致 */
 .app-container {
+  /* 内边距取 space-5（20px）；移动端在文件末尾的 @media 中降到 12px */
   padding: var(--app-space-5);
+  /* 路由切换时播放一次淡入上浮，弱化"整屏瞬间替换"的突兀感 */
   animation: page-fade-in 0.24s ease;
 }
 
+/* 进场动画：从"透明 + 下移 6px"回到原位。
+   只动 opacity/transform 这类可合成属性，不触发重排；0.24s 与后台操作节奏匹配，不显拖沓 */
 @keyframes page-fade-in {
   from {
     opacity: 0;
@@ -70,6 +113,7 @@ html.dark {
   }
 }
 
+/* 页面头部：左侧标题/副标题，右侧操作按钮，两端对齐；底部 16px 与下方卡片拉开距离 */
 .page-header {
   display: flex;
   align-items: center;
@@ -77,6 +121,7 @@ html.dark {
   margin-bottom: var(--app-space-4);
 }
 
+/* 主标题：22px + 650 字重（变量字体下比 700 更耐看），0.3px 字距让中文标题不显拥挤 */
 .page-header h2 {
   margin: 0;
   font-size: var(--app-font-xl);
@@ -85,12 +130,14 @@ html.dark {
   letter-spacing: 0.3px;
 }
 
+/* 副标题：12px 三级文字；5px 上间距比 4px 网格略大，视觉上更贴近标题基线 */
 .page-header .sub {
   margin-top: 5px;
   font-size: var(--app-font-xs);
   color: var(--app-text-3);
 }
 
+/* 右侧操作区：用 gap 而非给按钮加 margin，按钮增减时不会留下多余的尾部空隙 */
 .page-header-actions {
   display: flex;
   align-items: center;
@@ -98,6 +145,8 @@ html.dark {
 }
 
 /* ---------------- 卡片 ---------------- */
+/* 统一卡片外观：表面层底色 + 浅边框 + 12px 圆角 + 小阴影。
+   过渡只覆盖阴影与边框色，hover 时不改尺寸，避免密集卡片区出现抖动 */
 .el-card {
   background: var(--app-surface);
   border: 1px solid var(--app-border-light);
@@ -106,10 +155,12 @@ html.dark {
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
+/* hover 时阴影升一级（sm → md），形成"被抬起"的反馈；不做位移以保持列表稳定 */
 .el-card:hover {
   box-shadow: var(--app-shadow-md);
 }
 
+/* 卡片头部：13×18 内边距比 body 略紧，600 字重 + 底边线，作为卡内区块的分隔 */
 .el-card__header {
   padding: 13px 18px;
   font-size: var(--app-font-base);
@@ -119,24 +170,29 @@ html.dark {
   border-bottom: 1px solid var(--app-border-light);
 }
 
+/* 卡片内容区：16×18 留白，比 header 稍大，体现"头轻内容重"的视觉层级 */
 .el-card__body {
   padding: 16px 18px;
 }
 
 /* 查询区：更紧凑的栅格间距 */
+/* 查询卡片与下方表格卡片之间只留 12px，视觉上归为同一组；不改底色，继续复用 .el-card 的外观 */
 .search-card {
   margin-bottom: var(--app-space-3);
 }
 
+/* 查询区 body 底部只留 2px：表单项自带 margin-bottom，再给大 padding 会出现双倍留白 */
 .search-card .el-card__body {
   padding: 14px 18px 2px;
 }
 
+/* 表单项：14px 右距 + 12px 下距，一行能容纳更多筛选项，又不与下一行贴死 */
 .search-card .el-form-item {
   margin-right: 14px;
   margin-bottom: 12px;
 }
 
+/* 查询区标签：13px 二级文字 + 8px 右内距，标签与输入框紧凑但仍有呼吸感 */
 .search-card .el-form-item__label {
   padding-right: 8px;
   font-size: var(--app-font-sm);
@@ -144,19 +200,24 @@ html.dark {
 }
 
 /* 表格卡片：工具栏与表格贴合，底部分页留白一致 */
+/* 只覆盖圆角：其余外观复用 .el-card，保证全站卡片风格统一 */
 .table-card {
   border-radius: var(--app-radius-lg);
 }
 
+/* body 上 12px / 下 14px：上方贴近工具栏，下方给分页留出呼吸空间 */
 .table-card .el-card__body {
   padding: 12px 18px 14px;
 }
 
+/* header 更矮（12px），把纵向空间让给表格本身 */
 .table-card .el-card__header {
   padding: 12px 18px;
 }
 
 /* ---------------- 按钮 ---------------- */
+/* 基础按钮：统一 32px 高、14px 横内距、13px 字号、6px 圆角。
+   固定高度而不是靠 padding 撑开，是为了让不同文字长度的按钮在同一行严格等高 */
 .el-button {
   height: 32px;
   padding: 0 14px;
@@ -166,6 +227,7 @@ html.dark {
   transition: all 0.16s ease;
 }
 
+/* 大号按钮：40px 高、20px 横距、14px 字号、8px 圆角，用于登录页与弹窗主操作 */
 .el-button--large {
   height: 40px;
   padding: 0 20px;
@@ -173,6 +235,7 @@ html.dark {
   border-radius: var(--app-radius-md);
 }
 
+/* 小号按钮：26px 高、10px 横距、12px 字号、4px 圆角，主要用于表格行内操作 */
 .el-button--small {
   height: 26px;
   padding: 0 10px;
@@ -180,18 +243,25 @@ html.dark {
   border-radius: var(--app-radius-xs);
 }
 
+/* 实心主按钮：用渐变背景 + 主色光晕提升层次。
+   排除 is-link / is-text 两个修饰类，否则文字按钮也会被套上渐变底色 */
 .el-button--primary:not(.is-link):not(.is-text) {
   background: var(--brand-gradient);
   border-color: transparent;
   box-shadow: 0 2px 8px var(--brand-glow);
 }
 
+/* 主按钮 hover：用 filter 提亮而不是换色，渐变两端会同步变亮；
+   阴影加深并上移 1px，模拟轻微"抬起"的按压前反馈 */
 .el-button--primary:not(.is-link):not(.is-text):hover {
   filter: brightness(1.04);
   box-shadow: 0 4px 14px var(--brand-glow);
   transform: translateY(-1px);
 }
 
+/* plain / text 类主按钮：浅色底 + 主色描边 + 主色文字。
+   注意本选择器同时命中 is-text（Element Plus 的纯文字按钮本应无底无边），
+   因此文本按钮也会呈现浅底，视觉上更接近"轻量主按钮" */
 .el-button--primary.is-plain,
 .el-button--primary.is-text {
   color: var(--brand-primary);
@@ -199,23 +269,27 @@ html.dark {
   background: var(--brand-primary-soft);
 }
 
+/* 链接按钮：去掉固定高度与内边距，让它像行内文字一样贴合所在行高 */
 .el-button.is-link {
   height: auto;
   padding: 0;
   font-weight: 500;
 }
 
+/* 链接按钮 hover：只降透明度不改色，避免 hover 时颜色突变造成"跳色" */
 .el-button.is-link:hover {
   opacity: 0.82;
   background: transparent;
 }
 
+/* 默认（次要）按钮：表面底 + 标准边框 + 二级文字，作为主按钮的弱化对照 */
 .el-button--default {
   color: var(--app-text-2);
   background: var(--app-surface);
   border-color: var(--app-border);
 }
 
+/* 默认按钮 hover：文字/边框转主色、底色转浅主色，提示"即将变成主操作" */
 .el-button--default:hover {
   color: var(--brand-primary);
   border-color: var(--brand-primary-border);
@@ -223,6 +297,7 @@ html.dark {
 }
 
 /* 工具栏：主次按钮层级 + 批量操作靠右 */
+/* 表格上方工具栏：flex + 8px 间距 + 10px 下距；字号与表格一致（13px），避免工具栏比数据"更重" */
 .toolbar {
   display: flex;
   align-items: center;
@@ -231,10 +306,13 @@ html.dark {
   font-size: var(--app-font-sm);
 }
 
+/* 清零 Element Plus 相邻按钮默认的 margin-left：
+   间距改由 toolbar 的 gap 控制，否则会出现"margin + gap"叠加的双倍间隙 */
 .toolbar .el-button + .el-button {
   margin-left: 0;
 }
 
+/* 卡片头部内容容器：左标题、右操作两端对齐；12px gap 保证长标题与按钮之间不会贴死 */
 .card-header {
   display: flex;
   align-items: center;
@@ -242,6 +320,7 @@ html.dark {
   gap: var(--app-space-3);
 }
 
+/* 卡片头部右侧操作组：8px 间距，按钮增减时不留尾部空隙 */
 .card-actions {
   display: flex;
   align-items: center;
@@ -249,6 +328,8 @@ html.dark {
 }
 
 /* ---------------- 输入 / 选择 ---------------- */
+/* 输入框/文本域/选择器统一外观：32px 最小高度 + 表面底 + 6px 圆角。
+   用 inset box-shadow 模拟 1px 边框而不是 border，避免 border 影响盒模型导致高度跳动 */
 .el-input__wrapper,
 .el-textarea__inner,
 .el-select__wrapper {
@@ -259,22 +340,28 @@ html.dark {
   transition: box-shadow 0.2s ease, background 0.2s ease;
 }
 
+/* hover：边框换成主色描边，给"可输入"的弱强调；不改背景，避免整片输入区闪烁 */
 .el-input__wrapper:hover,
 .el-select__wrapper:hover {
   box-shadow: 0 0 0 1px var(--brand-primary-border) inset;
 }
 
+/* 聚焦态：主色描边 + 3px 浅主色外圈。
+   !important 用于压过 Element Plus 自带的高优先级焦点样式（组件内部会写内联 box-shadow） */
 .el-input__wrapper.is-focus,
 .el-select__wrapper.is-focused,
 .el-textarea__inner:focus {
   box-shadow: 0 0 0 1px var(--brand-primary) inset, 0 0 0 3px var(--brand-primary-soft) !important;
 }
 
+/* 占位符：与三级文字同色，保证"未填写"不会比已填写内容更显眼 */
 .el-input__inner::placeholder,
 .el-textarea__inner::placeholder {
   color: var(--app-text-3);
 }
 
+/* 下拉面板族：选择器下拉、普通下拉、浅色 popper 统一为表面底 + 浅边 + 8px 圆角 + 中阴影。
+   !important 是因为这些浮层由 Element Plus 动态挂到 body 且带内联定位样式 */
 .el-select-dropdown,
 .el-dropdown__popper,
 .el-popper.is-light {
@@ -284,21 +371,26 @@ html.dark {
   box-shadow: var(--app-shadow-md) !important;
 }
 
+/* 下拉选项：13px 二级文字，与表格/按钮字号统一 */
 .el-select-dropdown__item {
   font-size: var(--app-font-sm);
   color: var(--app-text-2);
 }
 
+/* 选项 hover：用次级表面色，比主色浅底更克制，避免长列表里满屏蓝色 */
 .el-select-dropdown__item.is-hovering {
   background: var(--app-surface-2);
 }
 
+/* 已选中选项：主色文字 + 600 字重，用字重强化"当前值"，不额外加底色 */
 .el-select-dropdown__item.is-selected {
   color: var(--brand-primary);
   font-weight: 600;
 }
 
 /* ---------------- 表格 ---------------- */
+/* 在组件作用域内重定义 --el-table-* 变量，而不是逐个给单元格上色：
+   Element Plus 用这些变量绘制表头、斑马纹与 hover，改变量能得到最完整且不易失效的换肤效果 */
 .el-table {
   --el-table-border-color: var(--app-border-light);
   --el-table-header-bg-color: var(--app-table-head-bg);
@@ -313,6 +405,8 @@ html.dark {
   border-bottom: 1px solid var(--app-border-light);
 }
 
+/* 表头：固定 42px 行高（对应 --app-table-head-h）、600 字重、表头底色。
+   !important 用来压过 Element Plus 的斑马纹/暗色内联背景，否则表头可能被行底色覆盖 */
 .el-table th.el-table__cell {
   height: var(--app-table-head-h);
   padding: 0;
@@ -323,33 +417,41 @@ html.dark {
   border-bottom: 1px solid var(--app-border) !important;
 }
 
+/* 数据单元格：10px 上下内距决定行高（约 44px），底边线用浅边框减轻密集表格的"重影" */
 .el-table td.el-table__cell {
   padding: 10px 0;
   border-bottom: 1px solid var(--app-border-light) !important;
 }
 
+/* 单元格内容：左右 12px（对应 --app-table-cell-px），1.55 行高提升多行文本可读性 */
 .el-table .cell {
   padding: 0 var(--app-table-cell-px);
   line-height: 1.55;
   color: var(--app-text-2);
 }
 
+/* 表头文字：一级文字色，与数据行形成层级差 */
 .el-table thead .cell {
   color: var(--app-text-1);
 }
 
+/* 隐藏 Element Plus 用来画"左侧滚动阴影"的伪元素：
+   它在带圆角的容器里会露出一道灰线，与卡片圆角冲突 */
 .el-table__inner-wrapper::before {
   display: none;
 }
 
+/* 行 hover：强制使用令牌里的 hover 底色（带主色倾向），覆盖 EP 默认灰底 */
 .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
   background: var(--app-table-hover) !important;
 }
 
+/* 当前选中行：用浅主色底，便于在长表格里定位"正在操作的那一行" */
 .el-table .el-table__body tr.current-row > td.el-table__cell {
   background: var(--brand-primary-soft) !important;
 }
 
+/* 空数据占位：竖向排列（SVG 插图 + 文案），12px 间距；min-height 220px 避免空表塌成一条线 */
 .el-table__empty-block {
   display: flex;
   flex-direction: column;
@@ -358,6 +460,7 @@ html.dark {
   background: var(--app-surface);
 }
 
+/* 空态插图：内联 SVG 省去额外图片请求；data URI 中的 # 必须转义成 %23 才能被解析 */
 .el-table__empty-block::before {
   content: '';
   width: 108px;
@@ -367,31 +470,38 @@ html.dark {
   background-position: center;
 }
 
+/* 暗色下的空态插图：描边换成偏亮的灰（%235a6272），否则浅灰线条在深底上几乎看不见 */
 html.dark .el-table__empty-block::before {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='108' height='78' viewBox='0 0 108 78'><g fill='none' stroke='%235a6272' stroke-width='1.6' stroke-linecap='round'><rect x='14' y='26' width='80' height='38' rx='6'/><path d='M54 26V12a5 5 0 0 1 5-5h18a5 5 0 0 1 5 5v14'/><path d='M14 40h80'/><path d='M38 52h32'/></g></svg>");
 }
 
+/* 空数据文案：13px 三级文字，与辅助说明同一层级 */
 .el-table__empty-text {
   font-size: var(--app-font-sm);
   color: var(--app-text-3);
 }
 
 /* 列表操作列：按钮保持单行，避免换行挤压 */
+/* 操作列不换行：多个操作按钮窄列里若折行会破坏整张表的行高一致性 */
 .el-table .op-col .cell {
   white-space: nowrap;
 }
 
+/* 操作列按钮降级为纯文字按钮：去掉固定高度与内边距，避免行内出现"大按钮" */
 .el-table .op-col .el-button {
   margin-left: 0;
   height: auto;
   padding: 0;
 }
 
+/* 相邻操作按钮间隔 10px：覆盖上面清零的默认 margin，用显式间隔代替 EP 的相邻选择器 */
 .el-table .op-col .el-button + .el-button {
   margin-left: 10px;
 }
 
 /* 表格加载态 */
+/* 加载遮罩：用 surface 底 + 0.78 透明度，加载时仍能隐约看到表格结构，减少"整块消失"的焦虑感；
+   圆角与表格一致，避免遮罩盖住表格圆角露出直角 */
 .el-loading-mask {
   background: var(--app-surface);
   opacity: 0.78;
@@ -399,6 +509,7 @@ html.dark .el-table__empty-block::before {
 }
 
 /* ---------------- 分页 ---------------- */
+/* 分页容器：右对齐 + 2px 间距 + 上 14px 留白；分页固定出现在表格右下角，与表格右边缘对齐 */
 .el-pagination {
   display: flex;
   justify-content: flex-end;
@@ -406,6 +517,8 @@ html.dark .el-table__empty-block::before {
   padding: 14px 0 2px;
 }
 
+/* 页码与上/下一页按钮：统一 30px 见方 + 次级表面底 + 6px 圆角。
+   固定尺寸可避免页码位数变化时整排按钮宽度跳动 */
 .el-pagination.is-background .el-pager li,
 .el-pagination .btn-prev,
 .el-pagination .btn-next {
@@ -418,6 +531,7 @@ html.dark .el-table__empty-block::before {
   border-radius: var(--app-radius-sm);
 }
 
+/* hover（禁用态除外）：主色文字 + 浅主色底，提示"这一页可点" */
 .el-pagination.is-background .el-pager li:hover,
 .el-pagination .btn-prev:not(:disabled):hover,
 .el-pagination .btn-next:not(:disabled):hover {
@@ -425,41 +539,50 @@ html.dark .el-table__empty-block::before {
   background: var(--brand-primary-soft);
 }
 
+/* 当前页：主色实底 + 白字 + 光晕，是全页唯一使用实心主色的分页元素，便于快速定位 */
 .el-pagination.is-background .el-pager li.is-active {
   color: #fff;
   background: var(--brand-primary);
   box-shadow: 0 2px 8px var(--brand-glow);
 }
 
+/* 分页外层容器：只负责右对齐；部分页面把分页放在卡片之外，用它包一层 */
 .pagination-wrap {
   display: flex;
   justify-content: flex-end;
 }
 
+/* 卡片内分页外层：上方 6px 留白，与表格底部形成轻微分隔 */
 .table-card .pagination-wrap {
   padding: 6px 0 0;
 }
 
+/* 卡片内分页本体：清零自身 padding，避免与 .pagination-wrap 的留白叠加 */
 .table-card .pagination-wrap .el-pagination {
   padding: 0;
 }
 
+/* 总数与跳页文案：13px 三级文字，弱化辅助信息，突出页码按钮 */
 .table-card .pagination-wrap .el-pagination__total,
 .table-card .pagination-wrap .el-pagination__jump {
   color: var(--app-text-3);
   font-size: var(--app-font-sm);
 }
 
+/* 每页条数下拉：高度对齐 30px，与页码按钮保持同一水平线 */
 .table-card .pagination-wrap .el-pagination__sizes .el-select {
   height: 30px;
 }
 
 /* ---------------- 弹窗 / 抽屉 ---------------- */
+/* 遮罩：使用令牌遮罩色 + 2px 背景模糊，让弹窗背后获得"景深"，同时仍能辨认底层内容 */
 .el-overlay {
   background-color: var(--app-overlay);
   backdrop-filter: blur(2px);
 }
 
+/* 弹窗：覆盖 EP 的 padding 变量为 20px；表面底 + 浅边 + 16px 大圆角 + 大阴影。
+   overflow:hidden 让 header 的分割线与圆角贴合，不会在四角露出直角 */
 .el-dialog {
   --el-dialog-padding-primary: 20px;
   background: var(--app-surface);
@@ -469,6 +592,7 @@ html.dark .el-table__empty-block::before {
   overflow: hidden;
 }
 
+/* 弹窗头部：18×22 内边距 + 底边线，标题区与内容区形成明确分界 */
 .el-dialog__header {
   margin: 0;
   padding: 18px 22px;
@@ -476,34 +600,41 @@ html.dark .el-table__empty-block::before {
   border-bottom: 1px solid var(--app-border-light);
 }
 
+/* 弹窗标题：16px + 650 字重 + 一级文字色，比卡片标题更醒目（浮层需要更强的层级） */
 .el-dialog__title {
   font-size: 16px;
   font-weight: 650;
   color: var(--app-text-1);
 }
 
+/* 关闭图标：默认三级文字，作为辅助操作不抢标题的注意力 */
 .el-dialog__headerbtn .el-dialog__close {
   color: var(--app-text-3);
 }
 
+/* 关闭图标 hover：转主色，给出"可点击"的明确反馈 */
 .el-dialog__headerbtn:hover .el-dialog__close {
   color: var(--brand-primary);
 }
 
+/* 弹窗内容区：22px 留白 + 二级文字，与表单标签的层级保持一致 */
 .el-dialog__body {
   padding: 22px;
   color: var(--app-text-2);
 }
 
+/* 弹窗底部：上边线分隔内容与按钮区，底部 20px 略小于左右 22px，视觉上更稳 */
 .el-dialog__footer {
   padding: 12px 22px 20px;
   border-top: 1px solid var(--app-border-light);
 }
 
+/* 抽屉：表面底（EP 默认白底在暗色下会刺眼）；宽度由使用方控制 */
 .el-drawer {
   background: var(--app-surface);
 }
 
+/* 抽屉头部：与弹窗头部同一内边距节奏，让两种浮层看起来是同一族 */
 .el-drawer__header {
   margin-bottom: 0;
   padding: 18px 22px;
@@ -511,16 +642,19 @@ html.dark .el-table__empty-block::before {
   border-bottom: 1px solid var(--app-border-light);
 }
 
+/* 抽屉内容区：20×22 留白，横向与头部对齐 */
 .el-drawer__body {
   padding: 20px 22px;
 }
 
+/* 抽屉底部：上边线 + 12/22/18 留白，与弹窗底部保持一致的按钮区高度 */
 .el-drawer__footer {
   padding: 12px 22px 18px;
   border-top: 1px solid var(--app-border-light);
 }
 
 /* 确认框 */
+/* 确认框：比弹窗轻一档（12px 圆角、18×20 内距），因为它是"短暂打断"而非长期停留的浮层 */
 .el-message-box {
   padding: 18px 20px;
   background: var(--app-surface);
@@ -529,29 +663,35 @@ html.dark .el-table__empty-block::before {
   box-shadow: var(--app-shadow-lg);
 }
 
+/* 确认框标题：15px + 650 字重，比弹窗标题小一档以匹配其体量 */
 .el-message-box__title {
   font-size: 15px;
   font-weight: 650;
   color: var(--app-text-1);
 }
 
+/* 确认框正文：二级文字，保证在浅底/深底上都可读 */
 .el-message-box__content {
   color: var(--app-text-2);
 }
 
 /* ---------------- 表单 ---------------- */
+/* 表单标签：13px / 500 字重 / 二级文字，与按钮、表格沿用同一字号体系，避免表单区文字显得过大 */
 .el-form-item__label {
   font-size: var(--app-font-sm);
   font-weight: 500;
   color: var(--app-text-2);
 }
 
+/* 校验错误提示：12px 危险色 + 3px 上距，紧贴控件下方；行内显示，不会把后续表单项整体推走 */
 .el-form-item__error {
   padding-top: 3px;
   font-size: var(--app-font-xs);
   color: var(--app-danger);
 }
 
+/* 错误态控件：危险色 inset 描边。
+   !important 用于压过聚焦态的浅主色外圈（失焦校验失败时两者可能同时存在，错误态应优先展示） */
 .el-form-item.is-error .el-input__wrapper,
 .el-form-item.is-error .el-select__wrapper,
 .el-form-item.is-error .el-textarea__inner {
@@ -559,6 +699,8 @@ html.dark .el-table__empty-block::before {
 }
 
 /* ---------------- 标签 / 徽标 ---------------- */
+/* 标签统一为"小圆角胶囊"：8px 横内距、12px 字号、22px 行高、去掉边框。
+   用固定行高而不是 padding 撑开，保证同一行里多个标签严格等高 */
 .el-tag {
   padding: 0 8px;
   font-weight: 500;
@@ -568,32 +710,40 @@ html.dark .el-table__empty-block::before {
   border-radius: var(--app-radius-sm);
 }
 
+/* 成功标签：底色由 color-mix 按当前语义色生成 12% 透明色。
+   这样做的好处是文字与底色同色相，且暗色下语义色一变，底色自动跟随，无需维护两套色值 */
 .el-tag--success {
   color: var(--app-success);
   background: color-mix(in srgb, var(--app-success) 12%, transparent);
 }
 
+/* 警告标签：透明度提到 14%，因为橙色在白底上的观感比绿/红更淡，需要略高一点的底色才清晰 */
 .el-tag--warning {
   color: var(--app-warning);
   background: color-mix(in srgb, var(--app-warning) 14%, transparent);
 }
 
+/* 危险标签：与成功标签同一混合比例，保持语义标签之间的视觉权重一致 */
 .el-tag--danger {
   color: var(--app-danger);
   background: color-mix(in srgb, var(--app-danger) 12%, transparent);
 }
 
+/* 信息标签：中性三级文字 + 三级表面底，不与语义色争抢注意力 */
 .el-tag--info {
   color: var(--app-text-3);
   background: var(--app-surface-3);
 }
 
+/* 主色标签：主色文字 + 浅主色底，用于"当前/主要"类状态，会随主题色变化 */
 .el-tag--primary {
   color: var(--brand-primary);
   background: var(--brand-primary-soft);
 }
 
 /* 状态圆点（配合标签使用） */
+/* 状态圆点：6px 圆形，inline-block 才能设置宽高，vertical-align 让它与文字中线对齐；
+   默认绿色表示"正常/启用"，仅靠颜色区分时需配合文字，避免色盲用户无法辨别 */
 .status-dot {
   display: inline-block;
   width: 6px;
@@ -604,45 +754,55 @@ html.dark .el-table__empty-block::before {
   background: var(--app-success);
 }
 
+/* 停用态圆点：用最弱文字色（text-4）表示"不活跃"，而不是灰色语义色，避免被误读为"信息" */
 .status-dot.is-off {
   background: var(--app-text-4);
 }
 
 /* ---------------- 标签页 / 描述列表 ---------------- */
+/* 标签页标题：13px / 500 字重 / 二级文字；未选中项保持中性，避免与激活项争夺注意力 */
 .el-tabs__item {
   font-size: var(--app-font-sm);
   font-weight: 500;
   color: var(--app-text-2);
 }
 
+/* 激活的标签页：主色 + 600 字重，用"颜色 + 字重"双重强化，弱视用户也能分辨当前页 */
 .el-tabs__item.is-active {
   color: var(--brand-primary);
   font-weight: 600;
 }
 
+/* 激活下划线：跟随主题主色，与文字颜色保持一致 */
 .el-tabs__active-bar {
   background-color: var(--brand-primary);
 }
 
+/* 标签栏底部分隔线：用浅边框替换 Element Plus 默认的较深灰，与卡片风格统一 */
 .el-tabs__nav-wrap::after {
   background-color: var(--app-border-light);
 }
 
+/* 描述列表：整体文字为二级色，表格化展示时与单元格内容同层 */
 .el-descriptions {
   color: var(--app-text-2);
 }
 
+/* 带边框模式下的标签单元格：500 字重 + 次级表面底，形成"标签-值"的表格式对比 */
 .el-descriptions__label.el-descriptions__cell.is-bordered-label {
   font-weight: 500;
   color: var(--app-text-2);
   background: var(--app-surface-2);
 }
 
+/* 描述列表主体：表面层底色，与卡片保持一致，暗色下自动变深 */
 .el-descriptions__body {
   background: var(--app-surface);
 }
 
 /* ---------------- 消息 / 通知 ---------------- */
+/* 顶部消息条：10×16 内距 + 表面底 + 浅边 + 8px 圆角 + 中阴影。
+   它属于"短暂提示"，层级低于弹窗，所以用中阴影而不是大阴影 */
 .el-message {
   padding: 10px 16px;
   background: var(--app-surface);
@@ -651,6 +811,7 @@ html.dark .el-table__empty-block::before {
   box-shadow: var(--app-shadow-md);
 }
 
+/* 右上角通知：体量比消息条大，因此用 12px 圆角与大阴影，符合"越大越圆、越高越重"的层级规则 */
 .el-notification {
   background: var(--app-surface);
   border: 1px solid var(--app-border-light);
@@ -658,36 +819,46 @@ html.dark .el-table__empty-block::before {
   box-shadow: var(--app-shadow-lg);
 }
 
+/* 确认框正文与通知正文：统一二级文字，避免不同浮层出现两种正文颜色 */
 .el-message-box__message,
 .el-notification__content {
   color: var(--app-text-2);
 }
 
 /* ---------------- 空状态 ---------------- */
+/* 空状态描述：三级文字，作为"无数据"的辅助说明，不应比页面标题更醒目 */
 .el-empty__description p {
   color: var(--app-text-3);
 }
 
 /* ---------------- 滚动条 ---------------- */
+/* 仅对 WebKit 内核（Chrome / Edge / Safari）生效；Firefox 会沿用系统滚动条，属可接受的降级 */
 ::-webkit-scrollbar {
+  /* 8px 的全局细滚动条：减少对内容宽度的侵占，同时仍方便鼠标拖拽 */
   width: 8px;
   height: 8px;
 }
 
+/* 滑块：用强边框色而不是主色，避免每页都有一条彩色滚动条抢走注意力；
+   8px 圆角与宽度一致，形成胶囊形 */
 ::-webkit-scrollbar-thumb {
   background: var(--app-border-strong);
   border-radius: 8px;
 }
 
+/* 滑块 hover：转为主色描边色，提示"可拖拽"，但仍是低饱和色 */
 ::-webkit-scrollbar-thumb:hover {
   background: var(--brand-primary-border);
 }
 
+/* 轨道透明：让滚动条底色与页面/容器一致，不出现一条灰色带状轨道 */
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
 /* ---------------- 通用间距工具类 ---------------- */
+/* mb12 / mt12 / mr4 是一次性微调工具类，值刻意写死而不取 --app-space-*：
+   它们表达的是"这里需要 12px/4px"，而不是某个设计层级；页面布局仍应优先使用布局间距 */
 .mb12 {
   margin-bottom: 12px;
 }
@@ -701,6 +872,8 @@ html.dark .el-table__empty-block::before {
 }
 
 /* ---------------- 代码块（代码预览） ---------------- */
+/* 代码预览块：无论明暗模式都保持深色底（代码在深色底上更易读），浅蓝文字保证对比度；
+   white-space: pre 保留缩进与换行，tab-size 4 让制表符与 4 空格对齐，避免粘贴的代码缩进错乱 */
 .code-block {
   margin: 0;
   padding: 14px 18px;
@@ -714,6 +887,7 @@ html.dark .el-table__empty-block::before {
   tab-size: 4;
 }
 
+/* 代码区顶部栏：左侧文件路径、右侧复制按钮，两端对齐；8px 下距把栏与代码块分开 */
 .code-header {
   display: flex;
   align-items: center;
@@ -721,6 +895,7 @@ html.dark .el-table__empty-block::before {
   margin-bottom: 8px;
 }
 
+/* 文件路径：12px 三级文字 + 等宽字体，属于辅助信息层级，但仍需等宽以便逐字符对照 */
 .code-path {
   color: var(--app-text-3);
   font-size: var(--app-font-xs);
@@ -728,6 +903,8 @@ html.dark .el-table__empty-block::before {
 }
 
 /* 预格式化文本（日志详情等） */
+/* 日志详情框：等宽字体便于对齐时间戳/堆栈；
+   max-height 300px + 内部滚动避免撑高弹窗；pre-wrap + break-all 让长 URL/异常堆栈自动换行，不产生横向滚动 */
 .plain-pre {
   margin: 0;
   padding: 12px 14px;
@@ -745,6 +922,8 @@ html.dark .el-table__empty-block::before {
 }
 
 /* ---------------- 可访问性：键盘焦点可见 ---------------- */
+/* 只对 :focus-visible（键盘导航/辅助技术）画 2px 主色轮廓，鼠标点击不会出现难看的焦点框；
+   outline-offset 2px 让焦点环与控件边缘留出空隙，避免"贴边"显得像描边加粗 */
 .el-button:focus-visible,
 .el-pagination .el-pager li:focus-visible,
 .el-tabs__item:focus-visible,
@@ -755,6 +934,9 @@ a:focus-visible {
 }
 
 /* 尊重系统"减少动效"偏好：关闭页面进场与悬浮位移 */
+/* 触发条件：操作系统/浏览器开启"减少动效"（prefers-reduced-motion: reduce）。
+   效果：把动画/过渡压到 0.01ms 而不是 0s——保留 transitionend / animationend 回调，
+   需要监听动画结束的组件不会卡住；同时单独取消主按钮 hover 的上移，避免仍留下"位移"错觉 */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -770,6 +952,8 @@ a:focus-visible {
 }
 
 /* ---------------- 响应式 ---------------- */
+/* 小屏（≤768px）：容器内边距降到 12px、页面标题降到 18px、查询项右距降到 8px。
+   目的是在窄屏上腾出横向空间，避免筛选区横向溢出而出现双滚动条 */
 @media (max-width: 768px) {
   .app-container {
     padding: 12px;
