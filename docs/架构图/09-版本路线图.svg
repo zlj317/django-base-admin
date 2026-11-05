@@ -90,7 +90,7 @@
   <!-- 汇总 -->
   <rect x="40" y="480" width="800" height="120" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
   <text x="60" y="506" font-size="15" font-weight="bold" fill="#334155">里程碑汇总</text>
-  <text x="60" y="530" font-size="13" fill="#64748b">9 个里程碑均已完成；数据规模：5 个 SQL 脚本 · 92 张表 · 24 个业务 App。</text>
+  <text x="60" y="530" font-size="13" fill="#64748b">9 个里程碑均已完成；数据规模：5 个 SQL 脚本 · 实际库 93 张表 · 24 个业务 App。</text>
   <text x="60" y="552" font-size="13" fill="#64748b">技术栈：Django 4.2 + DRF · MySQL 8（managed=False） · Vue 3 + Vite 5 + Element Plus。</text>
   <text x="60" y="574" font-size="13" fill="#64748b">关键能力：JWT 静默续期 · 权限校验 · 代码生成 · 自研 BPMN · 3D 场景与分享。</text>
   <text x="60" y="594" font-size="13" fill="#64748b">当前未部署：Celery / Redis、MinIO、kkFileView、OnlyOffice（标注预留 / 演示）。</text>

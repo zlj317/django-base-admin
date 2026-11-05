@@ -15,7 +15,7 @@
   <rect x="530" y="382" width="340" height="126" rx="10" fill="#165dff" fill-opacity="0.10" stroke="#165dff" stroke-width="1.8"/>
   <text x="700" y="422" font-size="22" font-weight="bold" fill="#0f172a" text-anchor="middle">后台管理系统</text>
   <text x="700" y="447" font-size="14" fill="#334155" text-anchor="middle">Django 4.2 + DRF · Vue 3</text>
-  <text x="700" y="470" font-size="13" fill="#64748b" text-anchor="middle">24 个业务 App · 92 张表</text>
+  <text x="700" y="470" font-size="13" fill="#64748b" text-anchor="middle">24 个业务 App · 93 张表</text>
   <text x="700" y="490" font-size="13" fill="#64748b" text-anchor="middle">雪花主键 · 逻辑删除 · 审计字段</text>
 
   <!-- 平台基础 -->

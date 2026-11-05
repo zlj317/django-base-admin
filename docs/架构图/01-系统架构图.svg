@@ -118,7 +118,7 @@
   <text x="302" y="748" font-size="13" fill="#64748b" text-anchor="middle">库名 gen_admin</text>
 
   <rect x="442" y="702" width="245" height="70" rx="8" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.4" stroke-width="1.5"/>
-  <text x="564" y="726" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">92 张表</text>
+  <text x="564" y="726" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">93 张表</text>
   <text x="564" y="748" font-size="13" fill="#64748b" text-anchor="middle">5 个 SQL 脚本手工建表</text>
 
   <rect x="704" y="702" width="245" height="70" rx="8" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.4" stroke-width="1.5"/>

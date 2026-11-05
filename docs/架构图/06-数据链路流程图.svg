@@ -71,7 +71,7 @@
   <rect x="680" y="380" width="200" height="84" rx="8" fill="#ff7d00" fill-opacity="0.10" stroke="#ff7d00" stroke-width="1.5"/>
   <text x="780" y="404" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">MySQL 8</text>
   <text x="780" y="426" font-size="13" fill="#64748b" text-anchor="middle">库 gen_admin</text>
-  <text x="780" y="445" font-size="13" fill="#64748b" text-anchor="middle">92 张表 · is_deleted</text>
+  <text x="780" y="445" font-size="13" fill="#64748b" text-anchor="middle">93 张表 · is_deleted</text>
 
   <rect x="470" y="380" width="190" height="84" rx="8" fill="#165dff" fill-opacity="0.10" stroke="#165dff" stroke-width="1.5"/>
   <text x="565" y="404" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">BigIntJSONRenderer</text>

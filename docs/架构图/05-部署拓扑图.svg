@@ -40,7 +40,7 @@
   <rect x="1010" y="150" width="150" height="90" rx="10" fill="#ff7d00" fill-opacity="0.10" stroke="#ff7d00" stroke-width="1.5"/>
   <text x="1085" y="180" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="middle">MySQL 8</text>
   <text x="1085" y="201" font-size="13" fill="#64748b" text-anchor="middle">库 gen_admin</text>
-  <text x="1085" y="220" font-size="13" fill="#64748b" text-anchor="middle">92 张表</text>
+  <text x="1085" y="220" font-size="13" fill="#64748b" text-anchor="middle">93 张表</text>
 
   <path d="M200,195 L246,195" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
   <text x="223" y="189" font-size="13" fill="#475569" text-anchor="middle">HTTPS</text>

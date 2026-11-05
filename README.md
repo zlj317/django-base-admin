@@ -15,11 +15,11 @@
 
 ## 系统架构图
 
-> 💡 以下为架构图图片，PNG 原图位于 [`docs/设计稿或截图/界面截图/`](docs/设计稿或截图/界面截图/)；每张图下方可展开查看对应的 Mermaid 源码。
+> 💡 以下两张图由 README 内置 Mermaid 渲染（GitHub / VS Code / Typora 可直接查看），PNG 快照位于 [`docs/设计稿或截图/界面截图/`](docs/设计稿或截图/界面截图/)。图后附关系说明。
 >
 > 📐 **独立 SVG 架构图（9 张，可直接在浏览器打开）**：[系统架构图](docs/架构图/01-系统架构图.svg) · [全功能结构图](docs/架构图/02-全功能结构图.svg) · [运行效果示意图](docs/架构图/03-运行效果示意图.svg) · [数据库关系图](docs/架构图/04-数据库关系图.svg) · [部署拓扑图](docs/架构图/05-部署拓扑图.svg) · [数据链路流程图](docs/架构图/06-数据链路流程图.svg) · [告警生命周期图](docs/架构图/07-告警生命周期图.svg) · [仿真时序图](docs/架构图/08-仿真时序图.svg) · [版本路线图](docs/架构图/09-版本路线图.svg)
 
-### 总体分层架构（四层）
+### 总体分层架构（四层 · 24 个 App · 93 张表）
 
 ![系统总体架构图](docs/设计稿或截图/界面截图/16-architecture.png)
 
@@ -29,84 +29,130 @@
 ```mermaid
 flowchart TB
     subgraph Client["🖥️ 客户端层"]
-        direction TB
-        FE["Vue 3 + Element Plus<br/>Vite 5 · TypeScript-Free"]
-        WS["WebSocket 客户端<br/>Django Channels"]
+        direction LR
+        FE["Vue 3 + Vite 5<br/>Element Plus 业务组件"]
+        THEME["主题令牌<br/>明暗双模式 × 5 套主色"]
+        PAGES["26 组页面<br/>平台 / 业务 / 3D / 大屏"]
+        VIEWER["3D 查看器<br/>three.js 独立 chunk"]
     end
 
-    subgraph Gateway["🌐 接入网关层"]
-        Nginx["Nginx 反向代理<br/>静态资源 / SSL / 限流"]
-        ViteProxy["Vite Dev Proxy<br/>开发环境直连后端"]
+    subgraph Gateway["🌐 接入层"]
+        direction LR
+        NGINX["Nginx<br/>静态资源 / SSL / 代理"]
+        VITE["Vite Dev Proxy<br/>5173 → 8000"]
     end
 
-    subgraph Backend["⚙️ Django 4.2 业务层（20 个 App）"]
+    subgraph Backend["⚙️ 业务层 · Django 4.2 + DRF · 24 个 App · 93 张表"]
         direction TB
-
         subgraph Common["📦 公共基座 common/"]
-            JWT["JWT 认证 + bcrypt"]
-            Crud["通用 CrudViewSet<br/>统一响应 / 分页 / 异常 / 审计"]
-            RBAC["PermissionCheck 权限校验<br/>按钮级 v-perm 指令"]
+            direction TB
+            ROUTER["config/urls.py<br/>24 个路由前缀"]
+            RESP["统一响应<br/>{code, msg, data}"]
+            JWT["JWT + bcrypt<br/>2h Token · 30min 续期"]
+            RBAC["PermissionCheck<br/>模块:资源:动作"]
+            CRUD["CrudViewSet<br/>雪花 ID / 逻辑删除 / 审计"]
+            LOG["OperLogMiddleware<br/>操作日志"]
         end
 
-        subgraph Core["🏛️ 平台核心（6 App）"]
-            Sys["system<br/>用户/角色/菜单/部门/字典/配置/日志"]
-            Gen["gen<br/>代码生成器<br/>SQL 模板 → 9 产物 → ZIP"]
-            WF["workflow<br/>自研 BPMN 2.0 引擎<br/>bpmn-js Designer + Viewer"]
-            File["file<br/>本地/MinIO 双存储<br/>MD5 秒传 / 分片上传<br/>kkFileView + OnlyOffice"]
-            Task["task_sched<br/>Celery + CRON / 间隔<br/>4 系统模板"]
-            Home["home<br/>首页聚合<br/>overview / rich / monitor"]
+        subgraph Core["🏛️ 平台核心（3）"]
+            direction TB
+            SYS["system<br/>用户 / 角色 / 菜单 / 部门<br/>字典 / 参数 / 日志"]
+            GEN["gen<br/>代码生成器（生成 biz_student 示例）<br/>9 个产物 + ZIP"]
+            HOME["home<br/>首页聚合<br/>overview / rich / monitor"]
         end
 
-        subgraph BizOld["📊 附加模块（6 App）"]
-            Msg["msg<br/>模板 + 站内信 + 渠道"]
-            Notice["notice<br/>公告分类 / 发布 / 推送"]
-            Report["report<br/>低代码报表<br/>MySQL + API 双数据源"]
-            BI["bi<br/>可视化大屏<br/>折线/柱/饼/指标卡"]
-            Outer["outer<br/>外部 API 对接<br/>手动 / 定时同步"]
-            Student["student<br/>生成模块示例"]
+        subgraph Biz["🧩 业务模块（9）"]
+            direction TB
+            WF["workflow<br/>BPMN 2.0 引擎 · 11 表"]
+            FILE["file<br/>附件 / 回收站 · 3 表"]
+            MSG["msg<br/>模板 / 站内信 · 4 表"]
+            NOTICE["notice<br/>分类 / 公告 · 3 表"]
+            TASK["task_sched<br/>CRON / 日志 · 2 表"]
+            REPORT["report<br/>模板 / 生成 · 4 表"]
+            BI["bi<br/>大屏 / 数据集 · 3 表"]
+            OUTER["outer<br/>接口 / 同步 · 3 表"]
+            SCENE["scene3d<br/>3D 场景 · 13 表 · 8 菜单"]
         end
 
-        subgraph BizNew["🛠️ 标配 + 高级（11 App · 2026-11 批次）"]
-            SysNo["sys_no<br/>编码规则"]
-            Imprint["imprint<br/>导入模板 + 打印模板"]
-            Backup["backup<br/>手动 + 自动备份"]
-            DP["dp<br/>数据权限规则"]
-            DSM["dsm<br/>脱敏规则"]
-            Mon["mon<br/>监控告警"]
-            Sec["sec<br/>IP 黑白名单<br/>登录限流 / 接口限流"]
-            Tenant["tenant<br/>多租户 + 套餐"]
-            WO["wo<br/>工单流转<br/>assign / solve / close"]
-            Cal["cal<br/>日历日程<br/>月/周/日视图"]
-            KB["kb<br/>知识库<br/>分类树 + 文档"]
+        subgraph Std["🛠️ 通用标配（7）"]
+            direction TB
+            NO["sys_no<br/>编码规则"]
+            IMPRINT["imprint<br/>导入 / 打印"]
+            BACKUP["backup<br/>备份策略 / 记录"]
+            DP["dp<br/>数据权限"]
+            DSM["dsm<br/>字段脱敏"]
+            MON["mon<br/>监控告警"]
+            SEC["sec<br/>IP 黑白 / 限流"]
+        end
+
+        subgraph Adv["🎯 高级可选（4）"]
+            direction TB
+            TENANT["tenant<br/>多租户 / 套餐"]
+            WO["wo<br/>工单流转"]
+            CAL["cal<br/>日历日程"]
+            KB["kb<br/>知识库"]
         end
     end
 
-    subgraph Infra["🗄️ 基础设施"]
-        MySQL[("MySQL 8<br/>SQL-first 手工建表<br/>managed=False")]
-        Redis["Redis<br/>Celery Broker<br/>Channels Layer"]
-        MinIO["MinIO（可选）<br/>对象存储"]
-        KKFile["kkFileView<br/>只读预览服务"]
-        OnlyOffice["OnlyOffice<br/>协同编辑"]
+    subgraph Infra["🗄️ 数据与基础设施"]
+        direction LR
+        MYSQL[("MySQL 8.0.21<br/>gen_admin · 93 表 / 1300 行")]
+        DISK["本地磁盘 uploads/<br/>附件 / 3D 模型 / 备份"]
+        REDIS["Redis<br/>预留：Celery / Channels"]
+        MINIO["MinIO<br/>预留：对象存储"]
+        KK["kkFileView<br/>可选：只读预览"]
+        OO["OnlyOffice<br/>预留：协同编辑"]
     end
 
-    FE -->|REST /api/**| Nginx
-    FE -->|REST /api/**| ViteProxy
-    ViteProxy --> Backend
-    Nginx --> Backend
-    Backend --> MySQL
-    Backend --> Redis
-    Backend --> MinIO
-    Backend --> KKFile
-    Backend --> OnlyOffice
-    WS -->|WebSocket /ws/**| Backend
+    ROUTER ~~~ SYS
+    SYS ~~~ WF
+    WF ~~~ NO
+    NO ~~~ TENANT
+    TENANT ~~~ MYSQL
 
-    style Client fill:#e8f4fd,stroke:#1976d2
-    style Gateway fill:#fff8e1,stroke:#f9a825
-    style Common fill:#f3e5f5,stroke:#7b1fa2
-    style Core fill:#e8f5e9,stroke:#388e3c
-    style BizOld fill:#e3f2fd,stroke:#1976d2
-    style BizNew fill:#fce4ec,stroke:#c2185b
-    style Infra fill:#eceff1,stroke:#455a64
+    FE --> THEME
+    FE --> PAGES
+    PAGES --> VIEWER
+    PAGES --> NGINX
+    PAGES --> VITE
+    NGINX --> ROUTER
+    VITE --> ROUTER
+    ROUTER -.->|"按前缀分发到 24 个 App"| CRUD
+    CRUD -->|"全 App 共用 ORM / 原生 SQL"| MYSQL
+    HOME -.->|"只读聚合"| MYSQL
+    SCENE -->|"3D 模型 / 缩略图"| DISK
+    FILE -->|"附件落盘"| DISK
+    FILE -.->|"预览地址"| KK
+    FILE -.->|"预留"| MINIO
+    FILE -.->|"预留"| OO
+
+    classDef client fill:#e8f1ff,stroke:#165dff,color:#0b1f3a
+    classDef gateway fill:#e6fbfa,stroke:#0fc6c2,color:#083b3a
+    classDef common fill:#f3e8ff,stroke:#722ed1,color:#2b0b4d
+    classDef core fill:#e8f1ff,stroke:#165dff,color:#0b1f3a
+    classDef biz fill:#fff4e8,stroke:#ff7d00,color:#5c2a00
+    classDef std fill:#ffeef7,stroke:#f5319d,color:#5c0a33
+    classDef adv fill:#e6fbfa,stroke:#0fc6c2,color:#083b3a
+    classDef infra fill:#f2f4f7,stroke:#4e5969,color:#1f2329
+
+    class FE,THEME,PAGES,VIEWER client
+    class NGINX,VITE gateway
+    class ROUTER,RESP,JWT,RBAC,CRUD,LOG common
+    class SYS,GEN,HOME core
+    class WF,FILE,MSG,NOTICE,TASK,REPORT,BI,OUTER,SCENE biz
+    class NO,IMPRINT,BACKUP,DP,DSM,MON,SEC std
+    class TENANT,WO,CAL,KB adv
+    class MYSQL,DISK,REDIS,MINIO,KK,OO infra
+
+    style Client fill:#fbfdff,stroke:#c9ddff
+    style Gateway fill:#f5fdfd,stroke:#bdeeee
+    style Backend fill:#fdfdff,stroke:#d6d6f5
+    style Common fill:#faf7ff,stroke:#dcc7f5
+    style Core fill:#f5f9ff,stroke:#c9ddff
+    style Biz fill:#fffaf4,stroke:#ffd6a3
+    style Std fill:#fff5fa,stroke:#f9c3dd
+    style Adv fill:#f5fdfd,stroke:#bdeeee
+    style Infra fill:#f8f9fa,stroke:#c9cdd4
 ```
 
 </details>
@@ -120,138 +166,117 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    %% ========== 核心平台 ==========
-    subgraph 平台核心
+    subgraph Platform["🔐 平台底座（认证 · 权限 · 字典）"]
         direction TB
-        Auth["🔐 认证权限<br/>JWT + bcrypt"]
-        RBAC["🎯 角色权限<br/>菜单 / 按钮级"]
-        Menu["📋 动态菜单<br/>M / C / F 三级"]
-        Dict["📚 字典参数<br/>类型 + 数据 + 系统配置"]
-        User["👤 用户<br/>角色 / 部门 / 状态"]
+        USER["用户 sys_user"]
+        ROLE["角色 sys_role<br/>数据范围"]
+        MENU["菜单 sys_menu · 348 条<br/>M / C / F"]
+        PERM["PermissionCheck<br/>模块:资源:动作 · *:*:*"]
+        AUTH["登录认证<br/>JWT + bcrypt"]
+        DICT["字典与参数<br/>sys_dict_* / sys_config"]
     end
 
-    %% ========== 业务模块 ==========
-    subgraph 业务模块
-        direction LR
+    subgraph Collab["🧩 业务协作（6 个模块）"]
         direction TB
-        WF["📝 工作流<br/>BPMN 审批"]
-        Task["⏰ 定时任务<br/>CRON / 间隔"]
-        Report["📈 报表<br/>lowcode-report"]
-        BI["📺 大屏<br/>可视化组件"]
-        File["📎 附件<br/>存储 + 预览 + 协同"]
-        Msg["💬 消息<br/>站内信 + 推送"]
-        Notice["📢 公告<br/>分类发布"]
-        Outer["🌐 外部 API<br/>同步 / 拉取"]
-        CodeGen["🔧 代码生成<br/>读表 → 下载"]
+        WF["workflow · 11 张 wf_ 表<br/>BPMN 2.0 审批引擎"]
+        FILE["file · 3 张 wf_file* 表<br/>附件 / 回收站"]
+        MSG["msg · 4 张 msg_ 表<br/>模板 / 站内信 / 推送"]
+        NOTICE["notice · 3 张 notice_ 表<br/>分类 / 公告 / 已读"]
+        TASK["task_sched · 2 张表<br/>CRON / 间隔 / 日志"]
+        SCENE["scene3d · 13 张表 · 8 个菜单<br/>场景 / 编辑器 / 告警 / 巡检"]
     end
 
-    subgraph 标配功能
+    subgraph DataMod["📊 数据与集成（3 个模块）"]
         direction TB
-        No["🔢 编码规则<br/>单号生成"]
-        Backup["💾 数据备份<br/>手动 + 自动"]
-        DP["🛡️ 数据权限<br/>行级过滤"]
-        DSM["👁️ 脱敏规则<br/>敏感字段"]
-        Mon["📟 监控告警<br/>DB / API / 磁盘"]
-        Sec["🚫 安全策略<br/>IP 黑白 + 限流"]
+        REPORT["report · 4 张 rp_ 表<br/>模板 / 数据源 / 生成记录"]
+        BI["bi · 3 张 bi_ 表<br/>大屏 / 数据集 / 访问日志"]
+        OUTER["outer · 3 张表<br/>接口配置 / 请求日志 / 同步"]
     end
 
-    subgraph 高级功能
+    subgraph StdMod["🛠️ 通用标配（7）"]
         direction TB
-        Tenant["🏢 多租户<br/>隔离 + 套餐"]
-        WO["🎫 工单流转<br/>assign/solve/close"]
-        Cal["📅 日历日程<br/>月/周/日"]
-        KB["📖 知识库<br/>分类树 + 文档"]
+        NO["sys_no<br/>编码规则"]
+        IMPRINT["imprint<br/>导入 / 打印"]
+        BACKUP["backup<br/>备份策略 / 记录"]
+        DP["dp<br/>数据权限"]
+        DSM["dsm<br/>字段脱敏"]
+        MON["mon<br/>监控告警"]
+        SEC["sec<br/>IP / 限流"]
     end
 
-    subgraph 首页聚合
+    subgraph AdvMod["🎯 高级可选（4）"]
         direction TB
-        Home["🏠 Dashboard<br/>overview + rich + monitor"]
+        TENANT["tenant<br/>租户 / 套餐"]
+        WO["wo<br/>工单 / 日志"]
+        CAL["cal<br/>日程 / 提醒"]
+        KB["kb<br/>分类 / 文档 / 收藏"]
     end
 
-    %% ========== 核心依赖 ==========
-    User --> Auth
-    User --> RBAC
-    RBAC --> Menu
-    Dict -.-> Report
-    Dict -.-> BI
-    Dict -.-> WF
+    subgraph HomeMod["🏠 首页聚合（只读）"]
+        direction TB
+        HOME["home · 无表<br/>overview / rich / monitor"]
+        AGG["rich 聚合 13 类数据源<br/>wf_task · wf_instance · work_order<br/>cal_schedule · notice_info · msg_record<br/>wf_file · task_info · task_log<br/>monitor_alarm_record<br/>sys_user / dept / role / tenant<br/>rp_template · bi_screen · kb_document"]
+    end
 
-    %% ========== 附件中心（被引用） ==========
-    File -.-> Report
-    File -.-> BI
-    File -.-> Notice
-    File -.-> Backup
-    File -.-> Print["打印模板"]
-    File -.-> WO
-    File -.-> KB
+    USER --> AUTH
+    ROLE -->|"sys_role_menu"| MENU
+    MENU --> PERM
+    ROLE --> PERM
+    TENANT -->|"sys_tenant_user"| USER
+    TENANT -->|"租户菜单"| MENU
 
-    %% ========== 消息发布 ==========
-    Notice --> Msg
-    WF --> Msg
-    WO --> Msg
-    Msg --> FE
+    SCENE -->|"模型上传写入 wf_file"| FILE
+    REPORT -.->|"file_id"| FILE
+    BI -.->|"snapshot_file_id"| FILE
+    BACKUP -.->|"file_id"| FILE
+    NOTICE -.->|"attachment_ids"| FILE
+    WO -.->|"attachment_ids"| FILE
+    WF -.->|"表单 file 字段"| FILE
 
-    %% ========== 数据源流向 ==========
-    Outer -->|"拉取 / API 数据源"| Report
-    Outer -->|"拉取 / API 数据源"| BI
-    Report -->|"手动生成 / 定时生成"| File
-    BI -->|"快照归档"| File
+    OUTER -->|"outer_sync_task.task_id"| TASK
+    TASK -.->|"演示级：run_once 未实际调度"| REPORT
+    TASK -.->|"演示级：未实际调度"| BACKUP
+    TASK -.->|"演示级：未实际调度"| WF
 
-    %% ========== 定时任务触发 ==========
-    Task -->|"定时生成"| Report
-    Task -->|"自动备份"| Backup
-    Task -->|"失败重试"| Msg
-    Task -->|"超时检测"| WF
+    NOTICE -.->|"预留：发布推送"| MSG
+    WF -.->|"预留：抄送通知"| MSG
+    WO -.->|"预留：状态通知"| MSG
+    MON -.->|"预留：告警推送"| MSG
 
-    %% ========== 工作流 ==========
-    WO -->|"审批流"| WF
-    WF -->|"抄送 / 通知"| Msg
+    WO -->|"可绑定审批"| WF
+    HOME -.->|"SQL 只读聚合"| AGG
 
-    %% ========== 编码规则 ==========
-    No -.-> WO
-    No -.-> Backup
-    No -.-> KB
+    classDef platform fill:#e8f1ff,stroke:#165dff,color:#0b1f3a
+    classDef collab fill:#fff4e8,stroke:#ff7d00,color:#5c2a00
+    classDef datamod fill:#f3e8ff,stroke:#722ed1,color:#2b0b4d
+    classDef stdmod fill:#ffeef7,stroke:#f5319d,color:#5c0a33
+    classDef advmod fill:#e6fbfa,stroke:#0fc6c2,color:#083b3a
+    classDef homed fill:#f5f6f8,stroke:#86909c,color:#1f2329
 
-    %% ========== 监控 ==========
-    Mon -->|告警触发| Msg
-    Sec -->|封禁 / 限流| Auth
+    class USER,ROLE,MENU,PERM,AUTH,DICT platform
+    class WF,FILE,MSG,NOTICE,TASK,SCENE collab
+    class REPORT,BI,OUTER datamod
+    class NO,IMPRINT,BACKUP,DP,DSM,MON,SEC stdmod
+    class TENANT,WO,CAL,KB advmod
+    class HOME,AGG homed
 
-    %% ========== 首页聚合 ==========
-    User --> Home
-    WF --> Home
-    Msg --> Home
-    Report --> Home
-    BI --> Home
-    WO --> Home
-    Cal --> Home
-    Mon --> Home
-
-    %% ========== 租户 ==========
-    Tenant -->|"隔离"| User
-    Tenant -->|"隔离"| Menu
-
-    %% ========== 代码生成 ==========
-    CodeGen -->|"生成新 App"| 业务模块
-
-    %% 样式
-    classDef core fill:#e8f5e9,stroke:#2e7d32,stroke-width:1px;
-    classDef biz fill:#e3f2fd,stroke:#1565c0,stroke-width:1px;
-    classDef std fill:#fff3e0,stroke:#ef6c00,stroke-width:1px;
-    classDef adv fill:#fce4ec,stroke:#c2185b,stroke-width:1px;
-    classDef home fill:#f3e5f5,stroke:#7b1fa2,stroke-width:1px;
-
-    class Auth,RBAC,Menu,Dict,User core;
-    class WF,Task,Report,BI,File,Msg,Notice,Outer,CodeGen biz;
-    class No,Backup,DP,DSM,Mon,Sec std;
-    class Tenant,WO,Cal,KB adv;
-    class Home home;
-
-    %% 线颜色
-    linkStyle default stroke-width:1.5px
+    style Platform fill:#f5f9ff,stroke:#c9ddff
+    style Collab fill:#fffaf4,stroke:#ffd6a3
+    style DataMod fill:#faf7ff,stroke:#dcc7f5
+    style StdMod fill:#fff5fa,stroke:#f9c3dd
+    style AdvMod fill:#f5fdfd,stroke:#bdeeee
+    style HomeMod fill:#f8f9fa,stroke:#c9cdd4
 ```
 
 </details>
 
+**图例与口径**
+
+- **实线**：代码中真实写入或直接引用。例如 `apps/scene3d/views.py` 上传模型时写 `WfFile`；`outer_sync_task.task_id` 关联 `task_info`；`sys_tenant_user` 关联租户与用户。
+- **虚线 + 预留**：数据库字段已留位、页面已呈现，但当前代码尚未接线（如公告/流程/工单/告警向消息中心的自动推送）。
+- **虚线 + 演示级**：`task_sched` 的「立即执行」写死为“演示：未实际调度”，未真正驱动报表生成、备份或流程超时检测。
+- **首页聚合**：`apps/home/views.py` 的 `rich` 接口以只读 SQL 汇总 13 类数据；未接入 `scene3d`、`backup`、`sec`、`imprint`、`dp`、`dsm`、`student`。
+- **报表/大屏数据源**：`report` 走 `rp_datasource` 配置、`bi` 走 `bi_dataset`，当前渲染基于模板/数据集配置与演示数据；`outer` 尚未作为其数据源直连。
 ---
 
 ## 功能截图
@@ -505,6 +530,7 @@ django-base-admin/
    ├─ 项目文档/               # 功能/启动/中间件/接口/数据库/测试/运维/FAQ/术语/路线图 + 历史版与 3D 规格
    ├─ 架构图/                 # 01~09 SVG（系统架构、功能结构、ER、部署、链路、告警、时序、路线）
    ├─ 设计稿或截图/           # 界面截图（17+6+7）、3D 场景截图（50）、首页改版设计
+   ├─ 数据库/                 # 实际库单文件导出（结构 + 数据）与导出说明
    ├─ 报告/                   # UI 验收、主题优化、前端注释报告
    └─ *.sql                   # 5 个建表脚本（92 张表）
 ```
@@ -589,7 +615,7 @@ python manage.py init_db
 | 02 | [项目启动运行指南](docs/项目文档/02-项目启动运行指南.md) | 环境、建库、初始化、启动、验证与自检清单 |
 | 03 | [中间件配置与安装](docs/项目文档/03-中间件配置与安装.md) | Django 中间件、MySQL、预览/存储、Nginx、预留服务 |
 | 04 | [接口文档](docs/项目文档/04-接口文档.md) | 24 个路由前缀、公共约定、各模块接口与示例 |
-| 05 | [数据库设计与数据字典](docs/项目文档/05-数据库设计与数据字典.md) | 92 张表的字段、类型、默认值、注释与关系 |
+| 05 | [数据库设计与数据字典](docs/项目文档/05-数据库设计与数据字典.md) | 93 张表（实际库）的字段、类型、默认值、注释与关系 |
 | 06 | [测试与验收清单](docs/项目文档/06-测试与验收清单.md) | 250 项接口回归、46 项 3D 用例、构建与巡检结果 |
 | 07 | [运维手册](docs/项目文档/07-运维手册.md) | 巡检、日志、备份恢复、发布回滚、故障速查 |
 | 08 | [常见问题解答](docs/项目文档/08-常见问题解答.md) | 启动、数据库、权限、功能、前端、3D、部署 FAQ |
@@ -633,6 +659,13 @@ python manage.py init_db
 | [界面截图/dashboard](docs/设计稿或截图/界面截图/dashboard/) | 首页 1440/1280 明暗与配色 6 张 |
 | [3D 场景截图](docs/设计稿或截图/3D场景截图/) | 3D 模块 50 张（8 菜单 + 只读/分享 + 主题矩阵） |
 | [首页改版设计](docs/设计稿或截图/首页改版设计/) | 首页改版 `spec.md` 与 `tasks.md` |
+
+### 数据库导出（[docs/数据库/](docs/数据库/)）
+
+| 文件 | 内容 |
+|---|---|
+| [django-base-admin-full-20261105.sql](docs/数据库/django-base-admin-full-20261105.sql) | 单文件全库导出：93 张表 `DROP/CREATE` + 按依赖顺序的 `INSERT`（1300 行），密码类字段已脱敏 |
+| [00-导出说明.md](docs/数据库/00-导出说明.md) | 导出时间、脱敏连接信息、每表行数、还原步骤与导入顺序 |
 
 ### 数据库脚本（[docs/](docs/)）
 
@@ -861,6 +894,7 @@ After login, seven top-level menus will appear automatically: **File & Attachmen
 | — | [3D module requirements](docs/需求文档/需求7%20django-base-admin_3D可视化模块需求文档.md) | 13 `scene3d_` tables, menus, APIs and status |
 | — | [Architecture diagrams](docs/架构图/) | 9 standalone SVGs (architecture, features, ER, deployment, data flow, alarms, sequence, roadmap) |
 | — | [Screenshots & design](docs/设计稿或截图/) | UI screenshots, 50 3D screenshots and dashboard redesign docs |
+| — | [Database export](docs/数据库/00-导出说明.md) | Single-file dump: 93 tables + 1300 rows, masked credentials, restore steps |
 
 ## Workflow Approval Workflow
 

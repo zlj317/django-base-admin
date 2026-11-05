@@ -8,7 +8,7 @@
   <rect x="0" y="0" width="1300" height="900" fill="#ffffff"/>
 
   <text x="40" y="54" font-size="28" font-weight="bold" fill="#0f172a">数据库关系图</text>
-  <text x="40" y="82" font-size="14" fill="#64748b">MySQL 8 · 库 gen_admin · 92 张表中的核心关系子集（雪花 BIGINT 主键 + is_deleted 逻辑删除）</text>
+  <text x="40" y="82" font-size="14" fill="#64748b">MySQL 8 · 库 gen_admin · 93 张表中的核心关系子集（雪花 BIGINT 主键 + is_deleted 逻辑删除）</text>
   <text x="1260" y="54" font-size="13" fill="#64748b" text-anchor="end">连线：1:N 父→子 · N:1 子表外键→父表</text>
 
   <!-- 权限与组织 -->
