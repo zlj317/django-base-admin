@@ -1,0 +1,194 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="820" viewBox="0 0 1120 820" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC','Segoe UI',sans-serif">
+  <defs>
+    <marker id="arrowB" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="820" fill="#ffffff"/>
+
+  <text x="24" y="38" font-size="24" font-weight="bold" fill="#0f172a">模块业务关联图（数据流 + 依赖关系）</text>
+  <text x="24" y="62" font-size="11.5" fill="#64748b">以当前代码中的真实写入 / 字段引用为准；预留与演示级能力单独标注</text>
+  <text x="1096" y="38" font-size="10.5" fill="#94a3b8" text-anchor="end">24 App · 93 表 · 矢量 SVG</text>
+
+  <!-- ================= 平台底座 ================= -->
+  <rect x="24" y="84" width="240" height="236" rx="9" fill="#165dff" fill-opacity="0.05" stroke="#165dff" stroke-opacity="0.25" stroke-width="1.2"/>
+  <text x="40" y="104" font-size="12.5" font-weight="bold" fill="#165dff">平台底座</text>
+
+  <rect x="38" y="110" width="212" height="30" rx="6" fill="#ffffff" stroke="#165dff" stroke-opacity="0.3" stroke-width="1"/>
+  <text x="48" y="129" font-size="9.4" fill="#0f172a">用户 / 部门 sys_user · sys_dept</text>
+
+  <rect x="38" y="146" width="212" height="30" rx="6" fill="#ffffff" stroke="#165dff" stroke-opacity="0.3" stroke-width="1"/>
+  <text x="48" y="165" font-size="9.4" fill="#0f172a">角色 sys_role · 数据范围</text>
+
+  <rect x="38" y="182" width="212" height="30" rx="6" fill="#ffffff" stroke="#165dff" stroke-opacity="0.3" stroke-width="1"/>
+  <text x="48" y="201" font-size="9.4" fill="#0f172a">菜单 sys_menu · 348 条（M/C/F）</text>
+
+  <rect x="38" y="218" width="212" height="30" rx="6" fill="#ffffff" stroke="#165dff" stroke-opacity="0.3" stroke-width="1"/>
+  <text x="48" y="237" font-size="9.4" fill="#0f172a">权限 PermissionCheck · *:*:*</text>
+
+  <rect x="38" y="254" width="212" height="30" rx="6" fill="#ffffff" stroke="#165dff" stroke-opacity="0.3" stroke-width="1"/>
+  <text x="48" y="273" font-size="9.4" fill="#0f172a">认证 登录 · JWT + bcrypt</text>
+
+  <rect x="38" y="290" width="212" height="24" rx="6" fill="#ffffff" stroke="#165dff" stroke-opacity="0.3" stroke-width="1"/>
+  <text x="48" y="307" font-size="9.4" fill="#0f172a">字典参数 sys_dict_* · sys_config</text>
+
+  <path d="M264,200 L300,200" stroke="#475569" stroke-width="1.2" marker-end="url(#arrowB)"/>
+  <text x="282" y="192" font-size="8.4" fill="#475569" text-anchor="middle">菜单/权限</text>
+
+  <!-- ================= 业务协作 ================= -->
+  <rect x="304" y="84" width="380" height="236" rx="9" fill="#ff7d00" fill-opacity="0.05" stroke="#ff7d00" stroke-opacity="0.28" stroke-width="1.2"/>
+  <text x="320" y="104" font-size="12.5" font-weight="bold" fill="#ff7d00">业务协作</text>
+
+  <rect x="318" y="110" width="352" height="48" rx="6" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.35" stroke-width="1"/>
+  <text x="330" y="128" font-size="10.6" font-weight="bold" fill="#0f172a">workflow · BPMN 2.0 审批引擎</text>
+  <text x="330" y="146" font-size="8.6" fill="#64748b">11 张 wf_ 表 · 模型/实例/任务/审批/抄送/表单/监听</text>
+
+  <rect x="318" y="170" width="170" height="42" rx="6" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.35" stroke-width="1"/>
+  <text x="330" y="188" font-size="10.6" font-weight="bold" fill="#0f172a">file 附件</text>
+  <text x="330" y="204" font-size="8.6" fill="#64748b">3 张 wf_file* 表</text>
+
+  <rect x="500" y="170" width="170" height="42" rx="6" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.35" stroke-width="1"/>
+  <text x="512" y="188" font-size="10.6" font-weight="bold" fill="#0f172a">msg 消息</text>
+  <text x="512" y="204" font-size="8.6" fill="#64748b">4 张 msg_ 表</text>
+
+  <rect x="318" y="222" width="170" height="42" rx="6" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.35" stroke-width="1"/>
+  <text x="330" y="240" font-size="10.6" font-weight="bold" fill="#0f172a">notice 公告</text>
+  <text x="330" y="256" font-size="8.6" fill="#64748b">3 张 notice_ 表</text>
+
+  <rect x="500" y="222" width="170" height="42" rx="6" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.35" stroke-width="1"/>
+  <text x="512" y="240" font-size="10.6" font-weight="bold" fill="#0f172a">task_sched 定时</text>
+  <text x="512" y="256" font-size="8.6" fill="#64748b">2 张 task_ 表</text>
+
+  <text x="330" y="298" font-size="8.4" fill="#94a3b8">run_once 为演示实现：只写 task_log，不真实调度</text>
+  <text x="330" y="312" font-size="8.4" fill="#94a3b8">公告/流程/工单→消息中心为预留推送</text>
+
+  <path d="M684,140 L720,140" stroke="#475569" stroke-width="1.2" marker-end="url(#arrowB)"/>
+  <text x="702" y="132" font-size="8.4" fill="#475569" text-anchor="middle">file_id</text>
+
+  <!-- ================= 数据与集成 ================= -->
+  <rect x="724" y="84" width="372" height="236" rx="9" fill="#722ed1" fill-opacity="0.05" stroke="#722ed1" stroke-opacity="0.25" stroke-width="1.2"/>
+  <text x="740" y="104" font-size="12.5" font-weight="bold" fill="#722ed1">数据与集成</text>
+
+  <rect x="738" y="110" width="344" height="42" rx="6" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.35" stroke-width="1"/>
+  <text x="750" y="128" font-size="10.6" font-weight="bold" fill="#0f172a">report · 4 张 rp_ 表</text>
+  <text x="750" y="144" font-size="8.6" fill="#64748b">模板 / 分类 / 数据源 / 生成记录</text>
+
+  <rect x="738" y="162" width="168" height="42" rx="6" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.35" stroke-width="1"/>
+  <text x="750" y="180" font-size="10.6" font-weight="bold" fill="#0f172a">bi 大屏</text>
+  <text x="750" y="196" font-size="8.6" fill="#64748b">大屏/数据集/访问日志</text>
+
+  <rect x="914" y="162" width="168" height="42" rx="6" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.35" stroke-width="1"/>
+  <text x="926" y="180" font-size="10.6" font-weight="bold" fill="#0f172a">outer 外部对接</text>
+  <text x="926" y="196" font-size="8.6" fill="#64748b">接口/日志/同步/调试</text>
+
+  <text x="750" y="230" font-size="8.6" fill="#64748b">报表渲染：rp_template + rp_datasource</text>
+  <text x="750" y="248" font-size="8.6" fill="#64748b">大屏渲染：bi_screen + bi_dataset</text>
+  <text x="750" y="266" font-size="8.6" fill="#64748b">快照/封面写入 wf_file，按 file_id 引用</text>
+  <text x="750" y="290" font-size="8.4" fill="#94a3b8">outer 暂未直连报表/大屏（仅预留数据源位）</text>
+  <text x="750" y="304" font-size="8.4" fill="#94a3b8">outer_sync_task.task_id → task_info</text>
+
+  <path d="M600,320 L600,356" stroke="#475569" stroke-width="1.2" marker-end="url(#arrowB)"/>
+  <text x="608" y="344" font-size="8.4" fill="#475569">只读 SQL 聚合</text>
+
+  <path d="M360,320 L360,356" stroke="#475569" stroke-width="1.2" marker-end="url(#arrowB)"/>
+  <text x="368" y="344" font-size="8.4" fill="#475569">模型上传 → wf_file</text>
+
+  <path d="M900,320 L900,356" stroke="#475569" stroke-width="1.2" marker-end="url(#arrowB)"/>
+  <text x="908" y="344" font-size="8.4" fill="#475569">快照/导出</text>
+
+  <!-- ================= 3D 可视化 ================= -->
+  <rect x="24" y="360" width="380" height="200" rx="9" fill="#0fc6c2" fill-opacity="0.06" stroke="#0fc6c2" stroke-opacity="0.3" stroke-width="1.2"/>
+  <text x="40" y="380" font-size="12.5" font-weight="bold" fill="#0b7a77">3D 可视化 · scene3d（13 表）</text>
+
+  <rect x="38" y="388" width="352" height="28" rx="6" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.38" stroke-width="1"/>
+  <text x="48" y="406" font-size="9.2" fill="#0f172a">场景 scene / 分类 / 模板 / 版本 / 权限 / 访问日志</text>
+
+  <rect x="38" y="422" width="352" height="28" rx="6" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.38" stroke-width="1"/>
+  <text x="48" y="440" font-size="9.2" fill="#0f172a">模型 model_resource · 场景对象 scene_object</text>
+
+  <rect x="38" y="456" width="352" height="28" rx="6" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.38" stroke-width="1"/>
+  <text x="48" y="474" font-size="9.2" fill="#0f172a">数据绑定 data_bind · 告警规则 / 告警记录</text>
+
+  <rect x="38" y="490" width="352" height="28" rx="6" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.38" stroke-width="1"/>
+  <text x="48" y="508" font-size="9.2" fill="#0f172a">巡检路线 patrol_route · 巡检记录 patrol_record</text>
+
+  <text x="48" y="540" font-size="8.6" fill="#64748b">8 个菜单：场景管理 / 模型资源 / 编辑器 / 大屏 / 告警 / 巡检 / 模板 / 分享</text>
+  <text x="48" y="554" font-size="8.4" fill="#94a3b8">three.js 独立 chunk · 模型与缩略图落本地磁盘</text>
+
+  <!-- ================= 首页聚合 ================= -->
+  <rect x="444" y="360" width="300" height="200" rx="9" fill="#4e5969" fill-opacity="0.05" stroke="#4e5969" stroke-opacity="0.25" stroke-width="1.2"/>
+  <text x="460" y="380" font-size="12.5" font-weight="bold" fill="#1f2329">首页聚合 · home（无表）</text>
+
+  <rect x="458" y="388" width="272" height="26" rx="6" fill="#ffffff" stroke="#4e5969" stroke-opacity="0.28" stroke-width="1"/>
+  <text x="468" y="405" font-size="9.2" fill="#0f172a">/overview · /rich · /monitor 三个只读接口</text>
+
+  <text x="458" y="430" font-size="8.6" fill="#334155">聚合来源（只读 SQL，共 16 类）：</text>
+  <text x="458" y="448" font-size="8.6" fill="#64748b">wf_task / wf_instance / work_order</text>
+  <text x="458" y="464" font-size="8.6" fill="#64748b">cal_schedule / notice_info / msg_record</text>
+  <text x="458" y="480" font-size="8.6" fill="#64748b">wf_file / task_info / task_log</text>
+  <text x="458" y="496" font-size="8.6" fill="#64748b">monitor_alarm_record</text>
+  <text x="458" y="512" font-size="8.6" fill="#64748b">sys_user / sys_dept / sys_role / sys_tenant</text>
+  <text x="458" y="528" font-size="8.6" fill="#64748b">rp_template / bi_screen / kb_document</text>
+  <text x="458" y="548" font-size="8.4" fill="#94a3b8">未接入 scene3d / backup / sec / imprint / dp / dsm</text>
+
+  <!-- ================= 存储与预览 ================= -->
+  <rect x="784" y="360" width="312" height="200" rx="9" fill="#ff7d00" fill-opacity="0.06" stroke="#ff7d00" stroke-opacity="0.26" stroke-width="1.2"/>
+  <text x="800" y="380" font-size="12.5" font-weight="bold" fill="#c2410c">存储与预览</text>
+
+  <rect x="798" y="388" width="284" height="26" rx="6" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.34" stroke-width="1"/>
+  <text x="808" y="405" font-size="9.2" fill="#0f172a">本地 uploads/ · 统一经 wf_file 登记</text>
+
+  <text x="798" y="432" font-size="8.6" fill="#334155">被引用方（代码中真实写入）：</text>
+  <text x="798" y="450" font-size="8.6" fill="#64748b">scene3d（模型 / 缩略图）</text>
+  <text x="798" y="466" font-size="8.6" fill="#64748b">report（生成快照）· bi（封面快照）</text>
+  <text x="798" y="482" font-size="8.6" fill="#64748b">backup（备份文件）· notice（附件）</text>
+  <text x="798" y="498" font-size="8.6" fill="#64748b">wo（工单附件）· workflow（表单文件字段）</text>
+  <text x="798" y="520" font-size="8.4" fill="#94a3b8">kkFileView 只读预览 · MinIO / OnlyOffice 预留</text>
+
+  <!-- ================= 通用标配 ================= -->
+  <rect x="24" y="600" width="520" height="190" rx="9" fill="#f5319d" fill-opacity="0.05" stroke="#f5319d" stroke-opacity="0.25" stroke-width="1.2"/>
+  <text x="40" y="620" font-size="12.5" font-weight="bold" fill="#f5319d">通用标配 · 7 App / 17 表</text>
+
+  <rect x="38" y="630" width="160" height="32" rx="6" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.32" stroke-width="1"/>
+  <text x="48" y="650" font-size="9.2" fill="#0f172a">sys_no 编码规则</text>
+  <rect x="204" y="630" width="160" height="32" rx="6" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.32" stroke-width="1"/>
+  <text x="214" y="650" font-size="9.2" fill="#0f172a">imprint 导入/打印</text>
+  <rect x="370" y="630" width="160" height="32" rx="6" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.32" stroke-width="1"/>
+  <text x="380" y="650" font-size="9.2" fill="#0f172a">backup 备份</text>
+
+  <rect x="38" y="670" width="160" height="32" rx="6" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.32" stroke-width="1"/>
+  <text x="48" y="690" font-size="9.2" fill="#0f172a">dp 数据权限</text>
+  <rect x="204" y="670" width="160" height="32" rx="6" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.32" stroke-width="1"/>
+  <text x="214" y="690" font-size="9.2" fill="#0f172a">dsm 字段脱敏</text>
+  <rect x="370" y="670" width="160" height="32" rx="6" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.32" stroke-width="1"/>
+  <text x="380" y="690" font-size="9.2" fill="#0f172a">mon 监控告警</text>
+
+  <rect x="38" y="710" width="160" height="32" rx="6" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.32" stroke-width="1"/>
+  <text x="48" y="730" font-size="9.2" fill="#0f172a">sec IP/限流</text>
+
+  <text x="214" y="731" font-size="8.6" fill="#64748b">backup_record.file_id → wf_file</text>
+  <text x="38" y="770" font-size="8.6" fill="#64748b">mon 告警落 monitor_alarm_record；dp/dsm/backup/sec 均为独立配置与执行记录，未强耦合业务表</text>
+
+  <!-- ================= 高级可选 ================= -->
+  <rect x="584" y="600" width="512" height="190" rx="9" fill="#0fc6c2" fill-opacity="0.06" stroke="#0fc6c2" stroke-opacity="0.3" stroke-width="1.2"/>
+  <text x="600" y="620" font-size="12.5" font-weight="bold" fill="#0b7a77">高级可选 · 4 App / 11 表</text>
+
+  <rect x="598" y="630" width="234" height="34" rx="6" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.36" stroke-width="1"/>
+  <text x="608" y="651" font-size="9.6" fill="#0f172a">tenant 租户 / 套餐（3 表）</text>
+
+  <rect x="846" y="630" width="234" height="34" rx="6" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.36" stroke-width="1"/>
+  <text x="856" y="651" font-size="9.6" fill="#0f172a">wo 工单 / 类型 / 日志（3 表）</text>
+
+  <rect x="598" y="674" width="234" height="34" rx="6" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.36" stroke-width="1"/>
+  <text x="608" y="695" font-size="9.6" fill="#0f172a">cal 日程 / 提醒（2 表）</text>
+
+  <rect x="846" y="674" width="234" height="34" rx="6" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.36" stroke-width="1"/>
+  <text x="856" y="695" font-size="9.6" fill="#0f172a">kb 分类 / 文档 / 收藏（3 表）</text>
+
+  <text x="598" y="730" font-size="8.6" fill="#64748b">wo 可绑定 workflow 审批实例；tenant 经 sys_tenant_user 关联用户与菜单</text>
+  <text x="598" y="748" font-size="8.6" fill="#64748b">kb_document 附件同样写入 wf_file；cal 日程进入首页待办聚合</text>
+  <text x="598" y="770" font-size="8.4" fill="#94a3b8">高级模块按需启用，关闭后不影响平台核心链路</text>
+
+  <text x="24" y="812" font-size="9" fill="#94a3b8">图例：实线箭头 = 代码中真实引用 / 写入；文字标注 = 预留、演示级或未接线能力；箭头方向表示数据或依赖流向。表数量与库内 SHOW TABLES（93 张）一致。</text>
+</svg>

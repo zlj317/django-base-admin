@@ -1,3 +1,9 @@
+# 模块：apps/system/serializers.py —— 系统模块的 DRF 序列化器集合
+# 用途：定义各模型的入参校验、出参字段与展示字段（部门名、角色列表、0/1 状态等）。
+# 数据表：sys_user、sys_role、sys_menu、sys_dept、sys_dict_type、sys_dict_data、
+#         sys_config、sys_oper_log、sys_login_log。
+# 调用方：apps/system/views 下的 UserViewSet、RoleViewSet、MenuViewSet、DeptViewSet、
+#         DictTypeViewSet、DictDataViewSet、ConfigViewSet、OperLogViewSet、LoginLogViewSet。
 """系统模块序列化器。"""
 from rest_framework import serializers  # DRF 序列化/反序列化组件
 
@@ -7,6 +13,7 @@ from apps.system.models import (SysConfig, SysDept, SysDictData, SysDictType,  #
 from common.utils import hash_password  # bcrypt 密码哈希
 
 
+# 唯一性校验器：可复用于任意模型字段，核心是「只统计未逻辑删除记录，更新时排除自身」
 class UniqueExcludingDeleted:
     """唯一性校验器：排除已逻辑删除记录后再判断字段值是否重复。"""
 
@@ -28,11 +35,13 @@ class UniqueExcludingDeleted:
         return value  # 校验通过返回原值
 
 
+# 辅助函数：把当前编辑对象的主键挂到模型类属性上，供 UniqueExcludingDeleted 读取并排除自身
 def set_pk_value(model, pk):
     """把当前编辑记录的主键暂存到模型类上，供唯一性校验排除自身。"""
     model.pk_value = pk  # 以类属性传递当前对象主键
 
 
+# 新增用户：password 只写不读，并对用户名做未删除范围的唯一性校验（对应 POST /api/system/user/create）
 class UserCreateSerializer(serializers.ModelSerializer):
     """新增用户序列化器：密码只写不读，并做账号唯一性校验。"""
     password = serializers.CharField(write_only=True, required=False, allow_blank=True)  # 只写字段
@@ -58,6 +67,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return int(bool(value))  # 布尔转 0/1
 
 
+# 编辑用户：不接收密码（改密走独立接口），用户名唯一校验时排除当前编辑对象（对应 PUT /api/system/user/update/<pk>）
 class UserUpdateSerializer(serializers.ModelSerializer):
     """编辑用户序列化器：不含密码（改密走单独接口）。"""
     class Meta:
@@ -80,6 +90,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return int(bool(value))  # 布尔转 0/1
 
 
+# 用户列表：在模型字段外补充部门名称、已分配角色与前端约定的 0/1 状态（对应 GET /api/system/user/list）
 class UserListSerializer(serializers.ModelSerializer):
     """用户列表序列化器：补充部门名、角色与前端使用的 0/1 状态。"""
     dept_name = serializers.SerializerMethodField()  # 只读：部门名称
@@ -114,6 +125,7 @@ class UserListSerializer(serializers.ModelSerializer):
             return [{'id': r[0], 'role_name': r[1]} for r in cursor.fetchall()]  # 整理为字典列表
 
 
+# 角色：输出角色基础字段，role_key 做未删除范围的唯一性校验（对应 /api/system/role/*）
 class RoleSerializer(serializers.ModelSerializer):
     """角色序列化器：角色编码唯一，状态统一为 0/1。"""
     class Meta:
@@ -136,6 +148,7 @@ class RoleSerializer(serializers.ModelSerializer):
         return int(bool(value))  # 布尔转 0/1
 
 
+# 菜单：输出菜单树节点字段，并阻止把菜单自身设为上级造成循环引用（对应 /api/system/menu/*）
 class MenuSerializer(serializers.ModelSerializer):
     """菜单序列化器：防止把菜单自身设为上级造成环。"""
     class Meta:
@@ -153,6 +166,7 @@ class MenuSerializer(serializers.ModelSerializer):
         return attrs  # 校验通过
 
 
+# 部门：输出部门树节点字段，并阻止把部门自身设为上级造成循环引用（对应 /api/system/dept/*）
 class DeptSerializer(serializers.ModelSerializer):
     """部门序列化器：防止把部门自身设为上级造成环。"""
     class Meta:
@@ -169,6 +183,7 @@ class DeptSerializer(serializers.ModelSerializer):
         return attrs  # 校验通过
 
 
+# 字典类型：dict_type 编码唯一校验，状态归一为 0/1（对应 /api/system/dict/type/*）
 class DictTypeSerializer(serializers.ModelSerializer):
     """字典类型序列化器：类型编码唯一，状态统一为 0/1。"""
     class Meta:
@@ -190,6 +205,7 @@ class DictTypeSerializer(serializers.ModelSerializer):
         return int(bool(value))  # 布尔转 0/1
 
 
+# 字典项：输出标签/键值/排序等字段，仅做状态归一（对应 /api/system/dict/data/*）
 class DictDataSerializer(serializers.ModelSerializer):
     """字典项序列化器：仅做状态归一化。"""
     class Meta:
@@ -203,6 +219,7 @@ class DictDataSerializer(serializers.ModelSerializer):
         return int(bool(value))  # 布尔转 0/1
 
 
+# 参数配置：config_key 全局唯一校验，避免同键覆盖（对应 /api/system/config/*）
 class ConfigSerializer(serializers.ModelSerializer):
     """参数配置序列化器：配置键全局唯一。"""
     class Meta:
@@ -220,6 +237,7 @@ class ConfigSerializer(serializers.ModelSerializer):
         return value  # 校验通过
 
 
+# 操作日志：只读输出全部字段，供日志列表与详情展示（对应 GET /api/system/operlog/list）
 class OperLogSerializer(serializers.ModelSerializer):
     """操作日志序列化器：直接暴露全部字段。"""
     class Meta:
@@ -228,6 +246,7 @@ class OperLogSerializer(serializers.ModelSerializer):
         fields = '__all__'  # 全字段输出
 
 
+# 登录日志：只读输出全部字段，供登录审计列表展示（对应 GET /api/system/loginlog/list）
 class LoginLogSerializer(serializers.ModelSerializer):
     """登录日志序列化器：直接暴露全部字段。"""
     class Meta:

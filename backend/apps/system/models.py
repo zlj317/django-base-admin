@@ -1,3 +1,10 @@
+# 模块：apps/system/models.py —— 平台基础模块（系统管理）的 ORM 模型定义
+# 用途：映射用户、角色、菜单、部门、字典、参数配置及操作/登录日志等表，
+#       供 apps/system/views 下的 ViewSet 与 apps/system/serializers.py 中的序列化器使用。
+# 数据表：sys_dept、sys_user、sys_role、sys_menu、sys_dict_type、sys_dict_data、
+#         sys_oper_log、sys_login_log、sys_config（均由 docs 建表 SQL 手工维护，managed=False）。
+# 路由：apps/system/urls.py 将各模型对应的 ViewSet 挂载到 /api/system/ 前缀下。
+# 说明：继承 BaseModel 的模型自动获得 create_by/create_time/update_by/update_time/is_deleted 公共字段。
 """系统基础模块模型（表结构由 docs 建表 SQL 手工创建，managed=False）。"""
 from django.db import models  # Django ORM 字段与模型基类
 from common.fields import SnowflakeIDField  # 雪花算法主键字段
@@ -5,6 +12,7 @@ from common.fields import SnowflakeIDField  # 雪花算法主键字段
 from common.utils import BaseModel  # 公共字段基类：创建/更新人、逻辑删除
 
 
+# 部门表映射：sys_dept，树形组织架构节点，parent_id=0 表示顶级部门
 class SysDept(BaseModel):
     """部门表：树形组织结构，默认按排序号与主键升序。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
@@ -22,6 +30,7 @@ class SysDept(BaseModel):
         ordering = ['order_num', 'id']  # 默认排序：排序号、主键升序
 
 
+# 用户表映射：sys_user，登录账号及昵称、联系方式、所属部门等基本信息
 class SysUser(BaseModel):
     """用户表：账号、密码及所属部门等基本信息。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
@@ -40,6 +49,7 @@ class SysUser(BaseModel):
         managed = False  # 不参与 migrate 的建表/改表
 
 
+# 角色表映射：sys_role，role_key 作为权限标识，data_scope 控制该角色可见的数据范围
 class SysRole(BaseModel):
     """角色表：角色编码用于权限标识匹配，data_scope 控制数据范围。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
@@ -57,6 +67,7 @@ class SysRole(BaseModel):
         ordering = ['role_sort', 'id']  # 默认排序：排序号、主键升序
 
 
+# 菜单表映射：sys_menu，M/C/F 三类节点构成前端路由与按钮权限树
 class SysMenu(BaseModel):
     """菜单表：M 目录 / C 菜单 / F 按钮，树形组织并可挂权限标识。"""
     TYPE_CHOICES = (('M', '目录'), ('C', '菜单'), ('F', '按钮'))  # 菜单类型可选值
@@ -80,6 +91,7 @@ class SysMenu(BaseModel):
         ordering = ['order_num', 'id']  # 默认排序：排序号、主键升序
 
 
+# 字典类型表映射：sys_dict_type，一个类型下挂多个字典项（如性别、启用状态）
 class SysDictType(BaseModel):
     """字典类型表：一个类型下挂多个字典项。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
@@ -94,6 +106,7 @@ class SysDictType(BaseModel):
         managed = False  # 不参与 migrate 的建表/改表
 
 
+# 字典项表映射：sys_dict_data，dict_type_id 关联字典类型，提供展示标签与实际存储值
 class SysDictData(BaseModel):
     """字典项表：以 dict_type_id 关联字典类型，提供标签与键值。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
@@ -111,6 +124,7 @@ class SysDictData(BaseModel):
         ordering = ['dict_sort', 'id']  # 默认排序：排序号、主键升序
 
 
+# 操作日志表映射：sys_oper_log，按接口记录增删改操作；字段按手工表结构裁剪，故不继承 BaseModel
 class SysOperLog(models.Model):
     """操作日志表（不继承 BaseModel）：仅保留本表 SQL 中实际存在的字段。"""
 
@@ -133,6 +147,7 @@ class SysOperLog(models.Model):
         ordering = ['-id']  # 默认按主键倒序，最新日志在前
 
 
+# 登录日志表映射：sys_login_log，记录登录结果、IP 与浏览器信息；同样不继承 BaseModel
 class SysLoginLog(models.Model):
     """登录日志表（不继承 BaseModel）：记录登录结果与客户端信息。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
@@ -152,6 +167,7 @@ class SysLoginLog(models.Model):
         ordering = ['-id']  # 默认按主键倒序，最新日志在前
 
 
+# 参数配置表映射：sys_config，config_key 唯一标识一项系统参数，业务代码按 key 读取
 class SysConfig(BaseModel):
     """参数配置表：以 config_key 唯一标识一项系统参数。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成

@@ -1,10 +1,16 @@
 """外部接口模块模型（表结构由 docs 建表 SQL 手工创建，managed=False）。"""
+# 模块用途：把外部对接模块的三张业务表映射为 Django 模型，供视图层与序列化器使用。
+# 对应表：outer_api_config（接口配置）、outer_api_request_log（调用日志）、outer_sync_task（同步任务）。
+# 说明：三张表均由 docs 建表 SQL 手工创建，Meta 中 managed=False，不参与 Django migrate。
+# 现状：outer 以「配置 + 调试」为主；同步任务只登记定义，通过 task_id 关联 task_info，
+#       既不会真正拉取数据写入 target_table，也不会驱动报表或大屏。
 from django.db import models  # Django ORM 字段与模型基类
 from common.fields import SnowflakeIDField  # 雪花算法主键字段
 
 from common.utils import BaseModel  # 公共字段基类：创建/更新人、逻辑删除
 
 
+# 接口配置表：一行代表一个允许后台测试或调用的外部 HTTP 接口。
 class OuterApiConfig(BaseModel):
     """外部API配置表：定义可被调用的外部接口及鉴权参数。"""
     METHOD_CHOICES = (('GET', 'GET'), ('POST', 'POST'), ('PUT', 'PUT'), ('DELETE', 'DELETE'))  # HTTP 方法可选值
@@ -21,6 +27,7 @@ class OuterApiConfig(BaseModel):
     status = models.SmallIntegerField('状态', default=0)  # 0 正常 / 1 停用
     remark = models.CharField('备注', max_length=500, blank=True, null=True)  # 备注说明
 
+    # Meta 只声明物理表映射与默认排序，不负责建表（表结构由 docs SQL 维护）。
     class Meta:
         """指定真实表名；表由 SQL 手工维护，故不参与迁移。"""
         db_table = 'outer_api_config'  # 对应数据库物理表名
@@ -28,6 +35,8 @@ class OuterApiConfig(BaseModel):
         ordering = ['-id']  # 默认按主键倒序
 
 
+# 调用日志表：每次 test/call 无论成功失败都会写一条，用于审计与排查外部接口问题。
+# 不继承 BaseModel，是因为该表只有调用快照，不需要 create_by/update_by/is_deleted 等业务审计列。
 class OuterApiRequestLog(models.Model):
     """外部API调用日志表（不继承 BaseModel）：记录每次外部接口调用详情。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
@@ -42,6 +51,7 @@ class OuterApiRequestLog(models.Model):
     request_time = models.DateTimeField('请求时间', blank=True, null=True)  # 请求发起时刻
     create_time = models.DateTimeField('创建时间', blank=True, null=True)  # 入库时间
 
+    # Meta 只声明物理表映射与默认排序，不负责建表；日志表数据量增长快，默认倒序便于看最新调用。
     class Meta:
         """指定真实表名；表由 SQL 手工维护，故不参与迁移。"""
         db_table = 'outer_api_request_log'  # 对应数据库物理表名
@@ -49,6 +59,8 @@ class OuterApiRequestLog(models.Model):
         ordering = ['-id']  # 默认按主键倒序，最新调用在前
 
 
+# 同步任务表：描述「何时从哪个接口、按什么字段映射、写入哪张目标表」。
+# 注意：目前只保存定义，task_id 指向 task_info 的调度记录，实际同步逻辑尚未实现（演示为主）。
 class OuterSyncTask(BaseModel):
     """外部数据同步任务表：定时从外部接口拉取数据写入目标表。"""
     SYNC_TYPE_CHOICES = (('manual', '手动触发'), ('schedule', '定时任务'))  # 同步方式可选值
@@ -63,6 +75,7 @@ class OuterSyncTask(BaseModel):
     status = models.SmallIntegerField('状态', default=0)  # 0 正常 / 1 停用
     remark = models.CharField('备注', max_length=500, blank=True, null=True)  # 备注说明
 
+    # Meta 只声明物理表映射与默认排序，不负责建表；表结构由 docs SQL 维护。
     class Meta:
         """指定真实表名；表由 SQL 手工维护，故不参与迁移。"""
         db_table = 'outer_sync_task'  # 对应数据库物理表名

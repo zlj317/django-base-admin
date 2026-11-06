@@ -15,13 +15,15 @@
 
 ## 系统架构图
 
-> 💡 以下两张图由 README 内置 Mermaid 渲染（GitHub / VS Code / Typora 可直接查看），PNG 快照位于 [`docs/设计稿或截图/界面截图/`](docs/设计稿或截图/界面截图/)。图后附关系说明。
+> 💡 下图使用**矢量 SVG**（文字不糊、可无损放大，不受浏览器缩放影响），并附 **4480px 宽高清 PNG** 备份；Mermaid 源码保留在折叠区，便于二次编辑。图后附关系说明。
 >
-> 📐 **独立 SVG 架构图（9 张，可直接在浏览器打开）**：[系统架构图](docs/架构图/01-系统架构图.svg) · [全功能结构图](docs/架构图/02-全功能结构图.svg) · [运行效果示意图](docs/架构图/03-运行效果示意图.svg) · [数据库关系图](docs/架构图/04-数据库关系图.svg) · [部署拓扑图](docs/架构图/05-部署拓扑图.svg) · [数据链路流程图](docs/架构图/06-数据链路流程图.svg) · [告警生命周期图](docs/架构图/07-告警生命周期图.svg) · [仿真时序图](docs/架构图/08-仿真时序图.svg) · [版本路线图](docs/架构图/09-版本路线图.svg)
+> 📐 **独立架构图（11 张，可直接在浏览器打开）**：[总体分层架构图](docs/架构图/10-总体分层架构图.svg) · [模块业务关联图](docs/架构图/11-模块业务关联图.svg) · [系统架构图](docs/架构图/01-系统架构图.svg) · [全功能结构图](docs/架构图/02-全功能结构图.svg) · [运行效果示意图](docs/架构图/03-运行效果示意图.svg) · [数据库关系图](docs/架构图/04-数据库关系图.svg) · [部署拓扑图](docs/架构图/05-部署拓扑图.svg) · [数据链路流程图](docs/架构图/06-数据链路流程图.svg) · [告警生命周期图](docs/架构图/07-告警生命周期图.svg) · [仿真时序图](docs/架构图/08-仿真时序图.svg) · [版本路线图](docs/架构图/09-版本路线图.svg)
 
 ### 总体分层架构（四层 · 24 个 App · 93 张表）
 
-![系统总体架构图](docs/设计稿或截图/界面截图/16-architecture.png)
+![总体分层架构图](docs/架构图/10-总体分层架构图.svg)
+
+> 高清位图备份：[10-总体分层架构图.png](docs/架构图/10-总体分层架构图.png)（4480 × 3200，适合投屏 / 打印）
 
 <details>
 <summary>Mermaid 源码（点击展开）</summary>
@@ -159,7 +161,9 @@ flowchart TB
 
 ### 模块业务关联图（数据流 + 依赖关系）
 
-![模块业务关联图](docs/设计稿或截图/界面截图/17-module-relations.png)
+![模块业务关联图](docs/架构图/11-模块业务关联图.svg)
+
+> 高清位图备份：[11-模块业务关联图.png](docs/架构图/11-模块业务关联图.png)（4480 × 3280）
 
 <details>
 <summary>Mermaid 源码（点击展开）</summary>
@@ -281,96 +285,19 @@ flowchart LR
 
 ## 功能截图
 
-| 登录页 | 首页仪表盘 |
+> 以下 6 张为当前最新代码在 **1440×900、浅色 + 默认蓝主题**下截取的代表性页面，覆盖首页聚合、平台管理、工作流、3D 可视化、BI 大屏与报表管理。其余模块可直接登录后从左侧菜单进入查看，完整功能见 [项目功能详细说明](docs/项目文档/01-项目功能详细说明.md)。
+
+| 首页 Dashboard（指标卡 / 趋势 / 待办 / 公告） | 系统管理 · 操作日志 |
 |---|---|
-| <img src="docs/设计稿或截图/界面截图/01-login.png" alt="登录页" width="100%"> | <img src="docs/设计稿或截图/界面截图/02-dashboard.png" alt="首页仪表盘" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/new-01-dashboard.png" alt="首页 Dashboard" width="100%"> | <img src="docs/设计稿或截图/界面截图/new-02-operlog.png" alt="操作日志" width="100%"> |
 
-| 用户管理 | 角色管理 |
+| 工作流 · 流程实例 | 3D 可视化 · 场景管理 |
 |---|---|
-| <img src="docs/设计稿或截图/界面截图/03-user.png" alt="用户管理" width="100%"> | <img src="docs/设计稿或截图/界面截图/04-role.png" alt="角色管理" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/new-03-workflow-instance.png" alt="工作流流程实例" width="100%"> | <img src="docs/设计稿或截图/界面截图/new-04-scene3d.png" alt="3D 场景管理" width="100%"> |
 
-| 菜单管理 | 部门管理 |
+| 报表大屏 · 大屏管理 | 报表管理 · 报表模板 |
 |---|---|
-| <img src="docs/设计稿或截图/界面截图/05-menu.png" alt="菜单管理" width="100%"> | <img src="docs/设计稿或截图/界面截图/06-dept.png" alt="部门管理" width="100%"> |
-
-| 字典管理 | 参数配置 |
-|---|---|
-| <img src="docs/设计稿或截图/界面截图/07-dict.png" alt="字典管理" width="100%"> | <img src="docs/设计稿或截图/界面截图/08-config.png" alt="参数配置" width="100%"> |
-
-| 操作日志 | 登录日志 |
-|---|---|
-| <img src="docs/设计稿或截图/界面截图/09-operlog.png" alt="操作日志" width="100%"> | <img src="docs/设计稿或截图/界面截图/10-loginlog.png" alt="登录日志" width="100%"> |
-
-| 代码生成 - 表列表 | 代码生成 - 字段配置 |
-|---|---|
-| <img src="docs/设计稿或截图/界面截图/11-gen-list.png" alt="代码生成列表" width="100%"> | <img src="docs/设计稿或截图/界面截图/12-gen-edit.png" alt="字段配置" width="100%"> |
-
-| 代码生成 - 建表 SQL | 字典数据维护 |
-|---|---|
-| <img src="docs/设计稿或截图/界面截图/14-gen-ddl.png" alt="建表 SQL" width="100%"> | <img src="docs/设计稿或截图/界面截图/15-dict-data.png" alt="字典数据" width="100%"> |
-
-| 生成模块示例（学生信息表） |
-|---|
-| <img src="docs/设计稿或截图/界面截图/13-student.png" alt="生成模块示例" width="100%"> |
-
-**UI 主题与暗色模式**
-
-| 主题设置面板（明暗 + 5 套主题色） | 角色管理（深色） |
-|---|---|
-| <img src="docs/设计稿或截图/界面截图/ui/04-theme-panel.png" alt="主题设置面板" width="100%"> | <img src="docs/设计稿或截图/界面截图/ui/05-role-dark.png" alt="角色管理深色" width="100%"> |
-
-| 仪表盘（1440 浅色 · 深海蓝） | 仪表盘（1440 深色 · 玫瑰红） |
-|---|---|
-| <img src="docs/设计稿或截图/界面截图/dashboard/dashboard-1440-light-blue.png" alt="仪表盘 1440 浅色深海蓝" width="100%"> | <img src="docs/设计稿或截图/界面截图/dashboard/dashboard-1440-dark-rose.png" alt="仪表盘 1440 深色玫瑰红" width="100%"> |
-
-**3D 可视化模块（8 个业务菜单 + 只读查看 + 免登录分享）**
-
-| 场景分类 | 3D 场景管理 |
-|---|---|
-| <img src="docs/设计稿或截图/3D场景截图/category-light-1440.png" alt="3D场景分类" width="100%"> | <img src="docs/设计稿或截图/3D场景截图/scene-light-1440.png" alt="3D场景管理" width="100%"> |
-
-| 场景编辑器 | 模型资源 |
-|---|---|
-| <img src="docs/设计稿或截图/3D场景截图/editor-light-1440.png" alt="场景编辑器" width="100%"> | <img src="docs/设计稿或截图/3D场景截图/model-light-1440.png" alt="模型资源" width="100%"> |
-
-| 数据绑定 | 告警联动 |
-|---|---|
-| <img src="docs/设计稿或截图/3D场景截图/binding-light-1440.png" alt="数据绑定" width="100%"> | <img src="docs/设计稿或截图/3D场景截图/alarm-light-1440.png" alt="告警联动" width="100%"> |
-
-| 巡检路线 | 场景发布 / 大屏 |
-|---|---|
-| <img src="docs/设计稿或截图/3D场景截图/route-light-1440.png" alt="巡检路线" width="100%"> | <img src="docs/设计稿或截图/3D场景截图/screen-light-1440.png" alt="场景发布大屏" width="100%"> |
-
-| 只读查看 | 免登录分享 |
-|---|---|
-| <img src="docs/设计稿或截图/3D场景截图/view-light-1440.png" alt="只读查看" width="100%"> | <img src="docs/设计稿或截图/3D场景截图/share-light-1440.png" alt="免登录分享" width="100%"> |
-
-<details>
-<summary><b>展开查看 3D 模块完整截图（50 张：8 菜单 + 只读/分享 + 明暗 × 1440/1280 × 5 套主题色）</b></summary>
-
-- 目录：[docs/设计稿或截图/3D场景截图/](docs/设计稿或截图/3D场景截图/)
-- 覆盖：`category / scene / editor / model / binding / alarm / route / screen / view / share` × `light / dark` × `1440 / 1280`
-- 主题色专项：`palette-{blue,teal,purple,orange,rose}-{light,dark}-1440.png`
-- 文件说明：`screenshot-report.json`
-
-</details>
-
-**其它模块功能速览**
-
-> 以下模块的页面与接口已在当前版本实现，但本轮交付未单独补拍截图；运行环境登录后可按对应菜单直接查看。完整功能与接口见 [项目功能详细说明](docs/项目文档/01-项目功能详细说明.md) 与 [接口文档](docs/项目文档/04-接口文档.md)。
-
-| 模块 | 已实现能力 | 截图 |
-|---|---|---|
-| 工作流审批 | BPMN 设计、发起、待办、同意/驳回/转审/加签/退回、轨迹、抄送、请假示例 | 暂无独立截图 |
-| 附件管理 | 多文件上传、MD5 去重、下载、回收站恢复/彻底删除、上传配置 | 暂无独立截图 |
-| 消息中心 | 模板、站内消息、已读/全部已读、推送日志、渠道配置 | 暂无独立截图 |
-| 公告通知 | 分类、发布/下线、角色范围、置顶、有效期、已读追踪 | 暂无独立截图 |
-| 定时任务 | CRON/间隔配置、启停、手动触发、运行日志 | 暂无独立截图 |
-| 报表管理 | 数据源、模板、预览、手动生成、生成记录 | 暂无独立截图 |
-| BI 大屏 | 画布配置、发布、分享链接、访问日志 | 暂无独立截图 |
-| 外部对接 | 接口配置、连通性测试、调用日志、同步配置 | 暂无独立截图 |
-| 通用标配（7） | 编码规则、导入/打印模板、数据备份、数据权限、字段脱敏、监控告警、安全策略 | 暂无独立截图 |
-| 高级可选（4） | 多租户、工单、日历日程、知识库 | 暂无独立截图 |
+| <img src="docs/设计稿或截图/界面截图/new-05-bi.png" alt="BI 大屏管理" width="100%"> | <img src="docs/设计稿或截图/界面截图/new-06-report.png" alt="报表模板" width="100%"> |
 
 ---
 
@@ -529,7 +456,7 @@ django-base-admin/
    ├─ 需求文档/               # 需求 1~7
    ├─ 项目文档/               # 功能/启动/中间件/接口/数据库/测试/运维/FAQ/术语/路线图 + 历史版与 3D 规格
    ├─ 架构图/                 # 01~09 SVG（系统架构、功能结构、ER、部署、链路、告警、时序、路线）
-   ├─ 设计稿或截图/           # 界面截图（17+6+7）、3D 场景截图（50）、首页改版设计
+   ├─ 设计稿或截图/           # 界面截图（历史 17、README 最新 6、dashboard 6、ui 7）、3D 场景截图（50）、首页改版设计
    ├─ 数据库/                 # 实际库单文件导出（结构 + 数据）与导出说明
    ├─ 报告/                   # UI 验收、主题优化、前端注释报告
    └─ *.sql                   # 5 个建表脚本（92 张表）
@@ -606,6 +533,8 @@ python manage.py init_db
 | [07-告警生命周期图.svg](docs/架构图/07-告警生命周期图.svg) | 规则 → 触发 → 记录 → 确认 → 闭环 |
 | [08-仿真时序图.svg](docs/架构图/08-仿真时序图.svg) | 3D 场景编辑、发布、分享与访客访问时序 |
 | [09-版本路线图.svg](docs/架构图/09-版本路线图.svg) | M1~M10 里程碑与后续规划 |
+| [10-总体分层架构图.svg](docs/架构图/10-总体分层架构图.svg) | **高清重制**：客户端 / 接入 / 业务 / 数据四层、24 个 App 分组与表数量（README 首图） |
+| [11-模块业务关联图.svg](docs/架构图/11-模块业务关联图.svg) | **高清重制**：File 引用方、Outer→任务、Home 聚合、预留/演示级能力（README 第二图） |
 
 ### 项目文档（[docs/项目文档/](docs/项目文档/)）
 
@@ -654,7 +583,7 @@ python manage.py init_db
 
 | 目录 | 内容 |
 |---|---|
-| [界面截图](docs/设计稿或截图/界面截图/) | 登录、首页、平台模块、代码生成、字典等 17 张 |
+| [界面截图](docs/设计稿或截图/界面截图/) | 历史 17 张 + README 最新 6 张（首页/操作日志/流程实例/3D 场景/BI/报表模板） |
 | [界面截图/ui](docs/设计稿或截图/界面截图/ui/) | 主题面板、暗色角色、日历等 7 张高保真图 |
 | [界面截图/dashboard](docs/设计稿或截图/界面截图/dashboard/) | 首页 1440/1280 明暗与配色 6 张 |
 | [3D 场景截图](docs/设计稿或截图/3D场景截图/) | 3D 模块 50 张（8 菜单 + 只读/分享 + 主题矩阵） |
@@ -716,69 +645,20 @@ An admin system built with **Django 4.2 + DRF + MySQL 8 + Vue 3 + Element Plus**
 
 ## Screenshots
 
-| Login | Dashboard |
+> The following 6 screenshots were captured from the latest code at **1440×900, light mode with the default blue palette**, covering the dashboard, platform administration, workflow, 3D visualization, BI screens and reports. Other modules are available from the sidebar after signing in.
+
+| Dashboard | System · Operation Log |
 |---|---|
-| <img src="docs/设计稿或截图/界面截图/01-login.png" alt="Login" width="100%"> | <img src="docs/设计稿或截图/界面截图/02-dashboard.png" alt="Dashboard" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/new-01-dashboard.png" alt="Dashboard" width="100%"> | <img src="docs/设计稿或截图/界面截图/new-02-operlog.png" alt="Operation log" width="100%"> |
 
-| User Management | Role Management |
+| Workflow · Process Instances | 3D Visualization · Scenes |
 |---|---|
-| <img src="docs/设计稿或截图/界面截图/03-user.png" alt="Users" width="100%"> | <img src="docs/设计稿或截图/界面截图/04-role.png" alt="Roles" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/new-03-workflow-instance.png" alt="Workflow instances" width="100%"> | <img src="docs/设计稿或截图/界面截图/new-04-scene3d.png" alt="3D scenes" width="100%"> |
 
-| Menu Management | Department Management |
+| BI · Screen Management | Reports · Report Templates |
 |---|---|
-| <img src="docs/设计稿或截图/界面截图/05-menu.png" alt="Menus" width="100%"> | <img src="docs/设计稿或截图/界面截图/06-dept.png" alt="Departments" width="100%"> |
+| <img src="docs/设计稿或截图/界面截图/new-05-bi.png" alt="BI screens" width="100%"> | <img src="docs/设计稿或截图/界面截图/new-06-report.png" alt="Report templates" width="100%"> |
 
-| Dictionary Management | System Config |
-|---|---|
-| <img src="docs/设计稿或截图/界面截图/07-dict.png" alt="Dictionaries" width="100%"> | <img src="docs/设计稿或截图/界面截图/08-config.png" alt="Configs" width="100%"> |
-
-| Operation Log | Login Log |
-|---|---|
-| <img src="docs/设计稿或截图/界面截图/09-operlog.png" alt="Operation log" width="100%"> | <img src="docs/设计稿或截图/界面截图/10-loginlog.png" alt="Login log" width="100%"> |
-
-| Code Generator - Tables | Code Generator - Field Config |
-|---|---|
-| <img src="docs/设计稿或截图/界面截图/11-gen-list.png" alt="Gen tables" width="100%"> | <img src="docs/设计稿或截图/界面截图/12-gen-edit.png" alt="Field config" width="100%"> |
-
-| Code Generator - DDL | Dictionary Data |
-|---|---|
-| <img src="docs/设计稿或截图/界面截图/14-gen-ddl.png" alt="DDL" width="100%"> | <img src="docs/设计稿或截图/界面截图/15-dict-data.png" alt="Dictionary data" width="100%"> |
-
-| Generated Module (Students) |
-|---|
-| <img src="docs/设计稿或截图/界面截图/13-student.png" alt="Generated module" width="100%"> |
-
-**UI Themes & Dark Mode**
-
-| Theme panel (mode + 5 palettes) | Role list (dark) |
-|---|---|
-| <img src="docs/设计稿或截图/界面截图/ui/04-theme-panel.png" alt="Theme panel" width="100%"> | <img src="docs/设计稿或截图/界面截图/ui/05-role-dark.png" alt="Role list dark" width="100%"> |
-
-| Dashboard (1440 light · blue) | Dashboard (1280 dark · purple) |
-|---|---|
-| <img src="docs/设计稿或截图/界面截图/dashboard/dashboard-1440-light-blue.png" alt="Dashboard 1440 light blue" width="100%"> | <img src="docs/设计稿或截图/界面截图/dashboard/dashboard-1280-dark-purple.png" alt="Dashboard 1280 dark purple" width="100%"> |
-
-**Additional Module Previews**
-
-| File - Attachment List | File - Preview & Edit |
-|---|---|
-| (attachment grid, drag-drop upload, MD5 dedup, business-type filter) | (kkFileView read-only / OnlyOffice collaborative edit, watermark visible) |
-
-| Messages - In-site List | Announcements - List |
-|---|---|
-| (message list, unread red dot, mark-all-read, jump links) | (announcement list, top-pin badge, category filter, effective-time countdown) |
-
-| Scheduler - Tasks | Scheduler - Execution Log |
-|---|---|
-| (Cron / interval scheduling, on/off switch, run-now button) | (log timeline, 3 colors: running / success / failure) |
-
-| Report - Template Designer | BI - Dashboard Designer |
-|---|---|
-| (lowcode-report drag canvas, cell merge, expressions, group totals) | (datart canvas with line/bar/pie/map components, share-link generator) |
-
-| External - API Config | External - Request Log |
-|---|---|
-| (config form, GET/POST/PUT/DELETE + Token/Basic auth + connectivity test) | (request log with params/response/duration/status/error) |
 
 ## Features
 

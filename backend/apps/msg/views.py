@@ -87,6 +87,7 @@ class MsgPushLogViewSet(CrudViewSet):
     module_name = '推送日志'  # 操作日志模块名
 
     def get_queryset(self):
+        # 该表不继承 BaseModel、没有 is_deleted，直接按主键倒序返回全量
         return self.model.objects.order_by(self.order_by)
 
     def list(self, request):

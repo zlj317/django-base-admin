@@ -1,4 +1,9 @@
 """代码生成器视图。"""
+# 模块用途：代码生成器的 HTTP 入口，串起“读取库表 → 导入 → 保存字段配置 → 预览/下载代码”的完整链路。
+# 对应路由：apps/gen/urls.py 挂载 /gen/db/tables、/gen/db/import、/gen/table/<pk>/preview|ddl|download 等。
+# 权限：permission_classes=[PermissionCheck] 配合 perm_map，按 action 校验 gen:table:* 权限标识。
+# 调用关系：库表元数据读取、默认配置推断、模板渲染与 DDL 查询全部委托 apps/gen/engine.py。
+# 被谁调用：前端“代码生成”页面；本视图又由 config/urls.py 中的 include 挂到 /api/gen/ 前缀下。
 import io  # 用于在内存中构造 ZIP 二进制流，避免落盘
 import zipfile  # 用于把渲染结果打包成 ZIP
 from datetime import datetime  # 生成审计时间字符串
@@ -21,9 +26,11 @@ class GenTableViewSet(viewsets.ViewSet):
 
     module_name = '代码生成'  # 模块名，用于日志与错误提示
 
+    # perm_map 以 property 形式暴露：PermissionCheck 在每次请求时按当前 action 读取，避免类属性写死。
     @property
     def perm_map(self):
         """接口动作到权限编码的映射，供 PermissionCheck 校验。"""
+        # 键是路由 as_view 中声明的 action 名，值是 sys_menu.perms 中配置的权限标识；未配置的动作会被放行。
         return {
             'list': 'gen:table:list',  # 配置列表查询权限
             'db_tables': 'gen:table:import',  # 读取可导入表清单，归入导入权限
@@ -36,6 +43,7 @@ class GenTableViewSet(viewsets.ViewSet):
             'ddl': 'gen:table:preview',  # 建表语句复用一个预览权限
         }
 
+    # 所有 action 统一挂 PermissionCheck：先校验登录（401），再按 perm_map 比对按钮权限（403）。
     permission_classes = [PermissionCheck]  # 全部接口先做权限校验
 
     # ---- 数据库表读取与导入 ----
@@ -43,6 +51,7 @@ class GenTableViewSet(viewsets.ViewSet):
         """按关键字筛选数据库中的业务表，并附带是否已导入标记。"""
         keyword = request.query_params.get('table_name')  # 取表名关键字，可为空
         tables = engine.list_db_tables(keyword)  # 引擎返回已过滤系统表后的表清单
+        # 分页在内存中完成：信息来源是 information_schema，业务表数量有限，无需数据库层分页。
         page = StandardPagination(request)  # 解析页码与每页条数
         start = page.offset  # 计算当前页起始下标
         data = {
@@ -84,6 +93,7 @@ class GenTableViewSet(viewsets.ViewSet):
         page = StandardPagination(request)  # 解析分页参数
         total = queryset.count()  # 先统计总数供分页组件使用
         rows = queryset[page.offset:page.offset + page.page_size]  # 切片取当前页记录
+        # 主表信息由序列化器输出，字段数量需要额外统计，前端列表据此展示“已配置字段数”。
         data = []  # 组装返回列表
         for t in rows:  # 逐条补字段数量
             item = GenTableSerializer(t).data  # 序列化主表信息
@@ -118,6 +128,7 @@ class GenTableViewSet(viewsets.ViewSet):
             now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 统一的时间字符串
             table_serializer.save(update_by=username, update_time=now)  # 保存主表并刷新审计字段
 
+            # 字段配置采用“整组替换”：先物理清空旧列再按提交顺序重建，避免残留已删除的列。
             columns = request.data.get('columns')  # 前端提交的整组字段配置
             if columns is not None:  # 未提交 columns 时保持原字段配置不动
                 SysGenTableColumn.objects.filter(gen_table_id=pk).delete()  # 整体替换：先物理清空旧字段
@@ -155,6 +166,7 @@ class GenTableViewSet(viewsets.ViewSet):
         table, columns = self._load(pk)  # 加载配置
         if not table:  # 配置不存在
             return fail('配置不存在', code=404)  # 统一 404 提示
+        # 引擎返回 (相对路径, 文本内容) 列表；此处在内存中直接回传，不写磁盘。
         files = engine.render_files(table, columns)  # 引擎渲染全部文件
         return ok({'files': [{'name': path.split('/')[-1], 'path': path, 'content': content}
                              for path, content in files]})  # 转成前端可直接展示的文件树数据
@@ -177,6 +189,7 @@ class GenTableViewSet(viewsets.ViewSet):
         if table.parent_menu_id:  # 指定父级菜单时才做菜单注册
             self.create_menus(table, columns, request.user_info.username)  # 注册菜单与按钮权限
 
+        # 先按现有配置渲染全部文件，再统一打包，保证预览与下载内容一致。
         files = engine.render_files(table, columns)  # 渲染全部文件
         buf = io.BytesIO()  # 内存缓冲，避免产生临时文件
         with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as zf:  # 以 deflate 压缩写入
@@ -205,6 +218,7 @@ class GenTableViewSet(viewsets.ViewSet):
                     [menu_id, parent_id, menu_name, path, component, perms, menu_type, icon, username, now])
                 return menu_id  # 返回本次生成的雪花 ID
 
+        # 以“列表权限”作为幂等判据：该模块只要注册过任一菜单/按钮，就不再重复插入。
         if SysMenu.objects.filter(perms=f'{prefix}:list', is_deleted=0).exists():  # 已有列表权限说明注册过
             return  # 已注册过则直接跳过，保证可重复下载
         parent_id = table.parent_menu_id or 0  # 未指定父级时挂到根节点
@@ -212,6 +226,7 @@ class GenTableViewSet(viewsets.ViewSet):
                          path=table.module_name,
                          component=table.gen_path or f'{prefix}/index',
                          icon='Document')  # 注册目录级菜单（C 为菜单类型）
+        # 默认注册四个基础按钮；导入/导出按钮按配置开关追加，保持与生成的页面按钮一致。
         buttons = [('查询', f'{prefix}:list'), ('新增', f'{prefix}:create'),
                    ('编辑', f'{prefix}:update'), ('删除', f'{prefix}:delete')]  # 默认的四个按钮权限
         if table.import_enable:  # 开启导入时补充导入按钮

@@ -1,9 +1,14 @@
+# 模块：apps/system/urls.py —— 平台基础模块（系统管理）的路由表
+# 用途：把 apps/system/views 包中的各 ViewSet 映射为列表/新增/更新/删除及自定义动作接口。
+# 数据表：路由本身不含模型，实际由视图读写 sys_user、sys_role、sys_menu、sys_dept、字典、参数与日志等表。
+# 挂载：config/urls.py 以 'api/system/' 前缀 include 本文件，因此下列 path 均拼在该前缀之后。
 """平台基础模块路由。"""
 from django.urls import path  # 路由声明函数
 
 from apps.system import views  # 各资源 ViewSet
 
 
+# 路由工厂：按资源前缀批量生成标准 CRUD 路由，extras 用于补充各 ViewSet 的自定义动作。
 def crud(prefix, viewset, extras=None):
     """生成标准 CRUD 路由：/list /create /update/<pk> /delete"""
     list_view = viewset.as_view({'get': 'list', 'post': 'create', 'delete': 'delete'})  # 集合
@@ -19,6 +24,7 @@ def crud(prefix, viewset, extras=None):
     return patterns  # 返回路由列表供拼接
 
 
+# 路由汇总：每个 crud(...) 生成一类资源的 4 条标准路由，再用 + 拼接该资源的自定义动作路由。
 urlpatterns = crud('user', views.UserViewSet, {  # 用户：CRUD + 详情/重置密码/状态/角色分配
     '<int:pk>': {'get': 'retrieve'},  # 用户详情（编辑回填）
     'reset_pwd/<int:pk>': {'put': 'reset_pwd'},  # 重置密码

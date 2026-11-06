@@ -34,4 +34,5 @@ with connection.cursor() as cursor:
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='学生信息表'
     """)
+# 建表完成后输出提示，便于命令行确认执行结果
 print('biz_student 表已就绪')

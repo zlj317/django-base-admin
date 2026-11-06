@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="800" viewBox="0 0 1120 800" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC','Segoe UI',sans-serif">
+  <defs>
+    <marker id="arrowA" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <!-- 标题 -->
+  <text x="24" y="38" font-size="24" font-weight="bold" fill="#0f172a">总体分层架构图</text>
+  <text x="24" y="62" font-size="11.5" fill="#64748b">Vue 3 + Vite 5 前端 · Django 4.2 + DRF 后端 · MySQL 8 · 24 个 App / 93 张表</text>
+  <text x="1096" y="38" font-size="10.5" fill="#94a3b8" text-anchor="end">矢量 SVG · 可无损放大 · 依据当前代码绘制</text>
+
+  <!-- ============ 客户端层 ============ -->
+  <rect x="20" y="78" width="1080" height="92" rx="10" fill="#165dff" fill-opacity="0.05" stroke="#165dff" stroke-opacity="0.22" stroke-width="1.2"/>
+  <rect x="32" y="98" width="88" height="26" rx="6" fill="#165dff" fill-opacity="0.12"/>
+  <text x="76" y="116" font-size="12" font-weight="bold" fill="#165dff" text-anchor="middle">客户端层</text>
+
+  <rect x="134" y="94" width="186" height="68" rx="7" fill="#ffffff" stroke="#165dff" stroke-opacity="0.32" stroke-width="1"/>
+  <text x="146" y="116" font-size="11.5" font-weight="bold" fill="#0f172a">Vue 3 页面层</text>
+  <text x="146" y="134" font-size="9.5" fill="#64748b">26 组视图：平台 / 业务</text>
+  <text x="146" y="149" font-size="9.5" fill="#64748b">3D / 大屏 / 报表</text>
+
+  <rect x="327" y="94" width="186" height="68" rx="7" fill="#ffffff" stroke="#165dff" stroke-opacity="0.32" stroke-width="1"/>
+  <text x="339" y="116" font-size="11.5" font-weight="bold" fill="#0f172a">Vite 5 构建</text>
+  <text x="339" y="134" font-size="9.5" fill="#64748b">开发热更新 · 生产打包</text>
+  <text x="339" y="149" font-size="9.5" fill="#64748b">代码分割 · 3D 独立 chunk</text>
+
+  <rect x="520" y="94" width="186" height="68" rx="7" fill="#ffffff" stroke="#165dff" stroke-opacity="0.32" stroke-width="1"/>
+  <text x="532" y="116" font-size="11.5" font-weight="bold" fill="#0f172a">Element Plus</text>
+  <text x="532" y="134" font-size="9.5" fill="#64748b">表格 / 表单 / 弹窗 / 树</text>
+  <text x="532" y="149" font-size="9.5" fill="#64748b">统一交互与校验</text>
+
+  <rect x="713" y="94" width="186" height="68" rx="7" fill="#ffffff" stroke="#165dff" stroke-opacity="0.32" stroke-width="1"/>
+  <text x="725" y="116" font-size="11.5" font-weight="bold" fill="#0f172a">主题与权限</text>
+  <text x="725" y="134" font-size="9.5" fill="#64748b">明暗双模式 × 5 套主色</text>
+  <text x="725" y="149" font-size="9.5" fill="#64748b">路由守卫 · 按钮级权限</text>
+
+  <rect x="906" y="94" width="186" height="68" rx="7" fill="#ffffff" stroke="#165dff" stroke-opacity="0.32" stroke-width="1"/>
+  <text x="918" y="116" font-size="11.5" font-weight="bold" fill="#0f172a">axios 请求层</text>
+  <text x="918" y="134" font-size="9.5" fill="#64748b">request.js 拦截器</text>
+  <text x="918" y="149" font-size="9.5" fill="#64748b">Bearer Token · 统一错误码</text>
+
+  <path d="M560,170 L560,185" stroke="#475569" stroke-width="1.2" marker-end="url(#arrowA)"/>
+  <text x="570" y="181" font-size="9" fill="#475569">HTTPS / JSON</text>
+
+  <!-- ============ 接入层 ============ -->
+  <rect x="20" y="188" width="1080" height="82" rx="10" fill="#0fc6c2" fill-opacity="0.06" stroke="#0fc6c2" stroke-opacity="0.28" stroke-width="1.2"/>
+  <rect x="32" y="208" width="88" height="26" rx="6" fill="#0fc6c2" fill-opacity="0.14"/>
+  <text x="76" y="226" font-size="12" font-weight="bold" fill="#0b7a77" text-anchor="middle">接入层</text>
+
+  <rect x="134" y="202" width="306" height="54" rx="7" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.36" stroke-width="1"/>
+  <text x="146" y="223" font-size="11.5" font-weight="bold" fill="#0f172a">Vite Dev Proxy（开发）</text>
+  <text x="146" y="242" font-size="9.5" fill="#64748b">5173 → 127.0.0.1:8000，前端免配置跨域</text>
+
+  <rect x="452" y="202" width="306" height="54" rx="7" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.36" stroke-width="1"/>
+  <text x="464" y="223" font-size="11.5" font-weight="bold" fill="#0f172a">Nginx（生产）</text>
+  <text x="464" y="242" font-size="9.5" fill="#64748b">静态资源托管 + /api 反向代理 + SSL</text>
+
+  <rect x="770" y="202" width="322" height="54" rx="7" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.36" stroke-width="1"/>
+  <text x="782" y="223" font-size="11.5" font-weight="bold" fill="#0f172a">CORS 与访问控制</text>
+  <text x="782" y="242" font-size="9.5" fill="#64748b">开发期放开来源 · 生产按白名单收敛</text>
+
+  <path d="M560,270 L560,285" stroke="#475569" stroke-width="1.2" marker-end="url(#arrowA)"/>
+  <text x="570" y="281" font-size="9" fill="#475569">/api/** 统一入口</text>
+
+  <!-- ============ 业务层 ============ -->
+  <rect x="20" y="288" width="1080" height="364" rx="10" fill="#722ed1" fill-opacity="0.05" stroke="#722ed1" stroke-opacity="0.22" stroke-width="1.2"/>
+  <rect x="32" y="306" width="88" height="26" rx="6" fill="#722ed1" fill-opacity="0.12"/>
+  <text x="76" y="324" font-size="12" font-weight="bold" fill="#722ed1" text-anchor="middle">业务层</text>
+  <rect x="134" y="304" width="958" height="52" rx="7" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.38" stroke-width="1"/>
+  <text x="146" y="321" font-size="11" font-weight="bold" fill="#0f172a">common/ 公共基座</text>
+  <text x="146" y="337" font-size="8.6" fill="#64748b">auth（JWT+bcrypt）· permissions（模块:资源:动作）· pagination · response · exception · middleware（OperLog / TokenRefresh）</text>
+  <text x="146" y="351" font-size="8.6" fill="#64748b">snowflake · fields · CrudViewSet · chart_data · utils · config/urls（24 个路由前缀）· 统一响应 {code, msg, data}</text>
+
+  <!-- 第一行分组 -->
+  <rect x="134" y="364" width="228" height="132" rx="7" fill="#ffffff" stroke="#165dff" stroke-opacity="0.34" stroke-width="1"/>
+  <text x="146" y="386" font-size="11.5" font-weight="bold" fill="#165dff">平台核心 · 3 App</text>
+  <text x="146" y="406" font-size="9" fill="#334155">system：用户/角色/菜单/部门</text>
+  <text x="146" y="420" font-size="9" fill="#334155">　　　　字典/参数/日志（11 表）</text>
+  <text x="146" y="440" font-size="9" fill="#334155">gen：代码生成 9 类产物（2 表）</text>
+  <text x="146" y="460" font-size="9" fill="#334155">home：首页聚合 3 接口（1 表）</text>
+  <text x="146" y="482" font-size="8.6" fill="#64748b">登录 / 权限 / 操作日志在此落地</text>
+
+  <rect x="374" y="364" width="228" height="132" rx="7" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.34" stroke-width="1"/>
+  <text x="386" y="386" font-size="11.5" font-weight="bold" fill="#ff7d00">业务协作 · 5 App</text>
+  <text x="386" y="406" font-size="9" fill="#334155">workflow：BPMN 2.0 引擎（11 表）</text>
+  <text x="386" y="424" font-size="9" fill="#334155">file：附件 / 回收站（3 表）</text>
+  <text x="386" y="442" font-size="9" fill="#334155">msg：模板 / 站内信（4 表）</text>
+  <text x="386" y="460" font-size="9" fill="#334155">notice：分类 / 公告（3 表）</text>
+  <text x="386" y="478" font-size="9" fill="#334155">task_sched：CRON 任务（2 表）</text>
+
+  <rect x="614" y="364" width="228" height="132" rx="7" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.34" stroke-width="1"/>
+  <text x="626" y="386" font-size="11.5" font-weight="bold" fill="#722ed1">数据与集成 · 3 App</text>
+  <text x="626" y="406" font-size="9" fill="#334155">report：模板/数据源（4 表）</text>
+  <text x="626" y="424" font-size="9" fill="#334155">bi：大屏/数据集（3 表）</text>
+  <text x="626" y="442" font-size="9" fill="#334155">outer：接口/同步（4 表）</text>
+  <text x="626" y="462" font-size="8.6" fill="#64748b">报表快照与大屏封面均引用附件</text>
+  <text x="626" y="478" font-size="8.6" fill="#64748b">outer 同步任务关联 task_info</text>
+
+  <rect x="854" y="364" width="238" height="132" rx="7" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.38" stroke-width="1"/>
+  <text x="866" y="386" font-size="11.5" font-weight="bold" fill="#0b7a77">3D 与示例 · 2 App</text>
+  <text x="866" y="406" font-size="9" fill="#334155">scene3d：场景 / 编辑器 / 大屏</text>
+  <text x="866" y="420" font-size="9" fill="#334155">　　　　　告警 / 巡检 / 分享</text>
+  <text x="866" y="434" font-size="9" fill="#334155">　　　　　13 表 · 8 个菜单</text>
+  <text x="866" y="454" font-size="9" fill="#334155">student：代码生成示例（1 表）</text>
+  <text x="866" y="478" font-size="8.6" fill="#64748b">three.js 独立 chunk，按需加载</text>
+
+  <!-- 第二行分组 -->
+  <rect x="134" y="508" width="228" height="132" rx="7" fill="#ffffff" stroke="#f5319d" stroke-opacity="0.34" stroke-width="1"/>
+  <text x="146" y="530" font-size="11.5" font-weight="bold" fill="#f5319d">通用标配 · 7 App</text>
+  <text x="146" y="549" font-size="8.8" fill="#334155">sys_no 编码规则（2）</text>
+  <text x="146" y="563" font-size="8.8" fill="#334155">imprint 导入 / 打印（3）</text>
+  <text x="146" y="577" font-size="8.8" fill="#334155">backup 备份策略（2）</text>
+  <text x="146" y="591" font-size="8.8" fill="#334155">dp 数据权限（2）</text>
+  <text x="146" y="605" font-size="8.8" fill="#334155">dsm 字段脱敏（3）</text>
+  <text x="146" y="619" font-size="8.8" fill="#334155">mon 监控告警（2）· sec IP/限流（3）</text>
+
+  <rect x="374" y="508" width="228" height="132" rx="7" fill="#ffffff" stroke="#0fc6c2" stroke-opacity="0.38" stroke-width="1"/>
+  <text x="386" y="530" font-size="11.5" font-weight="bold" fill="#0b7a77">高级可选 · 4 App</text>
+  <text x="386" y="549" font-size="8.8" fill="#334155">tenant 租户 / 套餐（3）</text>
+  <text x="386" y="567" font-size="8.8" fill="#334155">wo 工单 / 日志（3）</text>
+  <text x="386" y="585" font-size="8.8" fill="#334155">cal 日程 / 提醒（2）</text>
+  <text x="386" y="603" font-size="8.8" fill="#334155">kb 分类 / 文档 / 收藏（3）</text>
+  <text x="386" y="625" font-size="8.6" fill="#64748b">按需启用；wo 可绑定流程审批</text>
+
+  <rect x="614" y="508" width="228" height="132" rx="7" fill="#ffffff" stroke="#722ed1" stroke-opacity="0.3" stroke-width="1"/>
+  <text x="626" y="530" font-size="11.5" font-weight="bold" fill="#722ed1">认证与授权链路</text>
+  <text x="626" y="549" font-size="8.8" fill="#334155">登录 → JWT（2h）→ 30min 续期</text>
+  <text x="626" y="567" font-size="8.8" fill="#334155">→ PermissionCheck 校验</text>
+  <text x="626" y="585" font-size="8.8" fill="#334155">→ dp 数据范围 / dsm 字段脱敏</text>
+  <text x="626" y="603" font-size="8.8" fill="#334155">→ OperLog 记录操作审计</text>
+  <text x="626" y="625" font-size="8.6" fill="#64748b">租户维度由 sys_tenant_user 判定</text>
+
+  <rect x="854" y="508" width="238" height="132" rx="7" fill="#ffffff" stroke="#4e5969" stroke-opacity="0.32" stroke-width="1"/>
+  <text x="866" y="530" font-size="11.5" font-weight="bold" fill="#1f2329">交付与运维</text>
+  <text x="866" y="549" font-size="8.8" fill="#334155">core/management/commands</text>
+  <text x="866" y="563" font-size="8.8" fill="#334155">/init_db 初始化与演示数据</text>
+  <text x="866" y="581" font-size="8.8" fill="#334155">5 个 SQL 脚本建 93 张表</text>
+  <text x="866" y="599" font-size="8.8" fill="#334155">manage.py check 通过</text>
+  <text x="866" y="617" font-size="8.8" fill="#334155">模型 managed=False，不改表结构</text>
+
+  <path d="M560,652 L560,667" stroke="#475569" stroke-width="1.2" marker-end="url(#arrowA)"/>
+  <text x="570" y="663" font-size="9" fill="#475569">ORM / 原生 SQL · 事务</text>
+
+  <!-- ============ 数据与基础设施层 ============ -->
+  <rect x="20" y="672" width="1080" height="92" rx="10" fill="#ff7d00" fill-opacity="0.06" stroke="#ff7d00" stroke-opacity="0.26" stroke-width="1.2"/>
+  <rect x="32" y="692" width="88" height="26" rx="6" fill="#ff7d00" fill-opacity="0.14"/>
+  <text x="76" y="710" font-size="12" font-weight="bold" fill="#c2410c" text-anchor="middle">数据层</text>
+
+  <rect x="134" y="686" width="228" height="66" rx="7" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.36" stroke-width="1"/>
+  <text x="146" y="707" font-size="11" font-weight="bold" fill="#0f172a">MySQL 8 · gen_admin</text>
+  <text x="146" y="725" font-size="9" fill="#64748b">93 张表 · 索引 / 注释 / utf8mb4</text>
+  <text x="146" y="740" font-size="9" fill="#64748b">雪花主键 · 逻辑删除 · 审计字段</text>
+
+  <rect x="374" y="686" width="228" height="66" rx="7" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.36" stroke-width="1"/>
+  <text x="386" y="707" font-size="11" font-weight="bold" fill="#0f172a">本地磁盘 uploads/</text>
+  <text x="386" y="725" font-size="9" fill="#64748b">附件 / 3D 模型 / 缩略图 / 备份</text>
+  <text x="386" y="740" font-size="9" fill="#64748b">统一经 wf_file 表登记</text>
+
+  <rect x="614" y="686" width="228" height="66" rx="7" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.36" stroke-width="1"/>
+  <text x="626" y="707" font-size="11" font-weight="bold" fill="#0f172a">Redis（预留）</text>
+  <text x="626" y="725" font-size="9" fill="#64748b">Celery 异步任务 / Channels 推送</text>
+  <text x="626" y="740" font-size="9" fill="#64748b">当前以同步实现为主</text>
+
+  <rect x="854" y="686" width="238" height="66" rx="7" fill="#ffffff" stroke="#ff7d00" stroke-opacity="0.36" stroke-width="1"/>
+  <text x="866" y="707" font-size="11" font-weight="bold" fill="#0f172a">可选外部能力</text>
+  <text x="866" y="725" font-size="9" fill="#64748b">MinIO 对象存储 · kkFileView 预览</text>
+  <text x="866" y="740" font-size="9" fill="#64748b">OnlyOffice 协同编辑（均预留）</text>
+
+  <text x="24" y="786" font-size="9.5" fill="#94a3b8">口径：表数量取自库内 SHOW TABLES（93 张）；实线箭头为请求链路；虚线/预留能力在代码中尚未接线，图中以“预留/可选”标注。</text>
+</svg>

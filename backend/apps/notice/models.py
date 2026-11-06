@@ -1,10 +1,16 @@
 """公告模块模型（表结构由 docs 建表 SQL 手工创建，managed=False）。"""
+# 模块：apps/notice/models.py —— 公告通知模块的三张核心表模型
+# 对应表：notice_category（公告分类）、notice_info（公告信息）、notice_read（阅读记录）
+# 路由前缀：/api/notice/category/、/api/notice/info/、/api/notice/read/
+# 关键约定：三张表均由 docs 建表 SQL 手工创建，Meta.managed=False 表示不参与 migrate；
+#           分类/公告继承 BaseModel 复用逻辑删除与审计字段，阅读记录只追加不更新，故不继承。
 from django.db import models  # Django ORM 字段与模型基类
 from common.fields import SnowflakeIDField  # 雪花算法主键字段
 
 from common.utils import BaseModel  # 公共字段基类：创建/更新人、逻辑删除
 
 
+# 公告分类模型：为公告归类，前台下拉选择与后台按分类筛选都依赖本表。
 class NoticeCategory(BaseModel):
     """公告分类表：组织公告的类别，支持排序与启用/停用。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
@@ -14,6 +20,7 @@ class NoticeCategory(BaseModel):
     status = models.SmallIntegerField('状态', default=0)  # 0 正常 / 1 停用
     remark = models.CharField('备注', max_length=500, blank=True, null=True)  # 备注说明
 
+    # Meta：绑定真实表 notice_category；managed=False 表示结构由手工 SQL 维护，ORM 不建表/改表。
     class Meta:
         """指定真实表名；表由 SQL 手工维护，故不参与迁移。"""
         db_table = 'notice_category'  # 对应数据库物理表名
@@ -21,6 +28,7 @@ class NoticeCategory(BaseModel):
         ordering = ['sort', 'id']  # 默认排序：排序号、主键升序
 
 
+# 公告信息模型：公告主表，保存标题、富文本正文、附件、可见角色范围与发布状态。
 class NoticeInfo(BaseModel):
     """公告信息表：存储公告正文、发布范围及状态。"""
     STATUS_CHOICES = ((0, '草稿'), (1, '已发布'), (2, '已下线'))  # 公告状态可选值
@@ -38,6 +46,7 @@ class NoticeInfo(BaseModel):
     publish_user_id = models.BigIntegerField('发布人ID', blank=True, null=True)  # 发布者用户 ID
     publish_time = models.DateTimeField('发布时间', blank=True, null=True)  # 实际发布时刻
 
+    # Meta：绑定真实表 notice_info；默认排序置顶优先，保证列表接口无需额外指定排序。
     class Meta:
         """指定真实表名；表由 SQL 手工维护，故不参与迁移。"""
         db_table = 'notice_info'  # 对应数据库物理表名
@@ -45,6 +54,7 @@ class NoticeInfo(BaseModel):
         ordering = ['-is_top', '-id']  # 置顶优先，再按主键倒序
 
 
+# 公告阅读记录模型：记录"谁在何时读了哪条公告"，用于已读/未读统计与重复阅读幂等。
 class NoticeRead(models.Model):
     """公告阅读记录表（不继承 BaseModel）：记录用户阅读公告的痕迹。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
@@ -53,6 +63,7 @@ class NoticeRead(models.Model):
     read_time = models.DateTimeField('阅读时间', blank=True, null=True)  # 实际阅读时刻
     create_time = models.DateTimeField('创建时间', blank=True, null=True)  # 入库时间
 
+    # Meta：绑定真实表 notice_read；该表无逻辑删除字段，只按主键倒序展示最新阅读。
     class Meta:
         """指定真实表名；表由 SQL 手工维护，故不参与迁移。"""
         db_table = 'notice_read'  # 对应数据库物理表名

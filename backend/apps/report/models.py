@@ -1,10 +1,16 @@
 """报表模块模型（表结构由 docs 建表 SQL 手工创建，managed=False）。"""
+# 模块：apps/report/models.py —— 报表模块的四张核心表模型
+# 用途：维护报表分类、数据源、报表模板（含查询与图表 JSON）以及每次生成的记录。
+# 数据表：rp_category、rp_datasource、rp_template、rp_generate_record。
+# 调用方：apps/report/views.py 负责增删改查，render.py 读取模板配置渲染图表，seed.py 初始化菜单。
+# 说明：表结构由 docs 建表 SQL 手工维护，因此所有 Meta 均为 managed=False，不参与迁移。
 from django.db import models  # Django ORM 字段与模型基类
 from common.fields import SnowflakeIDField  # 雪花算法主键字段
 
 from common.utils import BaseModel  # 公共字段基类：创建/更新人、逻辑删除
 
 
+# 报表分类：模板的归类维度，前端按分类树/页签展示报表
 class RpCategory(BaseModel):
     """报表分类表：组织报表模板的类别，支持排序与启用/停用。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
@@ -13,6 +19,7 @@ class RpCategory(BaseModel):
     status = models.SmallIntegerField('状态', default=0)  # 0 正常 / 1 停用
     remark = models.CharField('备注', max_length=500, blank=True, null=True)  # 备注说明
 
+    # 元信息：锁定物理表名、关闭迁移托管，默认按排序号展示
     class Meta:
         """指定真实表名；表由 SQL 手工维护，故不参与迁移。"""
         db_table = 'rp_category'  # 对应数据库物理表名
@@ -20,6 +27,7 @@ class RpCategory(BaseModel):
         ordering = ['sort', 'id']  # 默认排序：排序号、主键升序
 
 
+# 报表数据源：模板配置里引用它，用于标识取数来自哪个库或哪个外部接口
 class RpDatasource(BaseModel):
     """报表数据源表：定义报表可引用的数据源连接。"""
     DS_TYPE_CHOICES = (('mysql', 'MySQL数据库'), ('api', '外部API'))  # 数据源类型可选值
@@ -31,6 +39,7 @@ class RpDatasource(BaseModel):
     status = models.SmallIntegerField('状态', default=0)  # 0 正常 / 1 停用
     remark = models.CharField('备注', max_length=500, blank=True, null=True)  # 备注说明
 
+    # 元信息：锁定物理表名、关闭迁移托管，最新数据源排在前面
     class Meta:
         """指定真实表名；表由 SQL 手工维护，故不参与迁移。"""
         db_table = 'rp_datasource'  # 对应数据库物理表名
@@ -38,6 +47,7 @@ class RpDatasource(BaseModel):
         ordering = ['-id']  # 默认按主键倒序
 
 
+# 报表模板：真正决定"长什么样、怎么取数"的配置载体，render.py 以它的 template_json 为输入
 class RpTemplate(BaseModel):
     """报表模板表：存储报表的查询与呈现定义。"""
     id = SnowflakeIDField(primary_key=True)  # 主键，雪花算法生成
@@ -51,6 +61,7 @@ class RpTemplate(BaseModel):
     permission_json = models.TextField('权限配置(JSON)', blank=True, null=True)  # 可见角色/用户配置
     remark = models.CharField('备注', max_length=500, blank=True, null=True)  # 备注说明
 
+    # 元信息：锁定物理表名、关闭迁移托管，最新模板排在前面
     class Meta:
         """指定真实表名；表由 SQL 手工维护，故不参与迁移。"""
         db_table = 'rp_template'  # 对应数据库物理表名
@@ -58,6 +69,7 @@ class RpTemplate(BaseModel):
         ordering = ['-id']  # 默认按主键倒序
 
 
+# 生成记录：一次导出/生成动作的快照，模板被删后仍可按记录回放（build_record_report）
 class RpGenerateRecord(BaseModel):
     """报表生成记录表：记录每次报表生成的请求与结果。"""
     GEN_STATUS_CHOICES = ((0, '生成中'), (1, '成功'), (2, '失败'))  # 生成状态可选值
@@ -75,6 +87,7 @@ class RpGenerateRecord(BaseModel):
     gen_user_id = models.BigIntegerField('生成用户ID', blank=True, null=True)  # 操作者用户 ID
     gen_time = models.DateTimeField('生成时间', blank=True, null=True)  # 生成完成时刻
 
+    # 元信息：锁定物理表名、关闭迁移托管，最新生成记录排在最前
     class Meta:
         """指定真实表名；表由 SQL 手工维护，故不参与迁移。"""
         db_table = 'rp_generate_record'  # 对应数据库物理表名

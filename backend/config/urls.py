@@ -1,4 +1,14 @@
 """全局路由。"""
+# ============================== 文件说明 ==============================
+# 作用：项目根 URLConf，由 settings.ROOT_URLCONF='config.urls' 指定。
+# 被谁加载：Django 处理请求时导入本模块；include() 再把各应用子路由挂载到命名空间。
+# 关键约定：
+#   1) 所有接口统一以 /api/ 开头，便于 Nginx 反向代理与前端 baseURL 统一配置；
+#   2) 每个模块只 include 一次，具体路由规则由各 apps/*/urls.py 自行维护；
+#   3) 新增业务模块时按分组追加到列表末尾，不要随意改动已有顺序；
+#   4) apps.student 挂在裸前缀 'api/' 下，其子路由均以 'student/' 开头；若子路由未命中，
+#      Django 会自动继续尝试后续 'api/xxx/' 规则，因此该条不会截断其它模块。
+# 匹配规则：Django 自上而下逐条匹配，更具体的前缀应排在更宽泛的前缀之前。
 from django.urls import include, path  # include 挂载子路由，path 定义单条路由规则
 
 urlpatterns = [  # 路由表：按 URL 前缀把各模块的子路由挂载到不同命名空间

@@ -168,6 +168,7 @@ class FileRecycleViewSet(CrudViewSet):
     module_name = '文件回收站'  # 操作日志模块名
 
     def get_queryset(self):
+        # 回收站记录不做逻辑删除过滤，直接按主键倒序返回全部快照
         return self.model.objects.order_by(self.order_by)
 
     @action(detail=True, methods=['post'])

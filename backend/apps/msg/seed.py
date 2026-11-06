@@ -23,6 +23,7 @@ BUTTONS = {
 
 
 def _ensure_menu(parent_id, name, path, component, perms, mtype, icon, order):
+    # 以"父级+名称"作为幂等键，已存在则直接复用
     row = SysMenu.objects.filter(parent_id=parent_id, menu_name=name, is_deleted=0).first()
     if row:
         return row

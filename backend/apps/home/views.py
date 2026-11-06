@@ -1,7 +1,9 @@
 """首页聚合接口：overview + monitor。"""
-import datetime
-import os
-import shutil
+# 首页需要一次性返回统计、趋势、待办等多块数据，所有查询都以“只读 + 失败降级”为原则：
+# 某个模块的表尚未建好时只让该块为空，不整体报错，保证首页始终能渲染。
+import datetime  # 生成当前时间、今日日期与最近 7 天窗口等时间对象
+import os  # 取用户目录，作为磁盘使用率的统计目标
+import shutil  # 跨平台读取磁盘总容量/已用/可用空间
 
 from rest_framework import viewsets
 from rest_framework.response import Response

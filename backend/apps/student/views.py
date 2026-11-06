@@ -1,4 +1,10 @@
 """学生信息表 管理接口（由代码生成器生成，可二次修改）。"""
+# 模块用途：学生信息表的 HTTP 接口层，提供分页查询、增删改与 Excel 模板/导入/导出。
+# 对应表：biz_student（CRUD 与 Excel 导入导出都落在这张表）。
+# 被谁引用：apps/student/urls.py 把 list/create/update/delete/import/export 动作映射到本视图集。
+# 生成约定：视图集固定继承 viewsets.ViewSet，并用 perm_map 声明 action 到权限码的映射；
+#           导入导出列顺序由 EXPORT_COLUMNS/IMPORT_COLUMNS 常量维护，改列只改常量即可。
+# 说明：本文件是代码生成器产出的示例实现，保留最简逻辑，便于新手对照约定后二次扩展。
 import io  # 内存流，直接在内存中拼装 xlsx 与响应体
 import time  # 生成当前时间字符串，写入审计字段
 from datetime import datetime  # 判断导出值是否为时间类型
@@ -18,6 +24,7 @@ from common.permissions import PermissionCheck  # 基于 perm_map 的接口权�
 from common.response import fail, ok  # 统一响应包装
 
 
+# 导出列定义：(模型字段名, Excel 表头)；元组顺序即列顺序，字段名同时用于 getattr 取值，改列只需改这里。
 EXPORT_COLUMNS = [  # 导出 Excel 的列映射：(模型字段名, 表头中文名)
     ('name', '学生姓名'),  # 第 1 列：姓名
     ('age', '年龄'),  # 第 2 列：年龄
@@ -30,6 +37,8 @@ EXPORT_COLUMNS = [  # 导出 Excel 的列映射：(模型字段名, 表头中文
 ]
 
 
+# 导入列定义：顺序决定按列号读取的位置，模型字段名决定赋值给哪个字段；
+# 与导出列保持同构，用户可“导出-修改-再导入”；新增列请追加到末尾，避免打乱旧模板的列位置。
 IMPORT_COLUMNS = [  # 导入模板的列映射，顺序决定 Excel 列读取位置
     ('name', '学生姓名'),  # 第 1 列：姓名（必填）
     ('age', '年龄'),  # 第 2 列：年龄
@@ -42,15 +51,18 @@ IMPORT_COLUMNS = [  # 导入模板的列映射，顺序决定 Excel 列读取位
 ]
 
 
+# 导出下载的默认文件名；中文名称由浏览器根据 Content-Disposition 解析。
 FILE_NAME = '学生信息表.xlsx'  # 导出文件名
 
 
+# 采用 ViewSet 而非 ModelViewSet：动作名与路由一一对应，便于 PermissionCheck 按 action 取权限码。
 class BizStudentViewSet(viewsets.ViewSet):
     """学生信息表管理"""
 
     module_name = '学生信息表'  # 模块名，用于日志与提示
     permission_classes = [PermissionCheck]  # 全部接口先做权限校验
 
+    # perm_map 声明为 property：权限类在每次请求时读取它，按当前 action 找到所需权限码。
     @property
     def perm_map(self):
         """接口动作到权限编码的映射，供 PermissionCheck 校验。"""
@@ -65,12 +77,14 @@ class BizStudentViewSet(viewsets.ViewSet):
             'export_data': prefix + ':export',  # 数据导出权限
         }
 
+    # 统一的数据入口：所有读查询都从 get_queryset 出发，确保“未删除”过滤不会被个别动作遗漏。
     def get_queryset(self):
         """返回未逻辑删除的记录集，主键升序便于稳定分页。"""
         queryset = BizStudent.objects.all()  # 全量记录集
         queryset = queryset.filter(is_deleted=0)  # 只保留未删除数据
         return queryset.order_by('id')  # 固定排序，避免分页结果漂移
 
+    # 过滤约定：文本列用 icontains 模糊匹配，数值/字典/日期列用等值匹配；空串视为未传，0 视为有效值。
     def apply_filters(self, request, queryset):
         """按查询参数逐列过滤，文本模糊匹配、其余等值匹配。"""
         queryset = queryset.filter(is_deleted=0)  # 再次兜底过滤已删除数据
@@ -100,11 +114,13 @@ class BizStudentViewSet(viewsets.ViewSet):
             queryset = queryset.filter(address__icontains=value)  # 住址模糊匹配
         return queryset  # 返回过滤后的记录集
 
+    # 列表动作：复用同一套过滤与分页，响应结构由 StandardPagination 统一成 {total, page, page_size, list}。
     def list(self, request):
         """分页查询学生列表。"""
         queryset = self.apply_filters(request, self.get_queryset())  # 先按条件过滤
         return StandardPagination(request).paginate(queryset, BizStudentListSerializer)  # 统一分页并序列化输出
 
+    # 新增动作：先用写入序列化器完成校验，再补审计字段后 save；操作人取中间件注入的 user_info。
     def create(self, request):
         """新增学生记录，自动写入创建人与时间。"""
         serializer = BizStudentCreateSerializer(data=request.data)  # 校验前端提交数据
@@ -116,6 +132,7 @@ class BizStudentViewSet(viewsets.ViewSet):
             update_by=user.username if user else '', update_time=now)  # 保存时补齐审计字段
         return ok(BizStudentSerializer(instance).data, '新增成功')  # 返回完整详情
 
+    # 编辑动作：partial=True 支持只传部分字段；先按 pk 查未删除记录，不存在时返回业务码 404。
     def update(self, request, pk=None):
         """按主键更新学生记录，仅更新提交的字段。"""
         instance = self.get_queryset().filter(pk=pk).first()  # 未删除记录中按主键查找
@@ -128,6 +145,7 @@ class BizStudentViewSet(viewsets.ViewSet):
                         update_time=time.strftime('%Y-%m-%d %H:%M:%S'))  # 刷新更新人与更新时间
         return ok(BizStudentSerializer(instance).data, '修改成功')  # 返回修改后的详情
 
+    # 删除动作：逻辑删除而非物理删除，仅把 is_deleted 置 1 并记录操作人，保留数据以便追溯。
     def delete(self, request):
         """按主键批量逻辑删除学生记录。"""
         ids = request.data.get('ids') or []  # 前端提交的主键数组
@@ -139,11 +157,13 @@ class BizStudentViewSet(viewsets.ViewSet):
         return ok(None, '删除成功')  # 返回成功提示
 
 
+    # 模板下载：只输出中文表头、不写示例数据，文件名固定为 import_template.xlsx。
     def import_template(self, request):
         """下载导入模板。"""
         wb = openpyxl.Workbook()  # 新建工作簿
         ws = wb.active  # 取默认工作表
         ws.title = '学生信息表'  # 工作表名称与业务一致
+        # 首行写中文表头：仅表头、无示例行，用户按表头逐列填写数据后上传。
         ws.append([label for _, label in IMPORT_COLUMNS])  # 首行写入中文表头
         buf = io.BytesIO()  # 内存缓冲，不落临时文件
         wb.save(buf)  # 把工作簿写入缓冲
@@ -154,6 +174,7 @@ class BizStudentViewSet(viewsets.ViewSet):
         response['Content-Disposition'] = 'attachment; filename=import_template.xlsx'  # 声明下载文件名
         return response  # 返回文件流
 
+    # 导入动作：先逐行校验，任何一行有错则整批拒绝，避免脏数据写库；错误信息带 Excel 行号便于定位。
     def import_data(self, request):
         """Excel 导入：校验失败返回行号与错误信息，不导入脏数据。"""
         file = request.FILES.get('file')  # 取上传文件
@@ -193,6 +214,7 @@ class BizStudentViewSet(viewsets.ViewSet):
 
 
 
+    # 导出动作：复用列表的过滤逻辑，按系统配置的最大行数截断，在内存中生成 xlsx 后作为附件返回。
     def export_data(self, request):
         """按当前查询条件导出 Excel（限制最大行数）。"""
         queryset = self.apply_filters(request, self.get_queryset())  # 复用列表过滤逻辑
@@ -217,6 +239,7 @@ class BizStudentViewSet(viewsets.ViewSet):
         response['Content-Disposition'] = 'attachment; filename=' + FILE_NAME  # 文件名含中文，交由浏览器处理
         return response  # 返回文件流
 
+    # 读取系统配置的静态工具：仅导出动作使用，故放在视图内；SysConfig 延迟导入以避免模块级循环依赖。
     @staticmethod  # 静态工具方法：读取配置不依赖视图实例
     def get_config_int(key, default):
         """读取系统配置中的整数项，缺失或非法时返回默认值。"""

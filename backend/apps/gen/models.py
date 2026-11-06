@@ -1,10 +1,16 @@
 """代码生成器配置表模型。"""
+# 模块：apps/gen/models.py —— 代码生成器的两张配置表模型
+# 用途：保存"哪张业务表要出码"以及"每个字段如何生成表单/查询/导入导出"的配置。
+# 数据表：sys_gen_table（生成任务主表）、sys_gen_table_column（字段级配置表）。
+# 调用方：apps/gen/engine.py 读取配置渲染代码，apps/gen/views.py 与 serializers.py 读写配置。
+# 说明：两张表均由 docs 建表 SQL 手工创建，故 managed=False，不参与 migrate。
 from django.db import models  # 引入 ORM 字段定义模块
 from common.fields import SnowflakeIDField  # 雪花算法主键字段
 
 from common.utils import BaseModel  # 公共基类，提供审计字段与逻辑删除标记
 
 
+# 生成任务主表：一条记录对应一张已导入的业务表，是整套出码配置的根
 class SysGenTable(BaseModel):
     """生成任务主表：记录一张业务表导入后形成的代码生成配置。"""
 
@@ -21,6 +27,7 @@ class SysGenTable(BaseModel):
     import_enable = models.BooleanField('是否开启导入', default=True)  # 决定是否生成 Excel 导入相关内容
     export_enable = models.BooleanField('是否开启导出', default=True)  # 决定是否生成 Excel 导出相关内容
 
+    # 元信息：锁定物理表名、关闭迁移托管、指定默认排序
     class Meta:
         """模型元信息：指定表名并交由手工建表脚本维护。"""
 
@@ -29,14 +36,17 @@ class SysGenTable(BaseModel):
         ordering = ['-id']  # 默认按主键倒序，新导入的配置排在前面
 
 
+# 字段配置表：主表的子表，逐列描述表单控件、查询方式与导入导出开关
 class SysGenTableColumn(BaseModel):
     """生成字段配置表：逐列记录表单元件、查询方式等生成选项。"""
 
+    # 表单控件：决定前端渲染什么组件，值由导入时按列类型自动推断、之后可人工调整
     FORM_CHOICES = (  # 表单控件可选项，供前端下拉展示
         ('input', '输入框'), ('number', '数字框'), ('date', '日期选择'),
         ('select', '下拉字典'), ('radio', '单选'), ('textarea', '多行文本'),
         ('image', '图片上传'), ('file', '文件上传'),
     )
+    # 查询方式：决定列表页过滤条件用等值、LIKE 还是区间比较
     QUERY_CHOICES = (  # 查询方式可选项，决定列表过滤条件的生成逻辑
         ('eq', '等于'), ('like', '模糊'), ('gt', '大于'),
         ('lt', '小于'), ('between', '区间'),
@@ -58,6 +68,7 @@ class SysGenTableColumn(BaseModel):
     is_import = models.BooleanField('是否导入', default=True)  # 是否作为导入模板的可填列
     sort = models.IntegerField('排序号', default=0)  # 列顺序，决定表单与列表的展示先后
 
+    # 元信息：锁定物理表名、关闭迁移托管，并按排序号输出保证界面顺序稳定
     class Meta:
         """模型元信息：指定表名并按排序号升序输出。"""
 
